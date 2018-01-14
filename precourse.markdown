@@ -1,5 +1,5 @@
 # Pre course notes
-Links and snippets I'd like to record... (based on the [pre course FAC materials]((https://github.com/foundersandcoders/recommended-materials))
+Links and snippets I'd like to record... (based on the [pre course FAC materials](https://github.com/foundersandcoders/recommended-materials))
 
 ## My Pre course materials
 * [Recommended materials by FAC to go through](https://github.com/foundersandcoders/recommended-materials) _Mixed_
@@ -49,8 +49,8 @@ between the commits when passing in two git IDs as arguments. If no arguments ar
 * **git reset --hard** discards any changes to staging area and working directory (!!! - can't change it back!)
 * **git clone [url]** copies one repository on one computer to another
 * **git checkout** revert all files back to how it was in a previous commit (like restoring a prev version). Will have detached HEAD warning
-* **git clone [url]** make a cope of an entire Git repository, including the history, onto your own computer
-* **git init** initialises new git repository (creates an empty .git repository). Files in the working directory is transferred to the .git repositry.
+* **git clone [url]** make a copy of an entire Git repository, including the history, onto your own computer
+* **git init** initialises new git repository (creates an empty .git repository). Files in the working directory is transferred to the .git repository.
 * **git status** what files have changed since the last commit
 * **git add** to add files to the staging area.
 > * Many command line tools, including Git, are less useful if your files contain very long lines. For example, if you use **diff** to compare two files that have all their content on the same line, **diff** will only show you that the two files are different. It will not be able to pinpoint the location of the difference for you. Many developers use a max line length of 80 to 120 characters.  
@@ -72,9 +72,9 @@ HEAD is what Git calls the commit you are currently on. You can “detach” the
 * The main purpose of semantic HTML is for the automated extraction of meaning from content.
 * A semantic element clearly describes its meaning to both the browser and developer - for example, instead of `<div>` and `<span>`, we can use better alternatives such as `<form>`, `<table>`, and `<img>`. Helps:
   * accessibility - help assistive technologies read and interpret your webpage
- * searchability - help computers make sense of your content
- * internationalization - only 13% of the world are English native speakers
- * interoperability - help other programmers understand the structure of your webpage
+  * searchability - help computers make sense of your content
+  * internationalization - only 13% of the world are English native speakers
+  * interoperability - help other programmers understand the structure of your webpage
 
 ###### Tags for structuring a web page
 ![Structure of a page](https://almosthumor.files.wordpress.com/2011/09/html5demo1.jpg)
@@ -88,28 +88,25 @@ HEAD is what Git calls the commit you are currently on. You can “detach” the
 ### CSS
 #### Layout
 ##### Display values
-[Exhaustive list of display values](https://developer.mozilla.org/en-US/docs/Web/CSS/display). Every element has a default display type, but can be orridden (usually area a `block`-level element or `inline` element).
+[Exhaustive list of display values](https://developer.mozilla.org/en-US/docs/Web/CSS/display). Every element has a default display type, but can be overridden (usually area a `block`-level element or `inline` element).
 * **Standard block-level elements**: `<div>`, `<p>`, `<form>`, `<header>`, `<section>` (stretches as far as can)
 * **Standard inline element**: `<span>` (flow of the page/paragraph is not disrupted)
 * **none** (another common display value): `<script>`. Commonly used in JS to hide and show elements without deleting and recreating them. Renders them as if they don't exist (VS `visibility: hidden` - hides the element but takes up space)
 * `inline-block` elements  are like `inline` elements but they can have a width and height. (Like floated elements except no need to use `clear` on subsequent elements) NB:
- * `inline-block` elements are affected by the `vertical-align` property, which you probably want set to top.
+ * are affected by the `vertical-align` property, which you probably want to set it to the top.
  * You need to set the width of each column
  * There will be a gap between the columns if there is any whitespace between them in the HTML
 
 ##### Layout techniques
-* [Centering in CSS](https://css-tricks.com/centering-css-complete-guide/) <- this is great, states which method to use
+* [Centering in CSS](https://css-tricks.com/centering-css-complete-guide/) <- this is great, states which method to use based on element structure.
 * Horizontal vertically: use `max-width` & `margin: 0 auto`
 * `box-sizing` is used to negate the effects of _the box model_ (where the element's border and padding stretch beyond the specified width). Set:
->  "* {
+>  [universal selector] {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-}"
-
+}
 * `column` (new) to make [multi-column text](http://learnlayout.com/column.html)
-* Percentage is  a measurement unit relative to the containing block/container.
-* Use `media queries` to make responsive sites
 
 ###### `position` property
 * `position: static`: elements are _not positioned_ in any special way (elements with set position = _positioned_)
@@ -125,7 +122,7 @@ HEAD is what Git calls the commit you are currently on. You can “detach” the
 }` on outer containers means it stretches to enclose floated elements as well.
 
 ###### `flexbox` layout model_
-Can be used for [vertical alignment or have certain elements fill the rest of the space](http://learnlayout.com/flexbox.html).
+Can be used for [vertical alignment or to have certain elements fill the rest of the space](http://learnlayout.com/flexbox.html).
 
 #### CSS Specificity
 * If two selectors apply to the same element, the one with higher specificity wins.
@@ -135,7 +132,8 @@ Can be used for [vertical alignment or have certain elements fill the rest of th
 * Inherited values and universal selector has specificity of 0, 0, 0, 0.
 
 #### Em vs Rem
-* Both `em` and `rem` are flexible, scalable units which are translated by the browser into pixel values, depending on the font size settings in your design.
-* `rem`: the pixel size they translate to depends on the font size of the root element of the page, i.e. the `html` element. That root font size is multiplied by whatever number you’re using with your `rem` unit. Any sizing that doesn’t need em units for the reasons described above, and that should scale depending on browser font size settings. (e.g. for font sizes)
-* `em` units, the pixel value you end up with is a multiplication of the font size on the element being styled. I.e. they are relative to the font size “of the element on which they are used”. This font size is influenced by inheritance from parent elements unless explicitly overridden with a unit not subject to inheritance. Useful e.g. for `padding`, `margin`, `width`, `height` and `line-height` around a navigation menu item. Use it for: Any sizing that should scale depending on the font-size of an element other than the root & the font size of the element they’re used on should be set in `rem` units to preserve scalability but avoid inheritance confusion.
+* Both `em` and `rem` are flexible, scalable units which are translated by the browser into `px` values.
+* `rem`: the pixel size they translate to depends on the font size of the root element of the page, i.e. the `html` element/browser font size settings. That root font size is multiplied by the `rem` number. Use for most things, including font sizes.
+* `em` units, the `px` value you end up with is a multiplication of/relative to the font size on the element being styled/on which they are used. This font size is influenced by inheritance from parent elements unless explicitly overridden with a unit not subject to inheritance. Useful for `padding`, `margin`, `width`, `height` and `line-height`. Use it for: Any sizing that should scale depending on the font-size of an element other than the root.
+ * The font size of the element they’re used on should be set in `rem` units to preserve scalability but avoid inheritance confusion.
 * Every element automatically inherits the font size of its parent. NB: careful of the scaling effects with multiple wrapped containers
