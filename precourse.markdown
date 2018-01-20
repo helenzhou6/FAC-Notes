@@ -137,3 +137,13 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 * `em` units, the `px` value you end up with is a multiplication of/relative to the font size on the element being styled/on which they are used. This font size is influenced by inheritance from parent elements unless explicitly overridden with a unit not subject to inheritance. Useful for `padding`, `margin`, `width`, `height` and `line-height`. Use it for: Any sizing that should scale depending on the font-size of an element other than the root.
  * The font size of the element they’re used on should be set in `rem` units to preserve scalability but avoid inheritance confusion.
 * Every element automatically inherits the font size of its parent. NB: careful of the scaling effects with multiple wrapped containers
+
+
+### DOM Manipulation
+#### Walking the DOM to find any node
+* Finding a node on a page. Function: `document.getElementById('elementId')` - takes a string and returns the DOM element with that ID.
+* If the node doesn't have an ID (e.g. text nodes). Each node has a `childNodes` property that contains an ordered array of all its children (so can index into this array). e.g. `document.getElementById('stars').childNodes[0]`
+ * Can use `firstChild` and `lastChild` to find first and last child nodes.
+* Nodes also have `previousSibling` and `nextSibling` properties that allow one to slide sideways on the DOM tree.
+* `parentNode` - returns the node that encloses the current node.
+* NB: `firstChild`, `lastChild`, `previousSibling`, `nextSibling`, and `parentNode` return `null` if there so no such child/sibling/parent node. `childNodes` array is of length zero if there are no child nodes.
