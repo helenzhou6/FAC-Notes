@@ -52,7 +52,8 @@ between the commits when passing in two git IDs as arguments. If no arguments ar
 * **git clone [url]** make a copy of an entire Git repository, including the history, onto your own computer
 * **git init** initialises new git repository (creates an empty .git repository). Files in the working directory is transferred to the .git repository.
 * **git status** what files have changed since the last commit
-* **git add** to add files to the staging area.
+* **git add [Files]** To add new files to the repository or add changed files to staged area.
+* **git commit** (commit them); **git commit -a -m "commit message goes here"** to commit all files (-a) and add a message (-m)
 > * Many command line tools, including Git, are less useful if your files contain very long lines. For example, if you use **diff** to compare two files that have all their content on the same line, **diff** will only show you that the two files are different. It will not be able to pinpoint the location of the difference for you. Many developers use a max line length of 80 to 120 characters.  
 > * Standard practice is to write commit messages as if they are command lines
 
