@@ -140,6 +140,13 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 
 
 ### DOM Manipulation
+* According to the W3C HTML DOM standard, everything in an HTML document is a node:
+ * The entire document is a document node
+ * Every HTML element is an element node
+ * The text inside HTML elements are text nodes
+ * Every HTML attribute is an attribute node (deprecated)
+ * All comments are comment nodes
+
 #### Walking the DOM to find any node
 * Finding a node on a page. Function: `document.getElementById('elementId')` - takes a string and returns the DOM element with that ID.
 * If the node doesn't have an ID (e.g. text nodes). Each node has a `childNodes` property that contains an ordered array of all its children (so can index into this array). e.g. `document.getElementById('stars').childNodes[0]`
@@ -147,3 +154,10 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 * Nodes also have `previousSibling` and `nextSibling` properties that allow one to slide sideways on the DOM tree.
 * `parentNode` - returns the node that encloses the current node.
 * NB: `firstChild`, `lastChild`, `previousSibling`, `nextSibling`, and `parentNode` return `null` if there so no such child/sibling/parent node. `childNodes` array is of length zero if there are no child nodes.
+
+#### Manipulating the DOM
+* Simplest way is to change the DOM is to assign some HTML to an element's `innerHTML` property. E.g. `element.innerHTML = 'Hello<br>World'` BUT DO NOT USE
+* Every node has a method `removeChild` that takes as an argument the node that is to be destroyed. Note that this method needs to be called on the offending node's parent. E.g. `node1.removeChild(node2)` - where node1 is the parent node and node 2 is a child within node 1.
+* Nodes may be added as children of another node with the `node1.appendChild(node2)` method. This method is called on the new parent and takes the child as its argument. If the child you are appending is an existing element in the DOM, it will be automatically removed from its existing location. Any grandchildren will follow the child.
+* Creating a new text node is easy, use just call `document.createTextNode('hello')` (then use `appendChild` to add to DOM)
+* New elements are created by calling `document.createElement('SPAN')` with the argument being the element's HTML tag name. (Use `appendChild` to add to DOM)
