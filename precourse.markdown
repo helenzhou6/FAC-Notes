@@ -165,17 +165,25 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 
 #### DOM Events
 * Traditional Model: set the element's `.onclick` property to a function (thus once clicked function is executed). `this` within the function = the element that was clicked. DONT USE (scales badly)
-* Use this: `element.addEventListener('click', function(){}, false)`. (Function can be declared as a variable beforehand)
+* Use this: `element.addEventListener('click', yourFunction, false)`. (Function can be declared as a variable beforehand)
 	* An event listener fires every time that event occurs. To stop this, use: `removeEventListener`. E.g.
 		```
-			var img = document.getElementById('once_star');
-			var clickFunc = function() {
-  			alert('Hello');
-  			img.removeEventListener('click', clickFunc, false);
-			};
+		var img = document.getElementById('once_star');
+		var clickFunc = function() {
+  		alert('Hello');
+  		img.removeEventListener('click', clickFunc, false);
+		};
 		img.addEventListener('click', clickFunc, false);
 		```
-
+* An `Event` object is passed as an argument to handler functions (contains info about the event). One of the most useful properties is `target` which contains the DOM node that was clicked (or otherwise manipulated). So can add a single event handler to a parent node, then deal with the appropriate node when an event is triggered. E.g.:
+	 ```
+	var func = function(e) {
+	  if (e.target.src) {
+	    e.target.src = 'star_on.gif';
+	  }
+	};
+	```
+ * Also contains useful methods that can effect what happens after handler finishes executing (e.g. `e.preventDefault()` that prevents the browser from taking its normal actions in response to the event).
 
 #### Other JS tips
 * [The function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
