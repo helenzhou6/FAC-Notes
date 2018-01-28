@@ -100,13 +100,15 @@ HEAD is what Git calls the commit you are currently on. You can “detach” the
 
 ##### Layout techniques
 * [Centering in CSS](https://css-tricks.com/centering-css-complete-guide/) <- this is great, states which method to use based on element structure.
-* Horizontal vertically: use `max-width` & `margin: 0 auto`
+* Horizontal vertically: use `max-width` & `margin: 0 auto`.
 * `box-sizing` is used to negate the effects of _the box model_ (where the element's border and padding stretch beyond the specified width). Set:
->  [universal selector] {
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-}
+```
+  [universal selector] {
+	  -webkit-box-sizing: border-box;
+	     -moz-box-sizing: border-box;
+	          box-sizing: border-box;
+	}
+```
 * `column` (new) to make [multi-column text](http://learnlayout.com/column.html)
 
 ###### `position` property
@@ -128,7 +130,7 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 #### CSS Specificity
 * If two selectors apply to the same element, the one with higher specificity wins.
 * There are four distinct categories which define the specificity level of a given selector: inline styles, IDs, classes, attributes, and elements. ID > attribute. A class selector > element selectors.
-* Measuring specificity: Start at 0, add 1000 for style attribute, add 100 for each ID, add 10 for each attribute, class or pseudo-class, add 1 for each element name or pseudo-element. OR Count the number of ID attributes in the selector (= a). Count the number of other attributes and pseudo-classes in the selector (= b). Count the number of element names and pseudo-elements in the selector (= c). Concatenating the three numbers a-b-c gives the specificity. [Specificity calculator!](https://specificity.keegan.st/)
+* Measuring specificity: Start at 0, add 1000 for style attribute, add 100 for each ID, add 10 for each attribute, class or pseudo-class, add 1 for each element name or pseudo-element. OR Count the number of ID attributes in the selector (= a). Count the number of other attributes and pseudo-classes in the selector (= b). Count the number of element names and pseudo-elements in the selector (= c). Concatenating the three numbers a-b-c gives the specificity. [OR just use this Specificity calculator!](https://specificity.keegan.st/)
  * So for link styling: you’re best off putting your styles in the order “link-visited-hover-active”, or “LVHA” for short.”
 * Inherited values and universal selector has specificity of 0, 0, 0, 0.
 
@@ -175,6 +177,7 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 		};
 		img.addEventListener('click', clickFunc, false);
 		```
+	* NB: `clickFunc` is passed in rather than `clickFunc()`. Because if you add parenthesis to a function you call it, so when that code is hit you are passing the result of the function and not the function itself. Also `removeEventListener` expects a reference to same function you added in `addEventListener`.
 * An `Event` object is passed as an argument to handler functions (contains info about the event). One of the most useful properties is `target` which contains the DOM node that was clicked (or otherwise manipulated). So can add a single event handler to a parent node, then deal with the appropriate node when an event is triggered. E.g.:
 	 ```
 	var func = function(e) {
