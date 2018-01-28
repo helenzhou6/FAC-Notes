@@ -162,3 +162,33 @@ Can be used for [vertical alignment or to have certain elements fill the rest of
 * Nodes may be added as children of another node with the `node1.appendChild(node2)` method. This method is called on the new parent and takes the child as its argument. If the child you are appending is an existing element in the DOM, it will be automatically removed from its existing location. Any grandchildren will follow the child.
 * Creating a new text node is easy, use just call `document.createTextNode('hello')` (then use `appendChild` to add to DOM)
 * New elements are created by calling `document.createElement('SPAN')` with the argument being the element's HTML tag name. (Use `appendChild` to add to DOM)
+
+#### DOM Events
+* Traditional Model: set the element's `.onclick` property to a function (thus once clicked function is executed). `this` within the function = the element that was clicked. DONT USE (scales badly)
+* Use this: `element.addEventListener('click', function(){}, false)`. (Function can be declared as a variable beforehand)
+	* An event listener fires every time that event occurs. To stop this, use: `removeEventListener`. E.g.
+		```
+			var img = document.getElementById('once_star');
+			var clickFunc = function() {
+  			alert('Hello');
+  			img.removeEventListener('click', clickFunc, false);
+			};
+		img.addEventListener('click', clickFunc, false);
+		```
+
+
+#### Other JS tips
+* [The function expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)
+```
+var functionOne = function() {
+    // Some code
+};
+```
+= A function expression and so only defined when that line is reached.
+VS:
+```
+function functionTwo() {
+    // Some code
+}
+```
+= A function declaration and is defined as soon as its surrounding function or script is executed (due to hoisting).
