@@ -1,5 +1,5 @@
 # Pre course notes
-Links and snippets I'd like to record... (based on the [pre course FAC materials](https://github.com/foundersandcoders/recommended-materials))
+Links and snippets I'd like to record... (based on the [pre course FAC materials](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/precourse))
 
 ## My Pre course materials
 * [Recommended materials by FAC to go through](https://github.com/foundersandcoders/recommended-materials) _Mixed_
