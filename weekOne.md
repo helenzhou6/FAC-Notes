@@ -52,11 +52,11 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 1. Found a problem: create an issue on repo
 2. ```git pull origin master``` to pull remote repo (origin refers to remote)
 3. ```git checkout -b <new-branch-name>.``` to create new branch and change HEAD to branch.
-4. Update the files/do code.
-5. In case remote master has changed since, do ```git checkout master```, ```git pull origin master```, then checkout to branch. Finally do ```git merge master``` and work out any merge conflicts.
-6. ``git add`` and then ```git commit``` - with a commit messages linking to the issue (e.g. ```Relate #2```). Then ```git push origin <branch-name>``` the branch.
+4. Update the files/do code. ```git add``` and then ```git commit```- with a commit messages linking to the issue (e.g. ```Relate #2```)
+5. In case remote master has changed since, do ```git checkout master``` (switch head to master first), ```git pull origin master```, then checkout to branch. Finally do ```git merge master``` and work out any merge conflicts.
+6. Then ```git push origin <branch-name>``` the branch.
 7. Generate a pull request and link in the comments  with the issue #<number> (```Relate #2```)
-8. Second programmer reviews changes and accepts the merge
+8. Second programmer reviews changes and accepts the merge (branch into master)
 9. Close issue and branch
 
 #### Other useful stuff
@@ -88,4 +88,14 @@ _Resources:_ [_the team notes_](https://hackmd.io/CYUwHA7ADGDMUFoCMEkE4EBYQDNECM
 #### Command Line
 _Resources:_ [_the team notes_](https://hackmd.io/IYTgrALBDs3AtMAHAMwAzwmgpheAjJEANnhAgBN8LoQUoBmCIA==)
 * Keyboard shortcut ```Ctrl + K``` deletes line from position of cursor onwards
-* Can create shortcuts/funcs e.g. ```alias chrome=’open –a “Google Chrome”’``` and ```alias fac=”cd desktop/coding/fac”```
+* Can create shortcuts/funcs e.g. ```alias chrome=’open –a “Google Chrome”’``` and ```alias fac=”cd desktop/coding/fac”
+
+## Day Three
+### **CSS Gallery challenge**
+_Resources:_ [_CSS gallery challenge_](https://github.com/foundersandcoders/css-gallery-challenge)
+* Instead of using floats, can use ```display:flex``` and ```flex-grow: 1;``` to complete tasks 1-3
+* Duplicating the photo three times (task 4) - use ```background-image:repeat-y```
+
+### **Projects**
+_Resources:_ [_The project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md)
+* (Practiced coding within a group and [flying down the git rabbit hole](#practicing-git))
