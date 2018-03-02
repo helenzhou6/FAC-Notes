@@ -101,45 +101,45 @@ _Resources:_ [_Day Three CSS gallery challenge_](https://github.com/foundersandc
 
 ### **Projects**
 _Resources:_ [_The project (day three and four)_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md)
-* (Practiced coding within a group and [flying down the git rabbit hole](#practicing-git))
-* Whilst making an [accessible responsive one pager](https://fac-13.github.io/plhh/), discovered:
-    * #### Forms
-    * ```input:valid``` CSS styling
-    * If inputs have appropriate attributes (e.g. ```<input type="email">```, browser has inbuilt validation (input requires '@' symbol)
-    * ### Acessibility
-    * For those who have JS disabled, can have a hamburger that is interactive using CSS alone: 
+(Practiced coding within a group to make an [accessible responsive one pager](https://fac-13.github.io/plhh/). Also [flew down the git rabbit hole](#practicing-git)). Discovered:
+#### Forms
+* ```input:valid``` CSS styling
+* If inputs have appropriate attributes (e.g. ```<input type="email">```, browser has inbuilt validation (input requires '@' symbol)
+#### Acessibility
+* For those who have JS disabled, can have a hamburger that is interactive using CSS alone: 
 
-        ```
-        .hamburger input[type="checkbox"]:checked ~ .header__list {
-            display: block;
-        }
+    ```
+    .hamburger input[type="checkbox"]:checked ~ .header__list {
+        display: block;
+    }
 
-        input[type="checkbox"] {
-            display: none;
-        }
-        ```
+    input[type="checkbox"] {
+        display: none;
+    }
+    ```
 
-        Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
-        
-        However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
+    Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
 
-    * ### Layout
-    * Used CSS grid!
-        ```
-        .contact__form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            grid-column-gap: 2rem;
-        }
+    However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
 
-        .contact__form .form__message {
-            grid-column: 2/3;
-            grid-row: 1/3;
-        }
+#### Layout
+* CSS grid!
 
-        .contact__form .form__submit {
-            grid-column: 2/3;
-            grid-row: 3/4;
-        }
-        ```
+    ```
+    .contact__form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-column-gap: 2rem;
+    }
+
+    .contact__form .form__message {
+        grid-column: 2/3;
+        grid-row: 1/3;
+    }
+
+    .contact__form .form__submit {
+        grid-column: 2/3;
+        grid-row: 3/4;
+    }
+    ```
