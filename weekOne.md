@@ -40,7 +40,7 @@ Common things missing are listed in the [_solution_](https://github.com/founders
 ```
 <img src="./catonkeyboard.jpeg" title="Can on a keyboard" alt="Picture of a cat typing on a keybaord" />
 ```
-* Also look at the ```form``` and ```quote`` sections of the solution.
+* Also look at the ```form``` and ```quote``` sections of the solution.
 
 * Look into [aria labels](https://stackoverflow.com/questions/22039910/what-is-aria-label-and-how-should-i-use-it)
 * Look into [Preloading content with rel="preload"](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content)
@@ -49,15 +49,17 @@ Common things missing are listed in the [_solution_](https://github.com/founders
 _Resource:_ [_Git challenge_](https://github.com/foundersandcoders/git-workflow-workshop-for-two)
 
 Introduction into the idea of forking a repository. Never work on the master! Always work on a branch, then once accepted by a second programmer it is merged into the master.
-1. Found a problem: create an issue on repo
-2. ```git pull origin master``` to pull remote repo (origin refers to remote)
-3. ```git checkout -b <new-branch-name>.``` to create new branch and change HEAD to branch.
-4. Update the files/do code. ```git add``` and then ```git commit```- with a commit messages linking to the issue (e.g. ```Relate #2```)
-5. In case remote master has changed since, do ```git checkout master``` (switch head to master first), ```git pull origin master```, then checkout to branch. Finally do ```git merge master``` and work out any merge conflicts.
-6. Then ```git push origin <branch-name>``` the branch.
-7. Generate a pull request and link in the comments  with the issue #<number> (```Relate #2```)
-8. Second programmer reviews changes and accepts the merge (branch into master)
-9. Close issue and branch
+![The git flow diagram](https://i.imgur.com/UhfHrMT.jpg)
+1. Found a problem: create an issue on GitHub. This will give you an issue number.
+2. ```git pull origin master``` to pull remote master files into your local repo (origin refers to remote)
+3. ```git checkout -b <new-branch-name>.``` to create new local branch and change HEAD to branch. (Shortcut for ```git branch <new-branch-name>.``` then ```git checkout <new-branch-name>.```).
+4. Update the files/do code within this branch. Once ready to commit: ```git add``` (adds to local staging area) and then ```git commit``` (no longer in staging area, commits changes). N.B.: Link the commit message to the issue (e.g. ```Relate #2```). This commits to your local branch (so the commits have been logged - permanent record).
+5. In case remote master has changed since, do ```git checkout master``` (switch HEAD to master first), ```git pull origin master``` (pulls the remote master files - updates your local master), then checkout back to branch. Finally do ```git merge master``` (to merge updated local master with local branch) and work out any merge conflicts.
+6. If there are any merge conflicts (where HEAD = changes on your branch) that have been resolved, do ```git add``` and ```git commit``` again to save the changed files. 
+7. Then ```git push origin <branch-name>``` (pushes the local branch commits into the remote GitHub branch)
+8. Generate a pull request (remote branch -> into remote master) and link in the comments  with the issue #<number> (```Relate #2```)
+9. All programmers on the team need to reviews changes. The last person to review the code accepts the merge (branch into master to update the remote master branch).
+10. Close issue and branch on GitHub if necessary.
 
 #### Other useful stuff
 * [HTML reference](https://htmlreference.io/) - that features all elements and attributes.
@@ -67,6 +69,7 @@ Introduction into the idea of forking a repository. Never work on the master! Al
     * ```touch``` - new file
     * ```Ctrl C``` - Esc
     * ```git checkout``` - like ```cd``` for git
+    * ```git commit -a -m “..”```shortcut for add and commit at the same time
 
 
 ### **Research Afternoon**
@@ -90,12 +93,53 @@ _Resources:_ [_the team notes_](https://hackmd.io/IYTgrALBDs3AtMAHAMwAzwmgpheAjJ
 * Keyboard shortcut ```Ctrl + K``` deletes line from position of cursor onwards
 * Can create shortcuts/funcs e.g. ```alias chrome=’open –a “Google Chrome”’``` and ```alias fac=”cd desktop/coding/fac”
 
-## Day Three
+## Day Three & Day Four
 ### **CSS Gallery challenge**
-_Resources:_ [_CSS gallery challenge_](https://github.com/foundersandcoders/css-gallery-challenge)
+_Resources:_ [_Day Three CSS gallery challenge_](https://github.com/foundersandcoders/css-gallery-challenge)
 * Instead of using floats, can use ```display:flex``` and ```flex-grow: 1;``` to complete tasks 1-3
 * Duplicating the photo three times (task 4) - use ```background-image:repeat-y```
 
 ### **Projects**
-_Resources:_ [_The project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md)
+_Resources:_ [_The project (day three and four)_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md)
 * (Practiced coding within a group and [flying down the git rabbit hole](#practicing-git))
+* Whilst making an [accessible responsive one pager](https://fac-13.github.io/plhh/), discovered:
+    * #### Forms
+    * ```input:valid``` CSS styling
+    * If inputs have appropriate attributes (e.g. ```<input type="email">```, browser has inbuilt validation (input requires '@' symbol)
+    * ### Acessibility
+    * For those who have JS disabled, can have a hamburger that is interactive using CSS alone: 
+
+        ```
+        .hamburger input[type="checkbox"]:checked ~ .header__list {
+            display: block;
+        }
+
+        input[type="checkbox"] {
+            display: none;
+        }
+        ```
+
+        Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
+        
+        However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
+
+    * ### Layout
+    * Used CSS grid!
+        ```
+        .contact__form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-column-gap: 2rem;
+        }
+
+        .contact__form .form__message {
+            grid-column: 2/3;
+            grid-row: 1/3;
+        }
+
+        .contact__form .form__submit {
+            grid-column: 2/3;
+            grid-row: 3/4;
+        }
+        ```
