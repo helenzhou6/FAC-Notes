@@ -20,7 +20,7 @@ _Resource:_ [_hunt link_](https://github.com/foundersandcoders/master-reference/
 
 ## Day Two
 ### **Accessibility Workshop**
-_Resource:_ [_the challenge solution_](https://github.com/foundersandcoders/accessibility-challenge/blob/solution/index.html)
+_Resource:_ [_the actual challenge_](https://github.com/foundersandcoders/accessibility-challenge) _and_ [_the solution_](https://github.com/foundersandcoders/accessibility-challenge/blob/solution/index.html)
 
 Common things missing are listed in the [_solution_](https://github.com/foundersandcoders/accessibility-challenge/blob/solution/index.html). 
 * Remember all the stuff to include at the beginning of your document and in the ```head```:
@@ -43,10 +43,9 @@ Common things missing are listed in the [_solution_](https://github.com/founders
 * Also look at the ```form``` and ```quote``` sections of the solution.
 
 * Look into [aria labels](https://stackoverflow.com/questions/22039910/what-is-aria-label-and-how-should-i-use-it)
-* Look into [Preloading content with rel="preload"](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content)
 
 ### **Practicing Git**
-_Resource:_ [_Git challenge_](https://github.com/foundersandcoders/git-workflow-workshop-for-two)
+_Resource:_ [_Git challenge_](https://github.com/foundersandcoders/git-workflow-workshop-for-two) _and also added in info learnt over Days two to five_
 
 Introduction into the idea of forking a repository. Never work on the master! Always work on a branch, then once accepted by a second programmer it is merged into the master.
 ![The git flow diagram](https://i.imgur.com/UhfHrMT.jpg)
@@ -61,16 +60,22 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 9. All programmers on the team need to reviews changes. The last person to review the code accepts the merge (branch into master to update the remote master branch).
 10. Close issue and branch on GitHub if necessary.
 
-#### Other useful stuff
-* [HTML reference](https://htmlreference.io/) - that features all elements and attributes.
-* [CSS reference](https://cssreference.io)
-* Before closing the commit message with a quote symbol you can press enter on your keyboard to continue typing in the new terminal line. The text in the second line can be used as an additional message.
-* git commands
+* Neat git and terminal commands
     * ```touch``` - new file
     * ```Ctrl C``` - Esc
     * ```git checkout``` - like ```cd``` for git
     * ```git commit -a -m “..”```shortcut for add and commit at the same time
+    * ```echo "Test" > README.txt``` to add files to a repo
+    * Before closing the commit message with a quote symbol you can press enter on your keyboard to continue typing in the new terminal line. The text in the second line can be used as an additional message.
+* [Cool website](https://flaviocopes.com/git-guide/) introducing git (git setting up a new repo, push and pull and branches)
+* [Article:A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
+* [Article: Why use GitHub](https://medium.freecodecamp.org/a-developers-introduction-to-github-1034fa55c0db)
+* **AMAZING [website](http://ohshitgit.com/) that tells you what to do when you end up in a pickle (great name too: 'oh shit git')**
 
+#### Other useful stuff
+* [HTML reference](https://htmlreference.io/) - that features all elements and attributes.
+* [CSS reference](https://cssreference.io)
+* Look into [Preloading content with rel="preload"](https://developer.mozilla.org/en-US/docs/Web/HTML/Preloading_content)
 
 ### **Research Afternoon**
 _Resources:_ [_Topics Covered_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/research-afternoon.md) and [_good presentation tips_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/presentation-guidance.md)
@@ -79,7 +84,7 @@ _Resources:_ [_Topics Covered_](https://github.com/foundersandcoders/master-refe
 _Resources:_ [_the team notes_](https://hackmd.io/s/SJ2RdkQOz)
 * Use [skip links](https://www.joedolson.com/2013/07/designing-accessible-navigation/) to other sections of your site first
 * Use the ```accesskey``` attribute
-* Elements should be assigned a ``role`` and/or an ```aria-label``` attribute
+* Elements should be assigned a ```role``` (that has specific values) and/or an ```aria-labelledby``` or ```aria-label``` attribute (containing any text) for screenreaders.
 * Give focus to modals by using the ```tabindex``` attribute or ```.focus()```
 
 #### Regex
@@ -93,34 +98,21 @@ _Resources:_ [_the team notes_](https://hackmd.io/IYTgrALBDs3AtMAHAMwAzwmgpheAjJ
 * Keyboard shortcut ```Ctrl + K``` deletes line from position of cursor onwards
 * Can create shortcuts/funcs e.g. ```alias chrome=’open –a “Google Chrome”’``` and ```alias fac=”cd desktop/coding/fac”
 
-## Day Three & Day Four
+## Day Three & Day Four & Day Five
 ### **CSS Gallery challenge**
 _Resources:_ [_Day Three CSS gallery challenge_](https://github.com/foundersandcoders/css-gallery-challenge)
 * Instead of using floats, can use ```display:flex``` and ```flex-grow: 1;``` to complete tasks 1-3
-* Duplicating the photo three times (task 4) - use ```background-image:repeat-y```
+* Duplicating the photo three times (task 4) - use ```background-image:repeat-y``` - look at the full code solution [here](https://github.com/foundersandcoders/css-gallery-challenge/blob/master/solution/style.css)
 
 ### **Projects**
-_Resources:_ [_The project (day three and four)_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md)
-(Practiced coding within a group to make an [accessible responsive one pager](https://fac-13.github.io/plhh/). Also [flew down the git rabbit hole](#practicing-git)). Discovered:
+_Resources:_ [_The project (day three and four)_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/project.md) [_and the day five project presentation_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/general/weekly-projects.md#project-presentation)
+
+
+Practiced coding within a group to make an [accessible responsive one pager](https://fac-13.github.io/plhh/). Also [flew down the git rabbit hole](#practicing-git). Discovered:
+
 #### Forms
 * ```input:valid``` CSS styling
 * If inputs have appropriate attributes (e.g. ```<input type="email">```, browser has inbuilt validation (input requires '@' symbol)
-#### Acessibility
-* For those who have JS disabled, can have a hamburger that is interactive using CSS alone: 
-
-    ```
-    .hamburger input[type="checkbox"]:checked ~ .header__list {
-        display: block;
-    }
-
-    input[type="checkbox"] {
-        display: none;
-    }
-    ```
-
-    Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
-
-    However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
 
 #### Layout
 * CSS grid!
@@ -143,3 +135,54 @@ _Resources:_ [_The project (day three and four)_](https://github.com/foundersand
         grid-row: 3/4;
     }
     ```
+
+#### Code review
+_Resources:_ [_How to review code_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/codereviewintro.md)
+* Look at [this link ^](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/codereviewintro.md) on how to review code.
+    * Use the phrase 'have you considered'. Use images and emojis (use ```:``` or ```Ctrl, Cmd, Space```)
+    * Try and quote the specific lines you're talking about (use URLs like [here](https://stackoverflow.com/questions/23821235/how-to-link-to-specific-line-number-on-github))
+    * Don't close other people's issues! They should be the one to review the changes and close them once happy.
+
+#### Cool Code
+Cool code to deal with stuff!
+* [Script for modal that is accessible too (focus is correct)](https://github.com/fac-13/ab-fac/blob/master/script.js)
+* [Script for smooth scrolling to sections of the page](https://github.com/fac-13/JIKTDEVS/blob/master/script.js)
+*  Code to have a [spinning logo]:(https://fac-13.github.io/JIKTDEVS/)
+    ```
+    .logo{
+        transform-origin: 50% 50%;
+        animation:spin 14s linear infinite;
+    }
+    ```
+* Floating label code:
+    ```
+    .form-container__input-container label{
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #000;
+        pointer-events: none;
+        transition: 0.5s;
+    }
+    .form-container__input-container input:focus ~ label,
+    .form-container__input-container input:valid ~ label{
+        top:-29px;
+        left:0;
+        color: #fff;
+    }
+    ```
+* For those who have JS disabled, can have a hamburger that is interactive using CSS alone: 
+
+    ```
+    .hamburger input[type="checkbox"]:checked ~ .header__list {
+        display: block;
+    }
+
+    input[type="checkbox"] {
+        display: none;
+    }
+    ```
+
+    Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
+
+    However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
