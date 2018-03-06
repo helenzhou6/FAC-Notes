@@ -1,6 +1,6 @@
 
 # Week One
-_Resource:_ [_week one schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-1).
+_Resource:_ [_week one schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-1), _the_ [_learning outcomes_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/learning-outcomes.md) _and have a look at_ [_the resources_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-1/resources.md).
 
 It's Accessibility themed week!
 
@@ -70,6 +70,7 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 * [Cool website](https://flaviocopes.com/git-guide/) introducing git (git setting up a new repo, push and pull and branches)
 * [Article:A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 * [Article: Why use GitHub](https://medium.freecodecamp.org/a-developers-introduction-to-github-1034fa55c0db)
+* [Git comman cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf) and [references to git commands](https://git-scm.com/docs)
 * **AMAZING [website](http://ohshitgit.com/) that tells you what to do when you end up in a pickle (great name too: 'oh shit git')**
 
 #### Other useful stuff
@@ -154,6 +155,12 @@ Cool code to deal with stuff!
         animation:spin 14s linear infinite;
     }
     ```
+    > Resources:
+    > * [A video](https://www.youtube.com/watch?v=IM8eTD01UE8) which suggests drawing on screen and collecting code from svg editor and then cleaning it. 
+    > * [A free svg editor](https://github.com/jakearchibald/svgomg) that would produce svg code from your drawings
+        SCGOMG - another awesome site to draw svg and then turn into code
+    > * There is also a way to view any .svg as code by simply [opening it in a text editor](https://css-tricks.com/using-svg/)
+
 * Floating label code:
     ```
     .form-container__input-container label{
