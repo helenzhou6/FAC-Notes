@@ -65,7 +65,6 @@ _Resource:_ [_DOM Manipulation Challenge_](https://github.com/foundersandcoders/
 
 * **DOM Manipulation** team presentation [Notes](https://hackmd.io/tiUez2TjSrScUSQye8T1hA?both)
   * Create (```createElement()```) and add element to DOM, then create content (```createTextNode()```) inside new element and insert it into the new element (```appendChild()``` / ````replaceChild()``` / ```insertBefore()```)
-  * NB if you have inserted an element into the DOM dynamically (not there originally), you can't use certain methods like ```.querySelector()``` (as it is [not live](https://www.sitepoint.com/dom-manipulation-vanilla-javascript-no-jquery/)/it doesn't update the NodeList.
 
 ### Pure functions for easy testing
 _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersandcoders/ws-pure-functions-easy-testing)
@@ -114,7 +113,52 @@ _Resource:_ [_the topics_](https://github.com/foundersandcoders/master-reference
 
 ### Event loops
 _Resource:_ [_incredible video: What is an event loop anyway_](https://www.youtube.com/watch?v=8aGhZQkoFbQ&t=5s)
+* JS is single thread. But some things seem to run simultaneously: if you set a timeout, then the **web API** deals with the countdown, and once countdown complete puts the task in the **Callback queue**. Once the **call stack** is empty, then the **event loop** puts the task into the **call stack** and it exceutes.
+* Put code in [here](http://latentflip.com/loupe/?code=JC5vbignYnV0dG9uJywgJ2NsaWNrJywgZnVuY3Rpb24gb25DbGljaygpIHsKICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gdGltZXIoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ1lvdSBjbGlja2VkIHRoZSBidXR0b24hJyk7ICAgIAogICAgfSwgMjAwMCk7Cn0pOwoKY29uc29sZS5sb2coIkhpISIpOwoKc2V0VGltZW91dChmdW5jdGlvbiB0aW1lb3V0KCkgewogICAgY29uc29sZS5sb2coIkNsaWNrIHRoZSBidXR0b24hIik7Cn0sIDUwMDApOwoKY29uc29sZS5sb2coIldlbGNvbWUgdG8gbG91cGUuIik7!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D) to visualise it.
+* set ```timeout``` to 0 if want a function to run only when the stack is empty.
+* NB the timeout is not the time until exceution, rather it would be at least that amount of time until exceution since the timer will run, and then it will be put into the **call stack** where there may be other things in the **call stack** delaying the exceution even more before it is run.
+* Things that need to run and can take up the **call stack** includes rendering - so best is to have breaks in the **call stack** to allow for rendering in between.
 
+## Day Three
+### Callback challenge
+_Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/)
+
+> * **Callback** is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time (usually after waiting for the outter function to complete first).
+> * **Callback functions** are derived from a programming paradigm known as **functional programming**. At a fundamental level, functional programming specifies the use of functions as arguments.
+> * Because functions are **first-class objects**, we can pass a function as an argument in another function and later execute that passed-in function or even return it to be executed later. This is the essence of using callback functions in JavaScript. 
+
+```
+function blinkLight(element, colour) {
+  return function(callback) {
+    element.classList.add(colour);
+    setTimeout(function() {
+      element.classList.remove(colour);
+      if (callback) {
+        callback();
+      }
+    }, time);
+  };
+}
+
+var red = blinkLight(get('light-top'), 'red');
+
+function light() {
+  green(function() {
+    yellow(function() {
+      time = 3000;
+      red(function() {
+        time = 1000;
+        red();
+        yellow(light);        
+      });
+    });
+  });
+}
+light();
+
+```
+In [the challenge](https://github.com/foundersandcoders/morning-challenge-traffic-lights), ```red``` becomes a function that takes the argument ```callback```. It executes some code, and then if a function has been passed in (which the if statement checks for), the function is then called. In this case the green light blinks first before the other function is executed (goes from the outter function to the inner function).
+* NB: In order to pass in a function as an argument, it needs to be passed in as an anonymous function, since putting a parentheses after the function name - ```function()``` - means the function would be executed immediately instead of passed in. So then ```red(yellow(green))``` wouldn't work since it would try running ```red()``` and ```yellow()``` simulatenously/or do something weird.
 
 ## Day Three, Four & Five
 _Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-2/project) _and_ [_some slides_](http://slides.com/rachaelcodes/todoproject#/29)

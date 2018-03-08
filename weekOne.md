@@ -51,6 +51,8 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 
 ![The git flow diagram](https://i.imgur.com/UhfHrMT.jpg)
 
+![Another git flow diagram](https://raw.githubusercontent.com/foundersandcoders/git-workflow-workshop-for-two/master/images/git-flow-summary-table.png)
+
 ![The lifecycle of a branch](https://i.imgur.com/dyCSnVN.jpg)
 
 1. Found a problem: create an issue on GitHub. This will give you an issue number.
