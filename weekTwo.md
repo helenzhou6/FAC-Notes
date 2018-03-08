@@ -63,7 +63,8 @@ _Resource:_ [_DOM Manipulation Challenge_](https://github.com/foundersandcoders/
 
   * Whilst ```document.getElementsByClassName("myClass")``` and ```document.querySelectorAll(myCssSelector)``` returns an [array-like object](http://www.nfriedly.com/techblog/2009/06/advanced-javascript-objects-arrays-and-array-like-objects/) of all the matching elements = a **NodeList** (differences listed [here](https://hackmd.io/tiUez2TjSrScUSQye8T1hA?view)).
 
-* **DOM Manipulation** team presentation [Notes](https://hackmd.io/tiUez2TjSrScUSQye8T1hA?both)
+
+* DOM Manipulation team presentation [Notes](https://hackmd.io/tiUez2TjSrScUSQye8T1hA?both)
   * Create (```createElement()```) and add element to DOM, then create content (```createTextNode()```) inside new element and insert it into the new element (```appendChild()``` / ````replaceChild()``` / ```insertBefore()```)
 
 ### Pure functions for easy testing
@@ -99,6 +100,17 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     ```
     Where it creates an array of the object keys. Then for each key, adds to the new empty array the object[key] and the old object value associated.
 
+    OR
+    ```
+    var objectKeysArray = Object.keys(object);
+    var objectCopy = objectKeysArray.reduce    (function(accumulator, key){
+        accumulator[key] = object[key];
+        return accumulator;
+    }, {});
+    ```
+
+    [The solution to the DOM Manipulation challenge](https://github.com/foundersandcoders/DOM-manipulation-Challenge/blob/solutions/exercise/exercise.js) involves using reduce instead.
+
 ### Other snippets learnt
 * Remember the [```for...in```](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in) statement can be used to loop over properties of an object.
 * Every **function** in JS is an object (a collection of ```key:value``` pairs). Within the scope of an object, a function is referred to as a **method** of that object.
@@ -120,7 +132,7 @@ _Resource:_ [_incredible video: What is an event loop anyway_](https://www.youtu
 * Things that need to run and can take up the **call stack** includes rendering - so best is to have breaks in the **call stack** to allow for rendering in between.
 
 ## Day Three
-### Callback challenge
+### Callbacks
 _Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/)
 
 > * **Callback** is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time (usually after waiting for the outter function to complete first).
