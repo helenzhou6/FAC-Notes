@@ -48,7 +48,11 @@ Common things missing are listed in the [_solution_](https://github.com/founders
 _Resource:_ [_Git challenge_](https://github.com/foundersandcoders/git-workflow-workshop-for-two) _and also added in info learnt over Days two to five_
 
 Introduction into the idea of forking a repository. Never work on the master! Always work on a branch, then once accepted by a second programmer it is merged into the master.
+
 ![The git flow diagram](https://i.imgur.com/UhfHrMT.jpg)
+
+![The lifecycle of a branch](https://i.imgur.com/dyCSnVN.jpg)
+
 1. Found a problem: create an issue on GitHub. This will give you an issue number.
 2. ```git pull origin master``` to pull remote master files into your local repo (origin refers to remote)
 3. ```git checkout -b <new-branch-name>.``` to create new local branch and change HEAD to branch. (Shortcut for ```git branch <new-branch-name>.``` then ```git checkout <new-branch-name>.```).
