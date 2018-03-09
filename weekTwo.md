@@ -133,7 +133,7 @@ _Resource:_ [_incredible video: What is an event loop anyway_](https://www.youtu
 
 ## Day Three
 ### Callbacks
-_Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/)
+_Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/) _and_ [_higher order functions video_](https://www.youtube.com/watch?v=BMUiFMZr7vk)
 
 > * **Callback** is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time (usually after waiting for the outter function to complete first).
 > * **Callback functions** are derived from a programming paradigm known as **functional programming**. At a fundamental level, functional programming specifies the use of functions as arguments.
@@ -171,6 +171,21 @@ light();
 ```
 In [the challenge](https://github.com/foundersandcoders/morning-challenge-traffic-lights), ```red``` becomes a function that takes the argument ```callback```. It executes some code, and then if a function has been passed in (which the if statement checks for), the function is then called. In this case the green light blinks first before the other function is executed (goes from the outter function to the inner function).
 * NB: In order to pass in a function as an argument, it needs to be passed in as an anonymous function, since putting a parentheses after the function name - ```function()``` - means the function would be executed immediately instead of passed in. So then ```red(yellow(green))``` wouldn't work since it would try running ```red()``` and ```yellow()``` simulatenously/or do something weird.
+
+#### Higher order functions
+[This video](https://www.youtube.com/watch?v=BMUiFMZr7vk) tells you about **higher order functions** - a function that does at least one of the following: takes one or more functions as arguments, returns a function as its result.
+  ```
+  var animals = [
+    { name: 'Helen', species: 'human'},
+    { name: 'Doggy', species: 'dog'}
+  ]
+  var isDog = function(animal) {
+    return animal.species === 'dog';
+  }
+  var dogs = animals.filter(isDog);
+  ```
+  * e.g. the `filter` function takes an anonymous function (called a **callback function**). It loops through each item, and each item is passed into the callback function. The callback function returns true or false (to see if should go into new array or not) & then after the filter function would return a new array. Since functions are variables (that can be passed in etc) - this means you can make smaller functions (in this case `isDog()` that can be reused and tested easily.
+
 
 ## Day Three, Four & Five
 _Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-2/project) _and_ [_some slides_](http://slides.com/rachaelcodes/todoproject#/29)
