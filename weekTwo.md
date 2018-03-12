@@ -29,6 +29,7 @@ _Resources:_ [_introduction to testing and TDD methodology_](https://github.com/
 * **Unit testing** - one unit/function is being tested.
 * **TDD methodology**: Write a failing test (to specify what you want the outcome of your function to do), then a passing test (write the function to make the test pass, usually in the simpliest way to make it pass) and then refactor (you should be able to see a pattern in your code)
 * **deepequals** testing checking inside an object (as stated [here](https://api.qunitjs.com/assert/deepEqual))
+* Can use `t.pass()` and `t.fail()` within your tests, that can test for other things other than whether actual equals expected.
 
 
 #### Code coverage
@@ -50,7 +51,8 @@ _Resource:_ [_The istanbul NPM_](https://github.com/dwyl/learn-tape#bonus-level)
   > Use ```"test": "nyc tape <test.js filename> | tap-spec "``` - to make it look pretty on terminal
 
 ### Other snippets learnt
-* In ```./index.js```: write ```module.exports = {fizzbuzz, display};``` to export the ```fizzbuzz``` and ```display``` functions to other files. In the other files put ```var {fizzbuzz, display} = require('./index.js’);``` to import both functions
+* In ```./index.js```: write ```module.exports = {fizzbuzz, display};``` to export the ```fizzbuzz``` and ```display``` functions to other files. In the other files put ```var {fizzbuzz, display} = require('./index.js’);``` to import both functions. NB: the code needs to be wrapped into a closure - see [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node)
+  * Wrapping in a closure makes it an Immediatly invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead. More [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/)
 * ```switch``` statement: to evaluate expressions need to put ```swithc(true)```. Not need to break if you want to continue with function.
 
 ## Day Two
@@ -108,6 +110,11 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
         return accumulator;
     }, {});
     ```
+    OR
+    ```
+    var objectCopy = JSON.parse(JSON.stringify((object)));
+    ```
+    -> That makes a **deep copy** rather than a **shallow copy** of the object (refer to [here](https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c))
 
     [The solution to the DOM Manipulation challenge](https://github.com/foundersandcoders/DOM-manipulation-Challenge/blob/solutions/exercise/exercise.js) involves using reduce instead.
 
@@ -189,3 +196,9 @@ In [the challenge](https://github.com/foundersandcoders/morning-challenge-traffi
 
 ## Day Three, Four & Five
 _Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-2/project) _and_ [_some slides_](http://slides.com/rachaelcodes/todoproject#/29)
+
+### Snippets learnt
+* `li.childNodes.item(0)` == `li.childNodes[0]`
+* Display flex: to have one item in a row on the left and the rest on the right, can `display: flex` and then on the left item put `margin-right: auto`
+* [Event bubbling](https://www.sitepoint.com/event-bubbling-javascript/)
+* [Local storage video](https://www.youtube.com/watch?v=YL1F4dCUlLc&t=0s&list=PLu8EoSxDXHP6CGK4YVJhL_VWetA865GOH&index=15). E.g. in the to do app project to get the item: `var state = JSON.parse(localStorage.getItem('state')) || [];` and to add the item into local storage: `localStorage.setItem('state', JSON.stringify(state));`
