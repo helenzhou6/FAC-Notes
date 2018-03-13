@@ -28,8 +28,10 @@ _Resources:_ [_introduction to testing and TDD methodology_](https://github.com/
 
 * **Unit testing** - one unit/function is being tested.
 * **TDD methodology**: Write a failing test (to specify what you want the outcome of your function to do), then a passing test (write the function to make the test pass, usually in the simpliest way to make it pass) and then refactor (you should be able to see a pattern in your code)
-* **deepequals** testing checking inside an object (as stated [here](https://api.qunitjs.com/assert/deepEqual))
-* Can use `t.pass()` and `t.fail()` within your tests, that can test for other things other than whether actual equals expected.
+* Code used in testing:
+  * **deepequals** testing checking inside an object (as stated [here](https://api.qunitjs.com/assert/deepEqual))
+  * Can use `t.pass()` and `t.fail()` within your tests, that can test for other things other than whether actual equals expected.
+* Fantastic talk on testing (including testing doubles) by Rabea. Slides [here](http://rabea.co.uk/spies-fakes-and-friends/) and [rock/paper/scissors repo](https://github.com/RabeaGleissner/rock-paper-scissors-js). Also [a blog post on test doubles](http://rabea.co.uk/blog/apprenticeship/post-101) by her
 
 
 #### Code coverage
@@ -52,7 +54,8 @@ _Resource:_ [_The istanbul NPM_](https://github.com/dwyl/learn-tape#bonus-level)
 
 ### Other snippets learnt
 * In ```./index.js```: write ```module.exports = {fizzbuzz, display};``` to export the ```fizzbuzz``` and ```display``` functions to other files. In the other files put ```var {fizzbuzz, display} = require('./index.js’);``` to import both functions. NB: the code needs to be wrapped into a closure - see [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node)
-  * Wrapping in a closure makes it an Immediatly invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead. More [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/)
+  * Wrapping in a closure makes it an Immediatly invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead.
+  * More IIFEs [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/). IIFEs are immediately called at runtime and only run once, so good for privacy.
 * ```switch``` statement: to evaluate expressions need to put ```swithc(true)```. Not need to break if you want to continue with function.
 
 ## Day Two
@@ -200,5 +203,11 @@ _Resource:_ [_the project_](https://github.com/foundersandcoders/master-referenc
 ### Snippets learnt
 * `li.childNodes.item(0)` == `li.childNodes[0]`
 * Display flex: to have one item in a row on the left and the rest on the right, can `display: flex` and then on the left item put `margin-right: auto`
-* [Event bubbling](https://www.sitepoint.com/event-bubbling-javascript/)
+* > **Function declarations** are hoisted to the top of other code. **Function expressions** aren’t hoisted, which allows them to retain a copy of the local variables from the scope where they were defined. See [here](https://www.sitepoint.com/function-expressions-vs-declarations/)
+* [Event bubbling](https://www.sitepoint.com/event-bubbling-javascript/).
+  > * During propagation, it is possible for a listener to know if an event bubbles by reading the `.bubbles ` Boolean property of the event object. `e.target` = event target, `e.currentTarget` = node references by `this`, and can do `e.eventPhase`.
+  * Threephases - **The event capture phase** (only capturer listeners are called) -> **the event target phase** (all listeners on the event target are invoked) -> **the event bubbling phase** (non-capturers)
+  > * The event propagation can be stopped in any listener by invoking the `e.stopPropagation()` method of the event object. This means that all the listeners registered on the nodes on the propagation path that follow the current target will not be called. Instead, all the other remaining listeners attached on the current target will still receive the event.
+  > * `e.stopImmediatePropagation()` throws the brakes on straight away, preventing even the siblings of the current listener from receiving the event.
+  > * Some events are associated with a default action that the browser executes at the end of the propagation. To avoid, use event cancellation: `e.preventDefault`
 * [Local storage video](https://www.youtube.com/watch?v=YL1F4dCUlLc&t=0s&list=PLu8EoSxDXHP6CGK4YVJhL_VWetA865GOH&index=15). E.g. in the to do app project to get the item: `var state = JSON.parse(localStorage.getItem('state')) || [];` and to add the item into local storage: `localStorage.setItem('state', JSON.stringify(state));`
