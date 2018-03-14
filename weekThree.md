@@ -64,6 +64,14 @@ function fetch (url, callback) {
     ```
 
 ## Day Two
+### Flexbox
+_Resources:_ [_Flexbox dice workshop_](https://github.com/smarthutza/flexbox-workshop) _-- NB look at the references inside workshop link and_ [_froggy game_](http://flexboxfroggy.com/)
+* `align-content` determines the spacing between lines, while `align-items` determines how the items as a whole are aligned within the container. (`align-content` adjusts the space between the row/columns too VS `align-items` is each item or whole group of items). `align-item` is aligning the specific item within a group that has `align-items` applied (note it still takes up the original space - to reshuffle items can then use `order`).
+* Adding `reverse` flips/mirrors what you expect: reverses the start and end points,
+* To mirror diagonally/flip across x and y axis, since can't have `column-reverse` and `row-reverse` together, do `flex-wrap: wrap-reverse` and `flex-direction: column-reverse`.
+
+![flexbox notes](https://i.imgur.com/wlz2RRc.jpg)
+
 
 ### Software Architecture
 _Resource_: [_workshop: software architecture design_](https://github.com/foundersandcoders/Workshop-Software-Architecture-Design) 
