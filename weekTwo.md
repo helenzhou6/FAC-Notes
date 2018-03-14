@@ -108,7 +108,7 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     OR
     ```
     var objectKeysArray = Object.keys(object);
-    var objectCopy = objectKeysArray.reduce    (function(accumulator, key){
+    var objectCopy = objectKeysArray.reduce(function(accumulator, key){
         accumulator[key] = object[key];
         return accumulator;
     }, {});
@@ -143,11 +143,15 @@ _Resource:_ [_incredible video: What is an event loop anyway_](https://www.youtu
 
 ## Day Three
 ### Callbacks
-_Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/) _and_ [_higher order functions video_](https://www.youtube.com/watch?v=BMUiFMZr7vk)
+_Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders/morning-challenge-traffic-lights) _and_ [_JS callback article_](http://javascriptissexy.com/understand-javascript-callback-functions-and-use-them/) _and_ [_higher order functions video_](https://www.youtube.com/watch?v=BMUiFMZr7vk) _and_ [_Functions as First Class Objects_](https://github.com/foundersandcoders/ws-software-design-js/tree/master/stage-1/first-class-functions)
 
 > * **Callback** is any executable code that is passed as an argument to other code, which is expected to call back (execute) the argument at a given time (usually after waiting for the outter function to complete first).
 > * **Callback functions** are derived from a programming paradigm known as **functional programming**. At a fundamental level, functional programming specifies the use of functions as arguments.
-> * Because functions are **first-class objects**, we can pass a function as an argument in another function and later execute that passed-in function or even return it to be executed later. This is the essence of using callback functions in JavaScript. 
+* Functions are **first-class objects** - an object that behaves as though it has a value, so can treat it like a variable. I.e. can:
+  * Store references to functions in variables and in other data structures
+  * Return a function from a function
+  * The `Function` data-type is an instance of the `Object` data-type - using `instanceof Function;` and `instanceof Object;` gives true. So you can attach arbitrary attributes to functions (e.g. `foo.bar = 2`) & the identity of functions works the same way as identity of objects
+  > * And can pass a function as an argument in another function and later execute that passed-in function or even return it to be executed later (a **higher order function**). This is the essence of using callback functions in JavaScript. 
 
 ```
 function blinkLight(element, colour) {
