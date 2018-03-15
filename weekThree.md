@@ -288,7 +288,6 @@ SO in this mass of confusing code:
             if (err != null){
             return cb(er)
             }
-        debugger;
             return waterfall(arg, tasks.slice(1), cb);
         }
     ```
