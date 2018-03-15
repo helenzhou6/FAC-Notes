@@ -159,3 +159,137 @@ _Resource_: [_FAC article_](https://github.com/foundersandcoders/ws-software-des
     * maintain an internal private state
     * keep variables which are irrelevant to the rest of the code within the private scope of the module
 (VS If the abstraction you wish to create has no internal state)
+
+## Day Three
+_Resource:_ [_solution to the waterfall challenge_](https://github.com/foundersandcoders/mc-waterfall-chaser/tree/master/solution) _and_ [_compose vs pipe_](https://medium.com/@dtipson/creating-an-es6ish-compose-in-javascript-ac580b95104a) _and_ [_composing functions_](http://blakeembrey.com/articles/2014/01/compose-functions-javascript/)
+
+### The pipe and compose functions
+* These functions allows you to take some functions and compose them into a single function. (Useful if you have a pattern of modular functions).
+* For example a **pipe function**:
+```
+function addOne(val) {
+  return val + 1;
+}
+
+function timesTwo(val) {
+  return val * 2;
+}
+
+function addThree(val) {
+  return val + 3;
+}
+
+var pipe = function() {
+  var fns = Array.from(arguments);
+  return function(val) {
+    return fns.reduce(function(current, fn){
+      return fn(current);
+    }, val);
+  };
+};
+
+console.log(
+  pipe(addOne, timesTwo, addThree)(4)
+);
+```
+* (NB: arguments of a function can be accessed using `arguments` and it is array-like (so you can use `Array.from`)
+* In this example, `func` returns a function that effectively is: `addThree(timesTwo(addOne(val)))`. It obtains an array of all the arguments, then reduces it into a nested format of functions.
+* Thus you can do `var flow = pipe(addOne, timesTwo, addThree)` to have a series of functions perform (`flow(4)`)
+
+* **The compose function** is similar to **pipe** but it's run in reverse.
+> You nest functions inside each other so when they are called with a final value, the result explodes outwards through each layer. It works right to left (inner to outer) to create a composition of all those functions (i.e. return a new function).
+* E.g.:
+    ```
+    function compose () {
+        var fns = arguments;
+
+        return function (result) {
+            for (var i = fns.length - 1; i > -1; i--) {
+                result = fns[i].call(this, result);
+            }
+
+            return result;
+        };
+    };
+    var number = compose(Math.round, parseFloat);
+    ```
+    * Where `.call` calls the function with a passed through `this` value (see [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call))
+
+### The Waterfall function
+>  * Like the compose function, **the waterfall function** runs an array of functions in series, each passing their result to the next function in the array (used if the passed in functions are asynchronous). Crucially, the waterfall function will not invoke the next function in the array until the current function being run has been returned.
+> * The waterfall function takes three arguments:
+>    * An initial argument, this is passed into the first async function in the waterfall.
+>    * The second argument is an array of functions, each function takes two arguments. The first argument it uses to find a result and the second is a callback function.
+>    * A final callback is given as the third argument. This is called after the waterfall has invoked all of the functions in the array.
+
+```
+function asyncAddOne(x, callBack) {
+  setTimeout(function() {
+    if (typeof x !== 'number'){ return callBack(new Error('need a number!'), undefined) }
+    else { return callBack(null, x + 1) }
+  }, 200)
+}
+
+function asyncDouble(x, callBack) {
+  setTimeout(function() {
+    if (typeof x !== 'number') { return callBack(new Error('need a number!')) }
+    else { return callBack(null, x * 2) }
+  }, 200)
+}
+
+function asyncTimesTen(x, callBack) {
+  setTimeout(function() {
+    if (typeof x !== 'number') { return callBack(new Error('need a number!')) }
+    else { return callBack(null, x * 10) }
+  }, 200)
+}
+
+function waterfall(args, tasks, cb) {
+    if(tasks.length === 0){
+      return cb(null, args)
+    }
+    tasks[0](args, function(err, arg){
+        if (err){
+          return cb(err)
+        }
+        return waterfall(arg, tasks.slice(1), cb);
+    });
+}
+
+waterfall(3, [
+  asyncAddOne,
+  asyncDouble,
+  asyncTimesTen
+], function(error, result) {
+  console.log('Test 1');
+  if (error) {
+    console.log('test failed, ' + error)
+  }
+  else if (result !== 80) {
+    console.log('test failed, expected 80 but got', result)
+  }
+  else {
+    console.log('Test 1 passed!')
+  }
+})
+
+```
+SO in this mass of confusing code:
+* `task[0](args...)` - runs the first task in the array, and then the `tasks.slice(1)` removes the first function in the argument array (so that the next time it runs `task[0]` is the next function and there is one less function in the array)
+* Each time `waterfall()` is being called again (so it loops until there are no more tasks) but with the new list of tasks (with one less function in it)
+* Nothing is being returned here, only the `cb` section will be run at the very end (when there are no more tasks in the array. `cb` is a test to see if result is 80.
+* Math is calculated immediately! So when `3` is passed in as `args` (i.e. it becomes the second argument `x = 3`), `x + 1` is run immediately - now making `args = 4` essentially.
+* `cb` - the final call back is simply being passed through each time, and it is only envoked at the end - `cb(null, args)` - where null refers to no errors and `args` is the final number `80`.
+* The `null` needs to be passed in as a first argument (e.g. `callBack(null, x * 2)` and `cb(null, args)`) because it refers to there not being an error. At the running of each task, if `x` is not a number being passed in, instead it returns `callBack(new Error('need a number!'), undefined)` (the second argument would be undefined by default), so that when `if (err) {return cb(err)}` runs - it would stop the waterfall, run the `cb` test instead that would return an error message using the first argument (`'need a number!'`) passed in. But if `x` is always a number, and so `err = null` (since `null` is being passed in when `x` is a number), the `if(err)` doesn't run in this example.
+* `new Error()` means the error has some other features, but it could've just been the string `'need a number!'`.
+* With `callBack(null, x * 10)` essentially the relevant code becomes: 
+    ```
+    function(null, x * 10){
+            if (err != null){
+            return cb(er)
+            }
+        debugger;
+            return waterfall(arg, tasks.slice(1), cb);
+        }
+    ```
+* Essentially it performs `asyncAddOne` -> `asyncDouble` -> `asyncTimesTen` (the maths is done in the argument section)/ `(((3 + 1) * 2) * 10 = 80` where at the very end (when `tasks.length===0`), `cb(null, args)` runs -- meaning `function(null, arg) {console.log('Test 1')...}`, where by this point `arg` is `80` (due to immediate maths as mentioned before), and there are no errors (`null` passed in as the first argument).
