@@ -34,12 +34,16 @@ _Resources:_
 * Finally, use `xhr.send()` to then send the HTTP request.
 * For example: 
 ```
-function fetch (url, callback) {
+// In Logic.js file
+function fetch (url, processResult, displayResponse) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             var response = JSON.parse(xhr.responseText);
-            return callback(response);
+            var result = processResult(response);
+            displayResponse(result);
+        } else {
+            console.log('XHR error', xhr.readyState);
         }
     };
     xhr.open("GET", url, true);
@@ -50,17 +54,36 @@ function fetch (url, callback) {
 
     * Then to have an event listener function:
     ```
+    // In DOM.js file:
     function addListener (selector, eventName, callback) {
         document.querySelector(selector).addEventListener(eventName, callback);
     }
-    addListener('#bar', 'click', function (event) {
-        var element = document.querySelector('#pam');
-        var url = 'https://lulz.org/search?query=' + element.value;
-
-        fetch(url, function (response) {
-            // ... do something with the response
-        });
-    });
+    ```
+    * Callbacks for manipulating the DOM (the function `displayResponse` is passed into `fetch` and runs within `fetch` after the repsonse from the API has been received:
+    ```
+    // In DOM.js file:
+    function displayResponse(APIresponse) {
+        // Code that manipulates the DOM after response from API received
+    }
+    // In DOM.js file:
+    addListener(DOMSubmitButton, 'submit', function(event){
+        event.preventDefault();
+        var input = event.target[0].value;
+        var url = URL + input + API Key
+        fetch(url, processResult, displayResponse); // see above code ^
+    }
+    // In logic.js file:
+    // Where this loops through and returns an array of objects
+    processResult function(response) {
+        var result = [];
+        response.forEach(function(item)){
+            var object = {
+                keyOne: item.anAttribute,
+                keyTwo: item.anotherAttribute
+            }
+            return result.push(object);
+        }
+    }
     ```
 
 ## Day Two
@@ -292,3 +315,39 @@ SO in this mass of confusing code:
         }
     ```
 * Essentially it performs `asyncAddOne` -> `asyncDouble` -> `asyncTimesTen` (the maths is done in the argument section)/ `(((3 + 1) * 2) * 10 = 80` where at the very end (when `tasks.length===0`), `cb(null, args)` runs -- meaning `function(null, arg) {console.log('Test 1')...}`, where by this point `arg` is `80` (due to immediate maths as mentioned before), and there are no errors (`null` passed in as the first argument).
+
+## Day Three, Four and Five
+_Resources:_ [_The project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-3/project.md)
+
+### Snippets of code
+* We found it difficult trying to filter duplicate results, but it turned out to be a simple solution: Essentially you push the value of what you don't want duplicates of into a `seen` array. You loop over each item and (using `filter`) if the current value is already within the `seen` array, ignore it otherwise add it to the result and the `seen` array:
+```
+var songs = [
+    {'a':"hello", 'b': "1"},
+    {'a':"goodbye", 'b': "2"},
+    {'a':"hello", 'b': "3"},
+    {'a':"goodbye", 'b': "4"},
+    {'a':"hello", 'b': "5"},
+    {'a':"goodbye", 'b': "6"}]; 
+
+function unique(array, key) {
+  var seen = [];
+
+  var result =  array.filter(function (obj) {
+
+    var val = obj[key];
+
+    if (seen.indexOf(val) == -1) { 
+        seen.push(val);
+        return true;
+      } else {
+        return false;
+      }
+
+  });
+  return result;
+}
+
+console.log(unique(songs, 'a'));
+
+```
