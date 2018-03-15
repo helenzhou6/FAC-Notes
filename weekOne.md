@@ -199,3 +199,59 @@ Cool code to deal with stuff!
     Where essentially the hamburger is a checkbox and once is checked a child element becomes ```display: block```.
 
     However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
+
+### CSS Styling
+_Resource:_ a talk by @oliverjam during Week Three (but I thought the content was more appropriate for week 1 so putting it in here 😬). [_The slides_](https://utilitarian-ui.netlify.com/#/) and [_the code along_](https://github.com/oliverjam/react-todo/blob/master/src/doin-it-live.css)
+
+#### Colours!
+* Who knew you could search Dribbble using [colors!](https://github.com/oliverjam/react-todo/blob/master/src/doin-it-live.css) (and each post has a colour palette associated)
+* `HSL` is an intuitive way to manage colours. Use the same Hue (the first parameter), and adjust the last % for different shades. `hsla()` for transparency too.
+* Saturate your greys:
+    > * Some `hsl(150, 0%, 85%)` text (5.4 contrast ratio)
+    > * Some `hsl(150, 40%, 85%)` text (6.2 contrast ratio)
+* Avoid pure black (use `hsl(200, 10%, 25%)`) and pure white background (use `hsl(200, 10%, 98%)`)
+
+### Typography
+* `line-height` should decrease with `font-size` (title: use `line-height: 1.1`, intro paragraph: `line-height: 1.25` and `p` text: `line-height: 1.5`
+* `line-length` should be between 60 to 80 characters (use the `ch` unit (the width of a '0'!)
+* Use weight and colour to get contrast rather than just font sizes.
+* System fonts are nice:
+```
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+```
+
+### Layout
+* Use `background-color` rather than internal border
+* Have an inner wrapper with:
+    ```
+    .main {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: 1rem;
+    }
+    ```
+    (it's like automatic responsiveness)
+* Use Vertically offset box shadows
+    ```
+    .form__btn {
+        padding: 0.5rem 1rem;
+        box-shadow: 0 1px 4px hsla(200, 10%, 20%, 0.25);
+        background-color: hsl(10, 100%, 60%);
+        color: #fff;
+        border-radius: 6px;
+    }
+
+    .form__btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px hsl(10, 100%, 85%);
+    }
+    ```
+> * The basic difference between **CSS Grid Layout** and **CSS Flexbox Layout** is that flexbox was designed for layout in one dimension, layout in a row or a column. Grid was designed for two-dimensional layout, layout in rows and columns at the same time. Info [here](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Relationship_of_Grid_Layout)
+* CSS Grid can sometimes be easier (for IE can use `@supports`)
+    > *  [Jen Simmon's YouTube channel](https://www.youtube.com/channel/UC7TizprGknbDalbHplROtag). She wrote a lot of the grid spec and does a good job of showing off some of the cool stuff you can do with it
+    > * [Wes Bos' CSS Grid course](https://cssgrid.io/): This free video course covers pretty much everything to do with grid and is really fun.
+    * Difference between `autofit` and `autofill` is the latter fills the remaining space with empty columns
+
+### Other stuff
+* You can use `:not(X)` (e.g. `:not(:nth-child(2n+1)) `)
+* `outline-offset` for outlines are cool!
