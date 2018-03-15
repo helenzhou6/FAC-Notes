@@ -115,13 +115,39 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     ```
     OR
     ```
+    var copy = Object.assign({}, original);
+    ```
+    OR
+    ```
     var objectCopy = JSON.parse(JSON.stringify((object)));
     ```
-    -> That makes a **deep copy** rather than a **shallow copy** of the object (refer to [here](https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c))
+    -> The `JSON.parse` method makes a **deep copy**/**deep clone** rather than a **shallow copy** of the object (refer to [here](https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c)) and below.
+
 
     [The solution to the DOM Manipulation challenge](https://github.com/foundersandcoders/DOM-manipulation-Challenge/blob/solutions/exercise/exercise.js) involves using reduce instead.
 
 ### Other snippets learnt
+* Objects are passed by reference (held in memory) rather than a copy. A copy could have been made of the object (thus `original === copy` evaluates to `false`). But an item within a **shallow copy** of an object is still a reference to the original object (as opposed to **deep copies**) - where `original.key === copy.key` evaluates to `true`. See below for an example:
+```
+var original = {
+  name: 'Helen',
+  family: {
+    dad: 'Dad',
+    mum: 'Mum',
+  },
+};
+
+var copy = Object.assign({}, original);
+
+console.log('is exactly the same thing', original === copy); // evaluates to false
+console.log('family is exactly the same thing', original.family === copy.family); // evaluates to true
+
+copy.family.sister = 'Sister';
+// both would have sister added to the object
+console.log('copy', copy);
+console.log('original', original);
+
+```
 * Remember the [```for...in```](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in) statement can be used to loop over properties of an object.
 * Every **function** in JS is an object (a collection of ```key:value``` pairs). Within the scope of an object, a function is referred to as a **method** of that object.
 * NB: be wary of using **mutating methods** like ```Array.prototype.push```, ```Array.prototye.pop```, or ```Array.prototype.sort``` that alter the array VS methods that generate new arrays like ```Array.prototype.map```, ```Array.prototype.filter```, or ```Array.prototype.concat```
