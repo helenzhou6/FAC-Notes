@@ -4,3 +4,4 @@ I (somehow) made it to FAC13 😊🎉, and these are just notes based on the mat
 - [Week One](https://github.com/helenzhou6/FAC-Notes/blob/master/weekOne.md) - Accessibility week. Project: making [a simple Portfolio One Pager](https://github.com/fac-13/plhh)
 - [Week Two](https://github.com/helenzhou6/FAC-Notes/blob/master/weekTwo.md) - Testing using [NPM Tape](https://www.npmjs.com/package/tape). Project: [To do app](https://github.com/fac-13/PLHH-ToDo) using TDD.
 - [Week Three](https://github.com/helenzhou6/FAC-Notes/blob/master/weekThree.md) - API requests. Project: website using 2 APIs ([mixtape generator](https://github.com/fac-13/vith-Mixtape)) 
+- [Week Four](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFour.md) - Node week

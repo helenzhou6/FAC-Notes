@@ -211,7 +211,7 @@ _Resource:_ a talk by @oliverjam during Week Three (but I thought the content wa
     > * Some `hsl(150, 40%, 85%)` text (6.2 contrast ratio)
 * Avoid pure black (use `hsl(200, 10%, 25%)`) and pure white background (use `hsl(200, 10%, 98%)`)
 
-### Typography
+#### Typography
 * `line-height` should decrease with `font-size` (title: use `line-height: 1.1`, intro paragraph: `line-height: 1.25` and `p` text: `line-height: 1.5`
 * `line-length` should be between 60 to 80 characters (use the `ch` unit (the width of a '0'!)
 * Use weight and colour to get contrast rather than just font sizes.
@@ -220,7 +220,7 @@ _Resource:_ a talk by @oliverjam during Week Three (but I thought the content wa
 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 ```
 
-### Layout
+#### Layout
 * Use `background-color` rather than internal border
 * Have an inner wrapper with:
     ```
@@ -252,6 +252,6 @@ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubun
     > * [Wes Bos' CSS Grid course](https://cssgrid.io/): This free video course covers pretty much everything to do with grid and is really fun.
     * Difference between `autofit` and `autofill` is the latter fills the remaining space with empty columns
 
-### Other stuff
+#### Other stuff
 * You can use `:not(X)` (e.g. `:not(:nth-child(2n+1)) `)
 * `outline-offset` for outlines are cool!
