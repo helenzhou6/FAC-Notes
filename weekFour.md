@@ -33,14 +33,36 @@ _Resource:_ [_Node Intro workshop_](https://github.com/foundersandcoders/Node-In
     * npm comes with its own command-line interface you can use in your terminal while within your relevant project folder (e.g. `npm search`, `npm install x --save-dev` and `npm init`)
     * Steps after running `npm init` -  that installs a Node virtual environment - [here](https://github.com/shannonjensen/node-workshop/blob/master/step01.md) (i.e. dealing with the `package.json` file - that contains meta-information about your project).
 
+## Day One & Two
 ### Building a Content Management System (CMS)
 _Resource:_ [_Node Girls/Shannon edition workshop_](https://github.com/shannonjensen/node-workshop)
+
+Some general points:
+* Can think of **endpoints** in the backend as creating a mail slot for directing incoming mail requests from the front end (from URL requests or others like form actions). Some endpoints never appear in the URL (depending on the type of `HTTP` method) and do not redirect (such as the `href` to assets and AJAX/XHR requests).
+    * Here the HTML for the form is:
+    ```
+    <form class="" action="/create/post" method="post" id="the-form">
+        <h2>Write a Blog Post</h2>
+        <textarea name="post" rows="8" cols="40"></textarea>
+        <button type="submit">Send</button>
+    </form>
+    ```
+    Where it uses the endpoint `/create/post` to post the data. But even if there is redirection back to `/` written in the backend (since default for `type="submit"` is to redirect to the `/create/post` URL), it still jumps the page to the top. To prevent this, it can be better to write a custom XHR request in the frontend (that sends after pressing the submit button and using `event.preventDefault()`), then leave off the `action` and `method` parts in the HTML and change it to `button type=“button”`
+    * API requests using a specific URL is their API server side posting information to that specific endpoint location.
+* When linking your backend with your frontend:
+    * The latter part of the url is like asking for a specific employee working in the back end. So this part of the URL in the frontend (or `action=/x` with forms in the HTML) must match the backend endpoint.
+    * Also best practice to put frontend code in a `public` folder, and then the frontend HTML requests need to include it (e.g. `href=“public/main.css”`) - so that in the backend, if there is 'public' included in the URL (using `indexOf`, it will know an asset is being requested, and it will match the file path (`/public/[assetname]`)
 
 #### Setting up the server
 * In file `src/server.js`
 * Use `http.createServer()` to build the server
-* `server.listen(3000, function(){}` - taking **port** number 3000 and the callback function. A **port** is needed for the server to listen to. Can think of it as creating a mail slot for direct incoming requests (from URL requests).
+* `server.listen(3000, function(){}` - taking **port** number 3000 and the callback function. A **port** is needed for the server to listen to. 
 * `node server.js` on command line to turn on server (can use `nodemon` to refresh server)
+    * For 'shortcuts', can write mini scripts in the `package.json` file (convention to do the following, NB `start` is needed for [heroku](https://www.heroku.com/):
+    ```
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+    ```
 
 #### Handling GET requests
 * When a request reaches the server, we need a way of responding to it. The `router` function receives requests and routes them to any appropriate handler functions (which handle the requests) or handles the requests directly (like giving the server a pre-paid addressed envelope)
@@ -76,44 +98,53 @@ function router (request, response) {
     * `.` is look in current folder
     * Can do `__dirname + '/../public/index.html'` or `path.join(__dirname, '..', 'public', 'index.html')`
 * A webpage can have several different requests to the server: E.g. One is the original browser request, another is a request sent by `<link>`, and the last one is a request sent by `<img>`
-    * Can write a generic route that is able to deal with lots of different assets (in `handler.js` file).
-    ```
-    const handleHomeRoute=(request,response)=>{
-        fs.readFile(filePath, (error,file)=>{
-            if (error) {
-                response.writeHead(500,'Content-Type: text/html')
-                response.end("<h1> sorry, we've had a problem on our end</h1>");
-            } else {
-                response.writeHead(200,'Content-Type: text/html')
-                response.end(file);
-            }
-        });
-    }
-
-    const handlePublic=(request,response,url)=>{
-        const extension = url.split('.')[1];
-        console.log('split 0:', url.split('.')[0], 'extension:', extension);
-        const extensionType = {
-            html: 'text/html',
-            css: 'text/css',
-            js: 'application/javascript',
-            ico: 'image/x-icon'
+    * Can write a generic route that is able to deal with lots of different assets (in `handler.js` file):
+        * `handleHomeRoute` - when `endpoint === '/'` (gets the `index.html` file)
+        ```
+        function homeHandler(request, response) {
+            response.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            fs.readFile(__dirname+"/../public/index.html", function(error, file) {
+                if (error) {
+                    response.writeHead(500,'Content-Type: text/html')
+                    response.end("<h1> sorry, we've had a problem on our end</h1>");
+                } else {
+                    response.writeHead(200,'Content-Type: text/html')
+                    response.end(file);
+                }
+            });
         };
-        const filePath = path.join(__dirname,'..',url);
-        fs.readFile(filePath,(error,file)=>{
-            if (error) {
-                response.writeHead(404, 'Content-Type: text/html');
-                response.end("<h1>404 file not found</h1>")
-            } else {
-                response.writeHead(200, `Content-Type: ${extensionType[extension]}`);
-                response.end(file);
-            }
-        })
-    }
-    ```
-    * `handleHomeRoute` - when `endpoint === '/'` (gets the `index.html` file) & `handlePublic` - for other assets (uses the file name to find the file within the `public` folder and the file extension to pick the right `Content-Type`)
+        ```
+        *  `handlePublic` - the **static file handler** - for assets (when the URL path literally is the backend path to the specific file wanted - since in other cases the endpoints may not be asking for a specific file).
+            * It uses the file name to find the file within the `public` folder and the file extension to pick the right `Content-Type`
+        ```
+        function staticFileHandler(request, response) {
+            var extensionType = {
+                html: 'text/html',
+                css: 'text/css',
+                js: 'application/javascript',
+                ico: 'image/x-icon',
+                jpg: 'image/jpg',
+                png: 'image/png'
+            };
+            var extension = request.url.split('.')[1];
+            fs.readFile(__dirname+"/../public" + request.url, function(error, file) {
+                if (error) {
+                    response.writeHead(404, 'Content-Type: text/html');
+                    response.end("<h1>404 file not found</h1>")
+                } else {
+                    response.writeHead(200, `Content-Type: ${extensionType[extension]}`);
+                    response.end(file);
+                }
+            });
+        };
+        ```
+
 * It's good practice to separate routes and handlers into their own files. For core module do `const x = require('x');` and for modules in own code write `const x = require('[path e.g. ./x]');` for dependencies, and to export modules do `module.exports = {x, x};`
-    * In `router.js` file
+    * In `router.js` file:
+        * NB It is best practice to put the static file handler in the penultimate position, and the final `else` as a `404` to catch certain errors when the user puts in something stupid in the `URL`. 
+        * In order to have it penultimate, in the front end asset requests should include 'public/[assetname]
     ```
     const router = (request, response) => {
         const url = request.url;
@@ -142,7 +173,7 @@ function router (request, response) {
 * Using the `POST` http request method
 * `<form action="/create-post" method="POST">`
 -  when e.g. submitting a `form`.
-    * The `action` attribute (in the HTML) is where the form data will be sent and the `name` attribute is used later to reference the data.
+    * The `action` attribute (in the HTML) is where the form data will be sent (essentially this is the URL that it will be redirected to) and the `name` attribute is used later to reference the data.
     * When you hit Send, the form will send a `POST` request to the server, using the `/create-post` endpoint.
 ##### Receiving form data on the server
 * Data doesn't come through the server in one go; it flows to the server in a stream. Need to collect a bucket of water in the server
@@ -152,7 +183,7 @@ function router (request, response) {
         allTheData += chunkOfData;
     });
     ```
-* Once all the data has come through, listen to the 'end' event:
+* Once all the data has come through, listen to the 'end' event (so all POST requests need `response.on` and `response.end`:
     ```
     request.on('end', function () {
         var convertedData = querystring.parse(allTheData);
@@ -161,4 +192,157 @@ function router (request, response) {
     });
     ```
     * NB Need `querystring.parse()` to convert the `allTheData` **query strings** (how html forms send data over the internet) to an JS object (to use it)
-    * To prevent going to the page `/create-post` after submitting, can use the `endpoint` if statement to redirect to an endpoint, and use `response.writeHead(200, {"Location": "/"});` and use the redirect [status code](https://httpstatuses.com/)
+
+#### Final solution
+To creating an blog post website. General points:
+* NB `server.js` is in the root for some reason, should really be in the `src` folder (but if you do change it remember `..` to go up a directory when writing file paths)
+* We encountered problems as soon as we added the `script.js` file on the front end [in step 10](https://github.com/shannonjensen/node-workshop/blob/master/step10.md). This is because the purpose of [this front end javascript](https://github.com/shannonjensen/node-workshop/blob/master/public/script.js) is to reload the page (upon the document being ready), and obtain blog post data from the backend using an **XHR/AJAX request** using the URL `/posts`. So the whole thing was crashing since it was trying to find the endpoint `/posts` that had not been written yet.
+    * Using an XHR request this way means the frontend is reaching an endpoint without any page redirection (to the `/posts` URL, hence why there is no need to write a redirection involvind `"Location": "/"`.
+* The blog information is a [`posts.json` file](https://github.com/shannonjensen/node-workshop/blob/solution/src/posts.json) that is JSON (the key is the timestamp and value is the blog post text). 
+
+
+In `router.js` file:
+```
+function router(request, response) {
+    var url = request.url;
+    if (url === "/") {
+        handlers.homeHandler(request, response);
+    } else if (url === "/create/post") {
+        handlers.createPostHandler(request, response);
+    } else if (url === "/posts") {
+        handlers.getPostsHandler(request, response);
+    } else {
+        handlers.staticFileHandler(request, response);
+    }
+}
+```
+And in the `handler.js` file:
+##### Getting posts - receiving data
+So the `script.js` file sends a request for all the blog posts using the `/posts` endpoint. You can either use the `fs.readFile` method, but an easier way (since JSON is a JS file), is to require it at the top and then send over the file
+    * NB by using `require`, it parses the data by default so will need `JSON.stringify` to turn the data back and be able to send it.
+* With `fs.readFile`, it's arguments are `(filePath, (err, data))`, - where the second argument is a callback that takes in two arguments, error and the data (see [here](https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback)).
+```
+var oldPosts = require('./posts.json');
+function getPostsHandler(request, response) {
+    response.writeHead(200, {'Content-Type': 'application/json'});
+    response.end(JSON.stringify(oldPosts));
+};
+```
+
+##### Creating posts - sending data
+* To prevent the whole page redirecting to the page `/create-post` after submitting, can use the `endpoint` if statement to redirect to an endpoint, and use `response.writeHead(200, {"Location": "/"});` and use the redirect [status code](https://httpstatuses.com/). -- which is what is happening in this case, but for form submission you could do the method described in the General Points section above.
+* With `fs.writeFile`, it's arguments are `(filePath, data, err callback)`, and the third argument is the error callback function.
+* N.B. where the data must be parsed or stringified.
+* There needs to be a redirection to `/` since even if there is an error, the response needs to be ended in order for the page to move on (and not just be a loading bar that keeps waiting for data to come back)
+```
+function createPostHandler(request, response) {
+    var blogPost = '';
+    request.on('data', function(dataChunk) {
+        blogPost += dataChunk;
+    });
+    request.on('end', function() {
+        var parsedPost = queryString.parse(blogPost);
+        var timePosted = Date.now();
+        var blogEntries = oldPosts;
+        blogEntries[timePosted] = parsedPost.post;
+        fs.writeFile('./src/posts.json', JSON.stringify(blogEntries), function (error) {
+            if (error) {
+                // Eventually some sort of error handling to catch this
+                return console.log(error);
+            }
+        });
+        response.writeHead(307, {
+            'Location': '/'
+        });
+        response.end();
+    });
+};
+```
+## Day Two
+### ES6
+_Resource:_ [_the ES6 morning challenge_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/morning-challenge-day-2.md)
+* You can use ES6 on the back end, since you determine what your server does, whilst ES5 on the front end since the client may not support ES6 yet.
+* ES6 features (some listed [here](https://github.com/foundersandcoders/mc-es6-challenge))
+
+
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+```
+// SPREAD - used to combine
+
+  var arrOne = [0];
+  var arrTwo = [1, 2, 3, 4];
+
+  // ES5
+  var newArr = arrOne.concat(arrTwo);
+
+  console.log('Spread - ES5 :', newArr);
+
+  // ES6
+  // Incorrect
+  var newArrayTwo = [arrOne, arrTwo];
+
+  console.log('Spread - ES5 incorrect:', newArrayTwo);
+
+  // Correct
+  var newArray = [...arrOne, ...arrTwo];
+
+  console.log('Spread - ES6 correct:', newArray);
+
+// -----------------
+
+// SET - used to remove duplicates
+// A set object takes in iterable values (e.g. array or string)
+// It contains unique values (no duplicates)
+
+  var array = [1, 2, 3, 4, 3];
+
+  // ES5
+  var setTwo = array.filter(function (value, index, self) {
+    return self.indexOf(value) === index;
+  });
+
+  // ES6
+  var set = new Set(array);
+
+  console.log('Set - ES5 :', setTwo);
+  console.log('Set - ES6 :', set);
+
+
+// USING IN COMBINATION
+  var cat = {
+    legs: 4,
+    name: 'Helen'
+  }
+  var bird = {
+    legs: 2,
+    name: 'Phat',
+    color: 'blue'
+  }
+
+  // ES6
+  var result = new Set([...Object.keys(cat), ...Object.keys(bird)])
+  console.log('Combo - ES6 :', result);
+
+  // ES5
+  var arrKeys = Object.keys(cat).concat(Object.keys(bird)).filter(function (value, index, self) { return self.indexOf(value) === index });
+  console.log('Combo - ES5 :', arrKeys);
+  ```
+
+### Research afternoon
+_Resource:_ [_the research afternoon instructions_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/research-afternoon.md)
+#### Architecting
+#### Engineering
+[_hackMD notes_](https://hackmd.io/ysExIh0bSX2hfBiGjp9bbA)
+#### Packaging
+[_hackMD notes_](https://hackmd.io/z_Zq1QcVSwWlBSKBysNcZA)
+#### Deploying
+
+## Day Three, Four and Five
+### Project
+_Resource:_ [_FAC instructions_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/project.md)
+
+* Producing an autocomplete website/widget
+
+### Other snippets of code
+* I love this description of objects: contain properties that are **"key:value" pairs**.

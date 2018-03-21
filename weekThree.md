@@ -351,3 +351,4 @@ function unique(array, key) {
 console.log(unique(songs, 'a'));
 
 ```
+NB: can use the `Object.keys()` method which returns an array of all the keys if it's an object (or an array of the indexes if it's an array).

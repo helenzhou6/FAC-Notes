@@ -53,8 +53,20 @@ _Resource:_ [_The istanbul NPM_](https://github.com/dwyl/learn-tape#bonus-level)
   > Use ```"test": "nyc tape <test.js filename> | tap-spec "``` - to make it look pretty on terminal
 
 ### Other snippets learnt
-* In ```./index.js```: write ```module.exports = {fizzbuzz, display};``` to export the ```fizzbuzz``` and ```display``` functions to other files. In the other files put ```var {fizzbuzz, display} = require('./index.js’);``` to import both functions (called **deconstruction** - by default not need `.js` extension if JS). NB: the code needs to be wrapped into a closure - see [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node) -- more on this in [Week Four](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFour.md)
-  * Wrapping in a closure makes it an Immediatly invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead.
+* In ```./index.js```: write ```module.exports = {fizzbuzz, display};``` to export the ```fizzbuzz``` and ```display``` functions to other files. In the other files put ```var {fizzbuzz, display} = require('./index.js’);``` to import both functions (called **deconstruction** - by default not need `.js` extension if JS). NB: the code needs to be wrapped into a closure - see [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node). Example:
+```
+var module = (function(){
+	var publicMethod = function(){
+    // do stuff
+	}
+  return {
+    publicMethod // which is the same as publicMethod: publicMethod
+  }
+})();
+// then to call on it in another file, module.publicMethod();
+```
+-- more on this in [Week Four](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFour.md).
+  * Wrapping in a closure makes it an Immediately invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead.
   * More IIFEs [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/). IIFEs are immediately called at runtime and only run once, so good for privacy.
 * ```switch``` statement: to evaluate expressions need to put ```swithc(true)```. Not need to break if you want to continue with function.
 
