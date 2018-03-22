@@ -30,14 +30,20 @@ _Resource:_ [_Node Intro workshop_](https://github.com/foundersandcoders/Node-In
 
 * **Node Package Manager (npm)** is a tool, installed with Node, for managing Node's ecosystem of modules in your projects.
     * Used to install tools, packages as dependencies for our projects, and also publish our own packages.
-    * npm comes with its own command-line interface you can use in your terminal while within your relevant project folder (e.g. `npm search`, `npm install x --save-dev` and `npm init`)
+    * npm comes with its own command-line interface you can use in your terminal while within your relevant project folder (e.g. `npm search`, `npm install x --save-dev` and `npm init`). These are built in scripts (such as `npm start` = `node server.js` and `npm test`) that can be accessed by defauly. Otherwise you can add your own 'shortcuts' to the `scripts` section in `package.json`, which can be accessed using `npm run [own script name]`.
+    * Use `npm help [command]` in terminal to get information on the commance.
     * Steps after running `npm init` -  that installs a Node virtual environment - [here](https://github.com/shannonjensen/node-workshop/blob/master/step01.md) (i.e. dealing with the `package.json` file - that contains meta-information about your project).
 
 ## Day One & Two
 ### Building a Content Management System (CMS)
-_Resource:_ [_Node Girls/Shannon edition workshop_](https://github.com/shannonjensen/node-workshop)
+_Resource:_ [_Node Girls/Shannon edition workshop_](https://github.com/shannonjensen/node-workshop), [_another solution by finn_](https://github.com/finnhodgkin/sturdy-giggle/tree/master/src), [_modulisation morning challenge SIMPLE ALT (PROB THE BETTER ONE) solution_](https://github.com/foundersandcoders/modules-challenge/tree/alt-solution) and [_modulisation morning challenge COMPLEX solution_](https://github.com/foundersandcoders/modules-challenge/tree/solutions/src)
 
 Some general points:
+* In the `src` backend folder:
+    * `server.js` is the hub linking things together/restaurant layout - It should include references to only two packages: `http` and your `router` package.
+    * `router.js` is the mail room with mail employees/waiters receiving orders - This is the package that acts as the traffic cop in your application, mapping incoming requests to appropriate application responses. The router should reference only a single package: `handlers.js`.
+    * `handler.js` is the kitchen for orders. The handlers are where the behaviour of your application is defined and where most of the work in your application is likely to be done. In a simple application like this one, all the handlers can go in a single file; in complex applications, the main handler may reference several different files. Unlike the main server file and the router, the handlers are going to need access to your data model.
+    > * `model.js` (not yet covered). The data model is not just the file where you put all your database connexions, but also where you define how you can access that data and what the data should look like. If any assumptions about your database leak into your handlers, something has gone wrong. You should be able to completely change the database you are using and it have no efffect on the rest of your application. Concerns should be kept separate between data and presentation.
 * Can think of **endpoints** in the backend as creating a mail slot for directing incoming mail requests from the front end (from URL requests or others like form actions). Some endpoints never appear in the URL (depending on the type of `HTTP` method) and do not redirect (such as the `href` to assets and AJAX/XHR requests).
     * Here the HTML for the form is:
     ```
@@ -81,15 +87,14 @@ function router (request, response) {
     * In router function:
     ```
       if (endpoint === "/") {
-        response.writeHead(200, {"Content-Type": "text/html"});
-
         fs.readFile(__dirname + '/public/index.html', function(error, file) {
-        if (error) {
-            console.log(error);
-            return;
-        }
-
-        response.end(file);
+            if (error) {
+                res.writeHead(500, {'content-type': 'text/plain'});
+                res.end('server error');
+            } else {
+                response.writeHead(200, {"Content-Type": "text/html"});
+                response.end(file);
+            }
         });
     }
     ```
@@ -140,7 +145,31 @@ function router (request, response) {
             });
         };
         ```
-
+* Can use `respondWith(res, 200, getContentType(endpoint), file);` or `respondWith(res, 404, 'text/plain', 'Error loading content');` instead, where:
+    ```
+    const getContentType = endpoint => {
+    // Get the content type based on the file extension
+    return {
+        css: 'text/css',
+        html: 'text/html',
+        js: 'application/javascript',
+        png: 'image/png',
+        ico: 'image/x-icon',
+    }[endpoint.split('.')[1]];
+    };
+    const respondWith = (res, statusCode, contentType, content, headers) => {
+        res.writeHead(statusCode, headers || { 'Content-Type': contentType });
+        res.end(content);
+    };
+    ```
+* Can also do:
+    ```
+    const url = /;
+    const staticRoute = {
+        ‘/‘: ‘fac.html’
+    }[url]
+    ```
+    So `staticRoute = fac.html` Which is the same as having the object in `const staticRoutes` and then doing `const staticRoute= staticRoutes[url]`
 * It's good practice to separate routes and handlers into their own files. For core module do `const x = require('x');` and for modules in own code write `const x = require('[path e.g. ./x]');` for dependencies, and to export modules do `module.exports = {x, x};`
     * In `router.js` file:
         * NB It is best practice to put the static file handler in the penultimate position, and the final `else` as a `404` to catch certain errors when the user puts in something stupid in the `URL`. 
@@ -162,11 +191,13 @@ function router (request, response) {
     * In `server.js` file:
     ```
     const http = require('http');
-    const router = require('./router');
-    const port = 4000;
+    const port = process.env.PORT || '5000';
+    const router = require('./router.js');
     const server = http.createServer(router);
-    server.listen(port);
-    console.log(`server up and running on localhost: ${port}`);
+    server.listen(port, (err) => {
+        if (err) throw err
+    console.log('server running on: http://localhost:' + port);
+    });
     ```
 
 #### Handling POST requests
@@ -197,9 +228,9 @@ function router (request, response) {
 To creating an blog post website. General points:
 * NB `server.js` is in the root for some reason, should really be in the `src` folder (but if you do change it remember `..` to go up a directory when writing file paths)
 * We encountered problems as soon as we added the `script.js` file on the front end [in step 10](https://github.com/shannonjensen/node-workshop/blob/master/step10.md). This is because the purpose of [this front end javascript](https://github.com/shannonjensen/node-workshop/blob/master/public/script.js) is to reload the page (upon the document being ready), and obtain blog post data from the backend using an **XHR/AJAX request** using the URL `/posts`. So the whole thing was crashing since it was trying to find the endpoint `/posts` that had not been written yet.
-    * Using an XHR request this way means the frontend is reaching an endpoint without any page redirection (to the `/posts` URL, hence why there is no need to write a redirection involvind `"Location": "/"`.
+    * Using an XHR request this way means the frontend is reaching an endpoint without any page redirection (to the `/posts` URL, hence why there is no need to write a redirection involving `"Location": "/"`.
+* Only through XHR requests can the front end request and receive for information in the backend.
 * The blog information is a [`posts.json` file](https://github.com/shannonjensen/node-workshop/blob/solution/src/posts.json) that is JSON (the key is the timestamp and value is the blog post text). 
-
 
 In `router.js` file:
 ```
@@ -236,7 +267,7 @@ function getPostsHandler(request, response) {
 * There needs to be a redirection to `/` since even if there is an error, the response needs to be ended in order for the page to move on (and not just be a loading bar that keeps waiting for data to come back)
 ```
 function createPostHandler(request, response) {
-    var blogPost = '';
+    const blogPost = '';
     request.on('data', function(dataChunk) {
         blogPost += dataChunk;
     });
@@ -247,8 +278,8 @@ function createPostHandler(request, response) {
         blogEntries[timePosted] = parsedPost.post;
         fs.writeFile('./src/posts.json', JSON.stringify(blogEntries), function (error) {
             if (error) {
-                // Eventually some sort of error handling to catch this
-                return console.log(error);
+                res.writeHead(500, {'content-type': 'text/plain'});
+                res.end('server error');
             }
         });
         response.writeHead(307, {
@@ -263,10 +294,15 @@ function createPostHandler(request, response) {
 _Resource:_ [_the ES6 morning challenge_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/morning-challenge-day-2.md)
 * You can use ES6 on the back end, since you determine what your server does, whilst ES5 on the front end since the client may not support ES6 yet.
 * ES6 features (some listed [here](https://github.com/foundersandcoders/mc-es6-challenge))
+* [This article](https://hackernoon.com/es6-features-you-need-to-know-now-b525e2b0755e) (particularly the first half) also quite relevant: 
 
-
-
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
+`(trace ? trace: ‘’)` in argument, is equivalent to putting within the function:
+```
+if (!trace) {
+    trace = '';
+}
+```
+[Set data type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 ```
 // SPREAD - used to combine
 
@@ -343,6 +379,8 @@ _Resource:_ [_the research afternoon instructions_](https://github.com/foundersa
 _Resource:_ [_FAC instructions_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/project.md)
 
 * Producing an autocomplete website/widget
+* [Heroku Cheatsheet](https://hackmd.io/X3nL7fDwRRS3Yn8TIz5NVA)
+* Can use `startsWith()` 
 
 ### Other snippets of code
 * I love this description of objects: contain properties that are **"key:value" pairs**.
