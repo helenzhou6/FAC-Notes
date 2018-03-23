@@ -66,17 +66,19 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 9. All programmers on the team need to reviews changes. The last person to review the code accepts the merge (branch into master to update the remote master branch).
 10. Close issue and branch on GitHub if necessary.
 
-* Neat git and terminal commands
+* Neat terminal commands
     * ```touch``` - new file
     * ```Ctrl C``` - Esc
+    * ```echo "Test" > README.txt``` to add files to a repo
+* Neat git commands
     * ```git checkout``` - like ```cd``` for git
     * ```git commit -a -m “..”```shortcut for add and commit at the same time
-    * ```echo "Test" > README.txt``` to add files to a repo
-    * Before closing the commit message with a quote symbol you can press enter on your keyboard to continue typing in the new terminal line. The text in the second line can be used as an additional message.
+    * Before closing the commit message with a quote symbol you can press enter on your keyboard to continue typing in the new terminal line. The text in the second line can be used as an additional message (use `#` to link to issues).
+    * `git stash` to stash your changes locally without commiting, allowing you to switch your HEAD without complaints. `Git stash` is like a stack. You can stash multiple things and the last bit you stashed is at the top of the stack. When you use `git stash pop` it will apply your most recent stash back into your code and DELETE it from the stack whereas `git stash apply` will apply your most recent stash and KEEP it in the stack.
 * [Cool website](https://flaviocopes.com/git-guide/) introducing git (git setting up a new repo, push and pull and branches)
 * [Article:A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 * [Article: Why use GitHub](https://medium.freecodecamp.org/a-developers-introduction-to-github-1034fa55c0db)
-* [Git comman cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf) and [references to git commands](https://git-scm.com/docs)
+* [Git comman cheatsheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf) and [references to git commands](https://git-scm.com/docs) and [another cheatsheet](http://ndpsoftware.com/git-cheatsheet.html#loc=workspace) - this one is really good
 * **AMAZING [website](http://ohshitgit.com/) that tells you what to do when you end up in a pickle (great name too: 'oh shit git')**
 
 #### Other useful stuff

@@ -26,7 +26,8 @@ _Resource:_ [_Node Intro workshop_](https://github.com/foundersandcoders/Node-In
 * Small packaged programs you can integrate with the other programs you are writing. Three types:
     * **core modules** - the Node core library comes installed with Node automatically. Includes `fs`, `http`(helps us process our server requests and responses), `path`, `querystring` and `url`.
     * **third-party modules** or **packages** - thousands of open-source modules -  Node.js' package ecosystem, `npm`, has a large ecosystem of open source libraries 
-    * Access by 'requiring' them: `var http = require('http');`
+    * Access by 'requiring' them: `var http = require('http');`. You can only use  `require` in the backend! In the required file, wrap them in an object, with each function linking to a key, and `module.exports` the bottom (either the whole object or just selecting a few functions to export)
+    * For the frontend, wrap everything in an IIFE, and then use `<script>` to load it in the HTML (be careful of ordering).
 
 * **Node Package Manager (npm)** is a tool, installed with Node, for managing Node's ecosystem of modules in your projects.
     * Used to install tools, packages as dependencies for our projects, and also publish our own packages.
@@ -232,18 +233,21 @@ To creating an blog post website. General points:
 * Only through XHR requests can the front end request and receive for information in the backend.
 * The blog information is a [`posts.json` file](https://github.com/shannonjensen/node-workshop/blob/solution/src/posts.json) that is JSON (the key is the timestamp and value is the blog post text). 
 
-In `router.js` file:
+In `router.js` file (adapted so may not have correct func names):
 ```
-function router(request, response) {
-    var url = request.url;
-    if (url === "/") {
-        handlers.homeHandler(request, response);
-    } else if (url === "/create/post") {
+const router = (request, response) => {
+    const url = request.url;
+    if(url === '/') {
+        handler.homeHandler(request, response);
+    } else if (url === "/create/post" || url.indexOf('create')!==-1)) { // this could it `indexOf` 'api'
         handlers.createPostHandler(request, response);
     } else if (url === "/posts") {
         handlers.getPostsHandler(request, response);
+    } else if (url.indexOf('public')!==-1){
+        handler.staticFileHandler(request, response, url);
     } else {
-        handlers.staticFileHandler(request, response);
+        response.writeHead(404);
+        response.end('404 resource not found');
     }
 }
 ```
@@ -378,9 +382,10 @@ _Resource:_ [_the research afternoon instructions_](https://github.com/foundersa
 ### Project
 _Resource:_ [_FAC instructions_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/project.md)
 
-* Producing an autocomplete website/widget
+Producing an autocomplete website/widget. [Our code](https://github.com/fac-13/vithAutocomplete) and [our website](https://vith-autocomplete.herokuapp.com/)
 * [Heroku Cheatsheet](https://hackmd.io/X3nL7fDwRRS3Yn8TIz5NVA)
 * Can use `startsWith()` 
+* `querystring` (core Node module) is your friend when it comes to parsing/stringifying URL (particularly when spaces etc are converted to `%20`).
 
 ### Other snippets of code
 * I love this description of objects: contain properties that are **"key:value" pairs**.
