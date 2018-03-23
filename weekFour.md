@@ -26,14 +26,71 @@ _Resource:_ [_Node Intro workshop_](https://github.com/foundersandcoders/Node-In
 * Small packaged programs you can integrate with the other programs you are writing. Three types:
     * **core modules** - the Node core library comes installed with Node automatically. Includes `fs`, `http`(helps us process our server requests and responses), `path`, `querystring` and `url`.
     * **third-party modules** or **packages** - thousands of open-source modules -  Node.js' package ecosystem, `npm`, has a large ecosystem of open source libraries 
-    * Access by 'requiring' them: `var http = require('http');`. You can only use  `require` in the backend! In the required file, wrap them in an object, with each function linking to a key, and `module.exports` the bottom (either the whole object or just selecting a few functions to export)
-    * For the frontend, wrap everything in an IIFE, and then use `<script>` to load it in the HTML (be careful of ordering).
+    * Access by 'requiring' them: `var http = require('http');`.
+
+#### NPM
+_Resource:_ [_introduction to NPM_](https://github.com/foundersandcoders/npm-introduction)
 
 * **Node Package Manager (npm)** is a tool, installed with Node, for managing Node's ecosystem of modules in your projects.
+
     * Used to install tools, packages as dependencies for our projects, and also publish our own packages.
+    * Are downloaded specific to repo (try to ignore npm -global)
+        * NPM website/library has libraries of ‘plugins’ to use (e.g. validator of strings for forms).
     * npm comes with its own command-line interface you can use in your terminal while within your relevant project folder (e.g. `npm search`, `npm install x --save-dev` and `npm init`). These are built in scripts (such as `npm start` = `node server.js` and `npm test`) that can be accessed by defauly. Otherwise you can add your own 'shortcuts' to the `scripts` section in `package.json`, which can be accessed using `npm run [own script name]`.
     * Use `npm help [command]` in terminal to get information on the commance.
     * Steps after running `npm init` -  that installs a Node virtual environment - [here](https://github.com/shannonjensen/node-workshop/blob/master/step01.md) (i.e. dealing with the `package.json` file - that contains meta-information about your project).
+
+#### The ```package.json``` file
+* Once initiated using ```npm init```, the ```package.json``` file is automatically generated specific to that repo.
+* Packages are recorded, that are either 'dependencies' if they are needed for the browser to run your project/need to be installed on the server delivering your app (using ```npm install <package-name> --save```) and 'dev-dependencies' that are packages related to the project, but the brower does not need to know about (e.g. testing frameworks, using ```npm install <package-name> --save-dev```).
+ * ```package.json``` should be pushed onto GitHub so that anyone who wants to work on your project can download it, and then be able to download all the NPMs they need to work on the project quickly.
+ * You can edit the ```package.json``` file, e.g.:
+ ```
+ "scripts": {
+    "test": "nodemon romanizer.test.js | tap-spec"
+  },
+```
+Where ```tap-spec``` NPM makes the output of ```test.js``` prettier, and ```nodemon``` NPM runs the tests every time there is a change in the file.
+
+#### Modularising your code
+* For the frontend, wrap everything in an IIFE for your `DOM.js`, and then use `<script>` to load it in the HTML. 
+    * In a `logic.js` file that is loaded using `<script>` in the html (above the others).
+    ```
+    var module = {
+        publicMethod: function(text){
+            console.log(text);
+        }
+    };
+
+    if (typeof module !== 'undefined') {
+        module.exports = module;
+    }
+    ```
+    BUT better for privacy to use IIFEs:
+    ```
+    var module = (function(){
+        var publicMethod = function(text){
+            console.log(text);
+        }
+        return {
+            publicMethod // which is the same as publicMethod: publicMethod
+        }
+    })();
+    ```
+    * In `DOM.js`
+    ```
+    (function() {
+        publicMethod.console('hi');
+    })();
+    ```
+    * Wrapping in a closure makes it an Immediately invoked function expression (IIFE) - definition [here](https://codeburst.io/javascript-what-the-heck-is-an-immediately-invoked-function-expression-a0ed32b66c18). So with the parenthesis, the function is invoked, whilst without it, the function definition is returned instead.
+    * More IIFEs [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/). IIFEs are immediately called at runtime and only run once, so good for privacy.
+* For backend modularisation, you can use `require` at the top. So have the `module.js` - first version in a file. And then in the other file put `const module = require('./logic');` and then to access use `logic.console()`.
+* To export multiple functions do `module.exports = {console, other};` (you still need to call it in the same manner in the other files, the same as if you exported the whole `module` function, except in this manner you can select which functions to export and which ones not to. This is called **deconstruction**). Also when using require if it is a `.js` file, you don't need to put that extension. Then put `var {console, other} = require('./logic.js’);` in other files.
+* More examples [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node). 
+
+
+  * You can only use  `require` in the backend! In the required file, wrap them in an object, with each function linking to a key, and `module.exports` the bottom (either the whole object or just selecting a few functions to export)
 
 ## Day One & Two
 ### Building a Content Management System (CMS)
