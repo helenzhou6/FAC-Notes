@@ -47,7 +47,9 @@ _Resource:_ [_introduction to NPM_](https://github.com/foundersandcoders/npm-int
  * You can edit the ```package.json``` file, e.g.:
  ```
  "scripts": {
-    "test": "nodemon romanizer.test.js | tap-spec"
+    "test": "nyc tape src/test.js | tap-spec",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
   },
 ```
 Where ```tap-spec``` NPM makes the output of ```test.js``` prettier, and ```nodemon``` NPM runs the tests every time there is a change in the file.
@@ -87,6 +89,7 @@ Where ```tap-spec``` NPM makes the output of ```test.js``` prettier, and ```node
     * More IIFEs [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/). IIFEs are immediately called at runtime and only run once, so good for privacy.
 * For backend modularisation, you can use `require` at the top. So have the `module.js` - first version in a file. And then in the other file put `const module = require('./logic');` and then to access use `logic.console()`.
 * To export multiple functions do `module.exports = {console, other};` (you still need to call it in the same manner in the other files, the same as if you exported the whole `module` function, except in this manner you can select which functions to export and which ones not to. This is called **deconstruction**). Also when using require if it is a `.js` file, you don't need to put that extension. Then put `var {console, other} = require('./logic.js’);` in other files.
+    * Also the conventional way to export multiple functions is not to wrap it all into a larger object, rather just separated functions in one file, then on import do: `const {console, x } = require (‘./module’)`. This means you only import the ones you need, and no longer need to do `module.console()` (just do `console()`).
 * More examples [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node). 
 
 
@@ -220,6 +223,7 @@ function router (request, response) {
         res.end(content);
     };
     ```
+* NB: can also use `path.extname()`
 * Can also do:
     ```
     const url = /;
@@ -443,6 +447,26 @@ Producing an autocomplete website/widget. [Our code](https://github.com/fac-13/v
 * [Heroku Cheatsheet](https://hackmd.io/X3nL7fDwRRS3Yn8TIz5NVA)
 * Can use `startsWith()` 
 * `querystring` (core Node module) is your friend when it comes to parsing/stringifying URL (particularly when spaces etc are converted to `%20`).
+    * use `const inputTwo = querystring.parse(input)['/search/?q'].toLowerCase().trim(); `
+* You can use `<datalist>` (though not fully supported in all broswers), but gives you default dropdown functionality like arrow down etc:
+    ```
+    <input list="browsers">
+
+    <datalist id="browsers">
+        <option value="Internet Explorer">
+        <option value="Firefox">
+        <option value="Chrome">
+        <option value="Opera">
+        <option value="Safari">
+    </datalist>
+    ```
+    * You can also use `aria-activedescendant` and `Combobox` to create a dropdown
+* Use the `<form action="/team_name_url/" method="post">` (example [here](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/forms)) for input rather than sending a request on `enter` button `keyup` event (a bit of a hacky way that we did it - where there were bugs e.g. having the `preventDefault()` on keydown)
 
 ### Other snippets of code
 * I love this description of objects: contain properties that are **"key:value" pairs**.
+* DOM Manipulation:
+    * `textContent` removes all of the children nodes and replaces them with a single text node with the given value
+    * Should use `className` rather than adding and removing classes with `classList` (`className` replaces all existing classes with one or more new classes)
+* The [`addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) can take a third argument - where can e.g. do it once before removing the event listener.
+    * Should never add an event listener within a function (since can accidentally add too many)
