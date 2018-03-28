@@ -259,9 +259,116 @@ const applyAndPrintResult = (func, integer) => {
     }
 };
 ```
+## Day Two
+
+### Linting
+_Resource:_ [_linting FAC article_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-5/linter.md)
+* Linters allows you to check syntax and fix formating, and also allows you to share a config file between your team to avoid merge conflicts.
+1. Install `eslint`
+2. `./node_modules/.bin/eslint --init` - initialises eslint on your project
+After this pick the following inputs:
+    - [How would you like to configure ESLint?] `Use a popular style guide`
+    - [Which style guide do you want to follow?] `Airbnb`
+    -   [Do you use React?] `No`
+    - [What format do you want your config file to be in?] `JSON`
+* Can now run linter on your files using 
+`/node_modules/.bin/eslint [yourfile.js]` OR install the `eslint` package on VS Code.
+* Also - to disable eslint for your client side files - add this to the top of your files: `/* eslint-disable */`
+
+### Research afternoon
+_Resource:_ [_the topics_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-5/research-afternoon.md)
+
+#### Streams and Buffers
+_Resource:_ [_research notes_](https://hackmd.io/47c_--FATayzYyC9ngDjFg)
+* `fs.readfile` is what is needed to send over files over the internet, since only `strings` or `buffers` can be sent over the internet (where the `Buffer` class - a global within `Node.js` is uesd for reading or manipulating streams of binary data)
+* > By default, no encoding is assigned and stream data will be returned as Buffer objects. Setting an encoding causes the stream data to be returned as strings of the specified encoding rather than as Buffer objects. For instance, calling `readable.setEncoding('utf8')` will cause the output data to be interpreted as `UTF-8` data, and passed as strings. Calling `readable.setEncoding('hex')` will cause the data to be encoded in hexadecimal string format.
+
+#### Continuous Integration (CI) & Travis
+_Resource:_ [_research notes_](https://hackmd.io/vj9FRHykQ1y68Nfk0l3PWQ), [_dwyl guide_](https://github.com/dwyl/learn-travis)
+
+* [**Travis**](https://travis-ci.org/) is an automatic verification system to run tests automatically and continuously (on pull requests etc)
+* Link your Github account to Travis & enable Travis on your selected project (using Travis interface).
+* Add a `.travis.yml` file to the root of your project, containing:
+    ```js
+    notifications:
+    - email: false
+    language: node_js
+    node_js:
+    - "node"
+    ```
+* More detailed information/guide by dwyl [here](https://github.com/dwyl/learn-travis)
+
+#### Make a request from the server
+_Resource:_ [_the example project_](https://github.com/i2xzy/request-research)
+
+### Build the Request module
+_Resource:_ [_the morning challenge_](https://github.com/foundersandcoders/mc-request-module-workshop)
+
+#### `request` module
+* Can use `request` module to help make HTTP requests - to make API calls from the backend
+* Instructions on how to use [here](http://stackabuse.com/the-node-js-request-module/)
+    ```js
+    const request = require('request');
+
+    const options = {  
+        url: 'https://www.reddit.com/r/funny.json',
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Accept-Charset': 'utf-8',
+            'User-Agent': 'my-reddit-client'
+        }
+    };
+
+    request(options, function(err, res, body) {  
+        let json = JSON.parse(body);
+        console.log(json);
+    });
+    ```
+
+#### Under the hood
+* The module is doing the `HTTP` request for you - [HTTP request -- Node.js](https://nodejs.org/api/http.html#http_http_get_options_callback)
+    ```js
+    const myRequest = (url, cb) => {
+        http.get(url, (response) => {
+            response.setEncoding('utf8');
+
+            let body = '';
+            response.on('data', (data) => {
+                body += data;
+            });
+
+            response.on('end', () => {
+                cb(null, response, body);
+            });
+
+        }).on('error', (err) => {
+            cb(err);
+        });
+    };
+    ```
+    * And where `cb` is essentially the below:
+    ```js
+    cb = function (error, response, body) {
+        console.log('error:', error);
+        console.log('statusCode:', response && response.statusCode);
+        console.log('body:', body);
+    });
+    ```
+
+    * NB: The JSON Fetching Example found in [this Node.js article](https://nodejs.org/api/http.html#http_http_get_options_callback) includes more error handling (for when `statusCode !== 200` and `!/^application\/json/.test(contentType)`), where it states 
+    ```js
+    error = new Error('Invalid content-type.\n'+`Expected application/json but received ${contentType}`);
+    ```
+
+    * ... And it also does a `try` and `catch` on `res.on('end' [...])`
+    * More on `res.resume()`  - [here](https://nodejs.org/api/stream.html#stream_readable_resume) - where "The `readable.resume()` method causes an explicitly paused Readable stream to resume emitting 'data' events, switching the stream into flowing mode."
+    * And it uses `console.error` - more [here](https://developer.mozilla.org/en-US/docs/Web/API/Console/error)
 
 ## Other snippets of code
-
 *   Terminal commands
-    *   You can use `&&` between two commands in terminal
+    *   You can use `&&` between two commands in terminal -- if the left is true, then use the right code.
     *   `node [filename]` runs the file in terminal
+    * `node` to start using terminal like a browser console.
+    * `-D == —save-dev`
+* [Overview of Blocking vs Non-Blocking - Node.js](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
