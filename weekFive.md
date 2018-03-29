@@ -100,6 +100,16 @@ _Resource:_ [_TDD workshop_](https://github.com/foundersandcoders/ws-tdd-node-se
         *   You can use `res.end(‘text’)` to immediately send over small amounts of information (shortcut method), whilst use `res.write('var text')` then `res.end()` for large amounts (or when want other steps between selecting the data and ending the response).
         *   `res.end()` is also the same thing as `res.on(‘end’, function(){});`
 
+* You can also use **nock** (stub testing) - to mock an API call - it intercepts the call and instead returns the dummy data you have
+
+* If you want to have two suites of tests running with independent commands in the terminal (e.g. `npm run test-router` and `npm run test-logic`, while also having them run together with `npm test`, you can use the structure below - note this also allows Travis to run both test suites whenever it's doing it's CI.
+    ```js
+        "test": "npm run test-router && npm run test-logic ",
+    "test-router": "nyc tape ./test/router.test.js | tap-spec",
+    "test-logic": "nyc tape ./test/logic.test.js | tap-spec",
+    ```
+    * OR `"test": "nyc tape ./test/*.test.js"` where this is neater, and will work the same, provided you are consistent with your file naming (it will run all files in the /test folder that end in `.test.js`)
+
 ### Error handling
 
 _Resource:_ [_Error Handling Workshop_](https://github.com/foundersandcoders/error-handling-workshop)
@@ -109,6 +119,39 @@ _Resource:_ [_Error Handling Workshop_](https://github.com/foundersandcoders/err
 > *   Two kinds of errors:
 >     *   **Programmer errors**: These are **bugs**; they are unintended and/or unanticipated behaviour of the code, and they can only be fixed by changing the code (e.g. calling a function with the wrong number of arguments)
 >     *   **Operational errors**: These are runtime errors that are usually caused by some external factor (e.g. any kind of network error, failure to read a file, running out of memory, etc.)
+
+* Operational errors (such as internal server down or API down) - should be displayed on page for user to comprehend. Rather than reload the page, send back `500` status code from back end to front end:
+```js
+  request(options, (err, res, body) => {
+    if (err) {
+      console.log(err);
+      response.writeHead(500, { 'Content-Type': 'text/html' });
+      response.end('Internal Server error');
+    } else {
+      // do stuff to DOM
+    }
+  });
+  ```
+  * NB: the `response` here refers to the `response` of the back end server returning information back to the front end, whilst `res` that is part of `request` is the response back from the API (used to access `res.headers` etc), and the `body` from request is the data within `res`.
+  * And then in your `callback(err, func)` function passed into the `XHR` function -- use `(xhr.readyState === 4 && xhr.status === 500)` to catch the error in the front end and do DOM manipulation. The following is a generic of an **error-first callback**
+  ```js
+    function console(text, cb) {
+        if (typeof text !== 'string'){
+            cb (new TypeError) // second argument not passed in = undefined
+        } else {
+            cb(null, text)
+        }
+    }
+    console ('hello', function(err, text){
+        if (err){
+            // do error stuff
+        } else {
+            console.log(text);
+        }
+    })
+  ```
+  * In this sense, the `cb` function has two different functions depending on whether an error is passed in or not - if there is an error in the first argument then the function will perform actions based on the error (due to the `if` statement), otherwise (if the error is `null`), it will perform the typical callback functions as expected.
+
 > *   How you should handle any given error depends on what kind of error it is. Operational errors are a normal part of the issues a program must deal with. They typically should not cause the program to terminate or behave unexpectedly. By contrast, programmer errors are by definition unanticipated, and may potentially leave the application with unpredictable state and behaviour. In this case it is usually best to terminate the program.
 >     *   There is, however, no blanket rule for what to do; each error represents a specific problem in the context of an entire application and the appropriate response to it will be heavily context dependent.
 
@@ -176,6 +219,7 @@ const applyAndPrintResult = (func, integer) => {
 
 _Resource:_ [_approach 2_](https://github.com/foundersandcoders/error-handling-workshop/blob/master/docs/approach_2.md)
 
+* Use `try` and `catch` for synchronous code (such as logic based code), since only the `callback` method can be used for asynchronous code (you could try using `try` and `catch` for API calls etc except the `catch` part of the code will run before the API call response is received)
 > *   Throwing
 >     *   During runtime, errors can be thrown in our application unexpectedly by computations acting on faulty computations produced earlier (like the first example above). We can also manually throw errors ourselves by using the [`throw`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw) keyword. This will immediately terminate the application, unless there is a [`catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) block in the call stack.
 > *   Catching
@@ -365,6 +409,23 @@ _Resource:_ [_the morning challenge_](https://github.com/foundersandcoders/mc-re
     * More on `res.resume()`  - [here](https://nodejs.org/api/stream.html#stream_readable_resume) - where "The `readable.resume()` method causes an explicitly paused Readable stream to resume emitting 'data' events, switching the stream into flowing mode."
     * And it uses `console.error` - more [here](https://developer.mozilla.org/en-US/docs/Web/API/Console/error)
 
+### Project
+_Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-5/project.md)
+
+* Doing an XHR request to request information from the front end to the back end server, and then using the `request` module to send an API request from the back end server. 
+* Our code [here](https://github.com/fac-13/jeth)
+
+#### heroku
+* When within your local repo, in terminal do the following:
+    ```
+    heroku login
+    heroku create
+    git push heroku master
+    heroku ps:scale web=1
+    heroku open
+    ```
+* Then add a PROCFILES file (no extension) to root and inside add `web: node src/server.js` — needed to let heroku know what commands are used to start the server
+
 ## Other snippets of code
 *   Terminal commands
     *   You can use `&&` between two commands in terminal -- if the left is true, then use the right code.
@@ -372,3 +433,5 @@ _Resource:_ [_the morning challenge_](https://github.com/foundersandcoders/mc-re
     * `node` to start using terminal like a browser console.
     * `-D == —save-dev`
 * [Overview of Blocking vs Non-Blocking - Node.js](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
+* To test your front end to back end API calls, use `curl` in your terminal (like `node`) or in your browser to see the response.
+    * Since this can identify bugs in your front end code (such as preventing `e.preventDefault()` on `submit` buttons - since buttons with submit within a form by default will try to refresh the page on click (OR adding the attribute `type="button"` within `html`))
