@@ -100,7 +100,28 @@ _Resource:_ [_TDD workshop_](https://github.com/foundersandcoders/ws-tdd-node-se
         *   You can use `res.end(‘text’)` to immediately send over small amounts of information (shortcut method), whilst use `res.write('var text')` then `res.end()` for large amounts (or when want other steps between selecting the data and ending the response).
         *   `res.end()` is also the same thing as `res.on(‘end’, function(){});`
 
-* You can also use **nock** (stub testing) - to mock an API call - it intercepts the call and instead returns the dummy data you have
+
+* [Nock](https://github.com/node-nock/nock) is an npm module that facilitates the 'mocking' of HTTP requests.
+* It will intercept any outgoing requests to a defined url, and respond with the dummy data which you give it. (Stub testing)
+
+    [For example](https://github.com/foundersandcoders/prereq-check/blob/master/README.md), in the test below *nock* intercepts any request to the defined domain passed to ```nock```, and responds with the contents of the file passed to ```replyWithFile()```.
+    ```js
+    tape('Codewars API: getCodewars invalid username', (t) => {
+    const username = 'astroashaaa';
+    nock('https://www.codewars.com/')
+        .get(`/api/v1/users/${username}`) # <--- MUST start with a /
+        .replyWithFile(404, path.join(__dirname, 'dummy-data', 'codewars-response-fail.json'));
+    getCodewars(username)
+        .then((response) => {
+        t.deepEqual(response, {
+            success: false,
+            statusCode: 404,
+            message: 'User not found',
+        }, 'getCodewars for invalid username returns correct object');
+        t.end();
+        });
+    })
+    ```
 
 * If you want to have two suites of tests running with independent commands in the terminal (e.g. `npm run test-router` and `npm run test-logic`, while also having them run together with `npm test`, you can use the structure below - note this also allows Travis to run both test suites whenever it's doing it's CI.
     ```js
@@ -416,6 +437,7 @@ _Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-refer
 * Our code [here](https://github.com/fac-13/jeth)
 
 #### heroku
+##### Deployment via Heroku CLI
 * When within your local repo, in terminal do the following:
     ```
     heroku login
@@ -425,6 +447,9 @@ _Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-refer
     heroku open
     ```
 * Then add a PROCFILES file (no extension) to root and inside add `web: node src/server.js` — needed to let heroku know what commands are used to start the server
+
+##### Deployment via GitHub
+* Connect your GitHub to your Heroku account, find the repo, and then enable automatic deploys from master.
 
 ## Other snippets of code
 *   Terminal commands
