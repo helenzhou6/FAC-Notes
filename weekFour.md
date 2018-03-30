@@ -331,7 +331,9 @@ function router (request, response) {
         response.end(); // need this to finish
     });
     ```
-    *   NB Need `querystring.parse()` to convert the `allTheData` **query strings** (how html forms send data over the internet) to an JS object (to use it)
+* `querystring` module (using `const querystring = require("querystring");`) to handle grabbing what the user has inputted from the endpoint. And endpoint of `/search/?q=topic`, then `let searchedInput = querystring.parse(query)['/search/?q'].toLowerCase().trim();`
+*   NB Need `querystring.parse()` to convert the `allTheData` **query strings** (how html forms send data over the internet) to an JS object (to use it) - to deal with spaces, punctuation, casing and random user inputted spaces
+* Querystring turns the endpoint into an object with key value pairs - so need to use `?date=` etc. so it know which part of the endpoint is the key, and which is the value.
 
 #### Final solution
 

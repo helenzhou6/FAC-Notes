@@ -11,6 +11,8 @@ It's `Node.js` (2) themed week!
 _Resource:_ [_TDD workshop_](https://github.com/foundersandcoders/ws-tdd-node-server)
 
 *   > [Tape](https://github.com/substack/tape) is an npm module used for testing server side code written in Node.js.
+
+#### Supertest
 *   > [Supertest](https://github.com/visionmedia/supertest) is used in this workshop to simulate fake server requests without the need to have the server listening via a socket connection to respond to the requests. Fake requests are simply objects passed to your routes;
 
     *   > Supertest introduces the `expect` API, which does some of the work `tape` was doing for us (eg: `res.statusCode` assertions). The [documentation](https://www.npmjs.com/package/supertest#api) indicate that we can use `expect` for testing status codes, header fields, response body, or to pass an arbitrary function to. Combined with [tapes testing methods](https://github.com/substack/tape) you can build a robust set of tests to ensure all your server endpoints are tested.
@@ -101,6 +103,7 @@ _Resource:_ [_TDD workshop_](https://github.com/foundersandcoders/ws-tdd-node-se
         *   `res.end()` is also the same thing as `res.on(‘end’, function(){});`
 
 
+#### Nock
 * [Nock](https://github.com/node-nock/nock) is an npm module that facilitates the 'mocking' of HTTP requests.
 * It will intercept any outgoing requests to a defined url, and respond with the dummy data which you give it. (Stub testing)
 
@@ -122,7 +125,31 @@ _Resource:_ [_TDD workshop_](https://github.com/foundersandcoders/ws-tdd-node-se
         });
     })
     ```
+* `nock` in combination with `supertest` would be integrated testing otherwise it is unit testing.
+* NB `nock` requires the URL passed in in the test to match the API URL _exactly_ - so make sure to include API keys etc.
+* Look at the documentation but it does handle query string handling
+* `nock` is **mocking** type test - since you are interjecting functions that mimic something (in this case returning an API call yourself)
 
+#### nock with supertest - integrated testing
+* `supertest` tests what happens when you reach a specific end point VS `nock` is mocking the external API call - and sending back data that we specify (so this is what is `expected` in the test (the `res.body`)).
+
+```js
+test.only('Integration test of API call', (t) => {
+  nock('https://api.nasa.gov/planetary/apod')
+    .get('?date=2018-03-29&api_key=undefined') // URL to match exactly
+    .reply(200, { planet: 'Jupiter', photographer: 'Lawrence' }); // or this can be linked to JSON in a dummy file
+
+  supertest(router)
+    .get('/api/search?2018-03-29') // your endpoint
+    .expect(200)
+    .end((err, res) => {
+      t.deepEqual(res.body, { planet: 'Jupiter', photographer: 'Lawrence' });
+      t.end();
+    });
+});
+```
+
+#### npm test scripts
 * If you want to have two suites of tests running with independent commands in the terminal (e.g. `npm run test-router` and `npm run test-logic`, while also having them run together with `npm test`, you can use the structure below - note this also allows Travis to run both test suites whenever it's doing it's CI.
     ```js
         "test": "npm run test-router && npm run test-logic ",
@@ -241,6 +268,9 @@ const applyAndPrintResult = (func, integer) => {
 _Resource:_ [_approach 2_](https://github.com/foundersandcoders/error-handling-workshop/blob/master/docs/approach_2.md)
 
 * Use `try` and `catch` for synchronous code (such as logic based code), since only the `callback` method can be used for asynchronous code (you could try using `try` and `catch` for API calls etc except the `catch` part of the code will run before the API call response is received)
+* The function(s) you are trying to test within the `try` block that you have writtin could `throw` an error - using `throw new TypeError("message");` (or with callbacks use `callback(new TypeError("message"))`) - but some functions (or the JS interpreter) can throw errors by default (look into the documentation - for example some functions throw a syntax error if `typeof` input is incorrect).
+* The **exception** is raised and an error object is passed, the thrown error will stop further execution of the code and instead go up the stack until it finds the closest `catch` and run that instead.
+
 > *   Throwing
 >     *   During runtime, errors can be thrown in our application unexpectedly by computations acting on faulty computations produced earlier (like the first example above). We can also manually throw errors ourselves by using the [`throw`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw) keyword. This will immediately terminate the application, unless there is a [`catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) block in the call stack.
 > *   Catching
@@ -324,6 +354,73 @@ const applyAndPrintResult = (func, integer) => {
     }
 };
 ```
+
+
+#### Real life example
+##### Front end handling
+* When writing error handling within our projects:
+```js
+  const xhrRequest = function (url, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+            try {
+                const response = JSON.parse(xhr.responseText);
+            } catch (e) {
+                console.log(e);
+            }
+            callback(null, response);
+        } else if (xhr.status === 500) {
+          callback(new TypeError('500 error'));
+        } else {
+          callback(new TypeError('error: ' + xhr.readyState));
+        }
+      } else {
+        console.log('XHR error', xhr.readyState);
+      }
+    };
+    xhr.open('GET', url, true);
+    xhr.send();
+  };
+
+  // Somewhere in the code to call the request
+  fetch(buildURL(), displayResults);
+
+  displayResults = function(err, result){
+      if (err) {
+          // DOM manipulation to notify user of error - USE the err.message
+      } else {
+          // do generic DOM manipulation stuff with result
+      }
+  }
+```
+* Functions such as `xhrRequest` should just do an XHR request and nothing else -- it should be unaware of the DOM/the environment in which it is called - these should be referred to in the `callback` (since it is the code you use to call `xhrRequest` that should be aware of what it is doing/how it relates to its environment)
+* `JSON.parse` will throw an exception if it's given a string that isn't valid JSON. This may be rare, but it's best to be sure, especially if that error will prevent you from responding to the client, or take down your server entirely. Or prevent your client-side code from updating the UI to let your user know what's happened.
+
+##### Back end handling
+* Using the `request` module:
+```js
+  request(options, (err, res, body) => {
+    if (err || response.statusCode !==200) {
+      console.log(err);
+      response.writeHead(500, { 'Content-Type': 'text/html' });
+      response.end('API error :' + err.message); // if there is an err.message provided by API
+    } else {
+        try {
+            const bod = JSON.parse(body);
+            const result = filter(bod); // NB filter is not a good name
+            response.writeHead(200, { 'Content-Type': 'application/json' });
+            response.end(JSON.stringify(result));
+        } catch (err) {
+            response.writeHead(500, { 'Content-Type': 'text/html' });
+            response.end('Error, could not initiate API request, error: ' + err.message);
+        }
+    }
+```
+* Look at the API documentation - but if there is an error coming from the API it should come with an `err.message`. This can then be passed back to the frontend with the appropriate status code and dealt with in the frontend (to notify the user of what has happened).
+* The `try` and `catch` can be used here for the `JSON.parse` and `filter` function.
+
 ## Day Two
 
 ### Linting
@@ -435,6 +532,8 @@ _Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-refer
 
 * Doing an XHR request to request information from the front end to the back end server, and then using the `request` module to send an API request from the back end server. 
 * Our code [here](https://github.com/fac-13/jeth)
+* To refresh the page with new data every 3s when the user on the page (e.g. for the most up to date news), you can use `setInterval(function(){ //XHR request }, 3000);`
+* Infinite scroll works by capturing the height of the window and the offset from this value, and in scroll event if almost the height of the page (near the bottom) then another XHR request is sent.
 
 #### heroku
 ##### Deployment via Heroku CLI
@@ -459,4 +558,10 @@ _Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-refer
     * `-D == —save-dev`
 * [Overview of Blocking vs Non-Blocking - Node.js](https://nodejs.org/en/docs/guides/blocking-vs-non-blocking/)
 * To test your front end to back end API calls, use `curl` in your terminal (like `node`) or in your browser to see the response.
-    * Since this can identify bugs in your front end code (such as preventing `e.preventDefault()` on `submit` buttons - since buttons with submit within a form by default will try to refresh the page on click (OR adding the attribute `type="button"` within `html`))
+    * Since this can identify bugs in your front end code (such as preventing `e.preventDefault()` on `submit` buttons - since buttons with submit within a form by default will try to refresh the page* on click (OR adding the attribute `type="button"` within `html` - but this would mean you need to handle submission on click and on pressing the enter key))
+    * > *Given that the input field is inside of a form with a 'submit button', you don't need to add an event listener to it to call the XHR request. The default behaviour of the form is to call the first 'submit' button available.
+* If you want to redirect a page on the front end, you can use `window.location` - but this (and also redirecting on the backend) is bad practice for the user experience when it comes to error handling (when filling out a form and something goes wrong, you don't want to go to a whole new page)
+* When using `forEach` - when you initiate a new empty array and then loop over an old array and use `push` to add new items to the new empty array <=> should use `map`.
+    * > The only case where it's not equivalent is if there's conditional logic in the body of the `forEach` callback which results in fewer or more elements in the new array than the original (in this case you can use `reduce` instead).
+* With the `input` html tag - you can set the type such as `type="data"` to bring up a default calender for the user to select dates.
+* `handler.js` file should ideally not have much blocking events. For example using `require` to get `JSON` is done asynchronously by `Node.js` whilst getting is using `filepath` is synchronous (so should stick to using `require`)
