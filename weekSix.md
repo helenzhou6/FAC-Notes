@@ -1,6 +1,6 @@
 # Week Six
 
-_Resource:_ [_week five schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-6) - [our condensed version](hhttps://github.com/foundersandcoders/london-programme/blob/master/current-cohort/week6.md) due to Bank Holiday, _the_ [_learning outcomes_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/learning-outcomes.md) _and have a look at_ [_the resources_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/resources.md).
+_Resource:_ [_week five schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-6) - [_our condensed version_](hhttps://github.com/foundersandcoders/london-programme/blob/master/current-cohort/week6.md) due to Bank Holiday, _the_ [_learning outcomes_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/learning-outcomes.md) _and have a look at_ [_the resources_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/resources.md).
 
 It's Database themed week!
 
@@ -87,7 +87,7 @@ publisher_id | integer | foreign key (publishers.id)
 * Using [`IN`](https://www.w3schools.com/sql/sql_in.asp) to combine two conditional statements that use `=` for the same column: `SELECT …FROM… WHERE…[column name, column 2 name] IN ([specific value of column 1,  specific value of column 2])` - e.g. `SELECT user_id, text_content FROM blog_posts WHERE user_id IN (3, 6);`
 * Using [`CASE WHEN`](https://www.postgresql.org/docs/7.4/static/functions-conditional.html) (to generate new temporary data from the existing data based on logic) and [`AS`](https://www.w3schools.com/sql/sql_alias.asp) (to display it in a temporary new column). E.g. show a list of _users_ by their `id` and a new column named _newname_ with values `true` or `false` based on the `CASE WHEN` statement (_age_).
     * `SELECT [column name(s) also to be printed], [remember comma!], CASE WHEN [condition e.g. age < 20] THEN [set value e.g. true] ELSE [other value e.g. false] END [to end the case] AS [temporary column name to put the case true/false in] FROM [table name]` e.g. 
-    ```bash
+    ```sql
     SELECT id,
        CASE WHEN age<20 THEN 'true'
             ELSE 'false'
@@ -100,7 +100,7 @@ publisher_id | integer | foreign key (publishers.id)
 
 #### General
 * Can use **subqueries** (nesting queries inside) e.g.:
-    ```bash
+    ```sql
     INSERT INTO post_comments (post_id, reply_to, user_id, text_content) VALUES
         (
             (
@@ -139,7 +139,7 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
     * So can use a combination of the [`HAVING`](https://www.w3schools.com/sql/sql_having.asp) a condition and maths operators including [`COUNT()`, `AVG()` and `SUM()`](https://www.w3schools.com/sql/sql_count_avg_sum.asp).
     * E.g. `SELECT...FROM...JOIN...GROUP BY authors.id HAVING COUNT(book_authors.author_id) > 2;`
 * Can use `COUNT()` as part of a column selected in `SELECT` and then use it later to `ORDER BY` - e.g.
-    ```bash
+    ```sql
     SELECT books.name, COUNT(book_authors.book_id) FROM books
     INNER JOIN book_authors
     ON books.id = book_authors.book_id
@@ -148,7 +148,7 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
     ORDER BY COUNT(book_authors.book_id) DESC LIMIT 1;
     ```
     * To display the count as well:
-    ```bash
+    ```sql
     SELECT authors.first_name, authors.surname, COUNT(book_authors.author_id) AS total FROM authors
     INNER JOIN book_authors
     ON authors.id = book_authors.author_id
@@ -156,7 +156,7 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
     ORDER BY total DESC LIMIT 1;
     ```
 * Can use `ALTER TABLE` 
-    ```bash
+    ```sql
     ALTER TABLE book_authors ADD book_author_id VARCHAR(20);
     UPDATE book_authors SET book_author_id = (Cast(book_id AS VARCHAR(20)) || '-' || Cast(author_id AS VARCHAR(20)));
     ALTER TABLE book_authors ADD PRIMARY KEY (book_author_id);
