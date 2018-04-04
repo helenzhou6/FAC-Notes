@@ -533,7 +533,7 @@ _Resource:_ [_week 5 project_](https://github.com/foundersandcoders/master-refer
 * Doing an XHR request to request information from the front end to the back end server, and then using the `request` module to send an API request from the back end server. 
 * Our code [here](https://github.com/fac-13/jeth)
 * To refresh the page with new data every 3s when the user on the page (e.g. for the most up to date news), you can use `setInterval(function(){ //XHR request }, 3000);`
-* Infinite scroll works by capturing the height of the window and the offset from this value, and in scroll event if almost the height of the page (near the bottom) then another XHR request is sent.
+* Infinite scroll works by capturing the height of the window and the offset from this value, and in scroll event if almost the height of the page (near the bottom) then another XHR request is sent. [See here for the code](https://github.com/fac-13/research/issues/25)
 
 #### heroku
 ##### Deployment via Heroku CLI
