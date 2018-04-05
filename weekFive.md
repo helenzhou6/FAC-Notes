@@ -148,6 +148,7 @@ test.only('Integration test of API call', (t) => {
     });
 });
 ```
+* NB: May need to end the API url portion of the line with a slash, but also had to begin the `.get()` part with one as well to pass tests
 
 #### npm test scripts
 * If you want to have two suites of tests running with independent commands in the terminal (e.g. `npm run test-router` and `npm run test-logic`, while also having them run together with `npm test`, you can use the structure below - note this also allows Travis to run both test suites whenever it's doing it's CI.
