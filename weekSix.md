@@ -39,6 +39,7 @@ createdb $PSQL_MY_USERNAME
 Then to test that you can login to the database, use `psql`.
 Running `psql` is equivalent to `psql <your computer username>`
 
+* `psql` ([PostgreSQL interactive terminal](https://www.postgresql.org/docs/9.0/static/app-psql.html)) is a terminal-based front-end to PostgreSQL to enable you to type in queries interactively, issue them to PostgreSQL, and see the query results.
 * As a last resort can use [the Postgres Mac GUI app](https://postgresapp.com/)
 * *Pgcli* is an alternative command line interface (client) for Postgres with auto-completion and syntax highlighting.
     * Login to databases with `pgcli` instead of `psql`.
@@ -194,8 +195,8 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
         * Rows separated with commas and each bracket, `(comma-separated values inside here)`, has a row inside it with values
 
 #### Connecting the database
-* Pg is a non-blocking PostgreSQL client for node.js that lets you access SQL values as JavaScript data values. Translates data types appropriately to/from JS data types.
-* `database/db_connection.js` -- This sets up your connection / makes the door of the database (the library as a metaphor). The **Pool** is like setting up the card reader (where the `DB_URL` in `config.env` is the keycard that can grant access)
+* `pg` is a non-blocking PostgreSQL client for node.js that lets you access SQL values as JavaScript data values. Translates data types appropriately to/from JS data types.
+* `database/db_connection.js` -- This sets up your connection / makes the door of the database (the library as a metaphor). The **Pool** is like setting up the card reader (where the `DB_URL` in `config.env` is the keycard that can grant access). Using the exported `Pool` and `.query` (i.e. `db_connection.query`) opens the door.
     * Install and require `pg` and `env2` (node modules)
         ```js
         const { Pool } = require('pg');
@@ -238,7 +239,7 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     module.exports = new Pool(options);
     ```
 #### Setting up the intial build of the database
-* `database/db_build.js` -- The file opens the connection to the database using `.query`, and uses the SQL commands within `db_build.sql` to build the initial structure of the database. It is run once and after the `config.env` file has been set up.
+* `database/db_build.js` -- So you run this file when connecting the dots - (within `test.js` before each test is run and initially on set up). It opens the connection/door to the database using `db_connection.query`, and uses the SQL commands within `db_build.sql` to build the initial structure of the database. It's opens the built door (the `Pool` in `db_connection.js`) with the instructions for setting up the initial default schema etc (specified in `db_build.sql`). It is run once and after the `config.env` file has been set up.
     ```js
     const fs = require('fs');
 
@@ -256,18 +257,19 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     * `sql` is a string of the build script. Think of it as a single query (transaction / collection of queries compiled into one).
     * This file should only be run separately. NEVER run this in a production after setup, or from other files (unless you know what you're doing)
 
-#### Connecting the dots - locally
-* SO you connect the dots by creating the database > setting up your username/password of the user you are logged into to match DB_URL > running the database build (to populate database with your defauly schema) > connecting to it within `pgcli`.
+#### Creating and connecting to the database
+* THE GENERAL PRINCIPLE: So you connect the dots by creating the database > setting up your username/password to allow access to the database if you are the user > matching these details with the `DB_URL` in `config.env` > running the database build (to create the default schema and populate your test database with data) - using `node src/database/db_build.js` (that could be listed in the `"scripts"` in `package.json`) OR (after doing the next step of connecting to it, running `\i [full_path_to_db_build.sql]`) > connecting to it within `pgcli` using `\c [test_database_name]`.
+    *  To easily copy a file's full path right click on it in atom and click on "Copy Full Path"
 
-##### Connecting and having local database
+##### Creating and connecting to a local database
 * In the directory on your terminal, run `psql` or `pgcli` (a Postgres CLI client)
 * Create the database by typing `CREATE DATABASE [tablename];`
 * Create a user specifically for the database with a password (though not necessary?)
-    * Type `CREATE USER [the new username] WITH PASSWORD '[the password of the database]'`;
+    * Type `CREATE USER [the new username] WITH SUPERUSER PASSWORD '[the password of the database]'`;
         - The password needs to be in single-quotes, otherwise you get an error
         - For security: In production/public facing server, clear command history and use a password manager with 25+ random characters - and use a firewall
         - A new user is made specifically for the application/database, so if this user is compromised, other databases should remain safe. (security: avoid use of superusers/root + give minimum permissions needed)
-    * Change ownership of the database to the new user by typing `GRANT ALL PRIVILEGES ON DATABASE [name of the database] TO [the new username];`.
+    * Change ownership of the database to the new user by typing `GRANT ALL PRIVILEGES ON DATABASE [name of the database] TO [the new username];` OR `ALTER DATABASE [db_name] OWNER TO [user_name];`
 * Add a `config.env` file and add the database's url in this format: `DB_URL = postgres://[username]:[password]@localhost:5432/[database]`. The username and password that has been generated previously and that you are logged in with locally (the library card) _need to match_ the `[username]:[password]` of `DB_URL` --> since if not you can not access the library since it needs to match the Pool options/the door card reader (that has been generated from the `DB_URL` in `config.env`). If it matches, then it allows the user to connect to the database once within `pgcli`.
     * The `config.env` has the sensitive information (`DB_URL`) that is structured in a way to obtain certain bits of information needed to make the door key card reader.
     - Don't use semi-colons or apostrophes for strings in `config.env`, or use alternative JSON notation
@@ -287,9 +289,10 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     psql <database name>
     ```
 
-##### Connecting to a Heroku database
+##### Creating and connecting to a Heroku database
 _Resources:_ [_Morning challenge (SQL commands)_](https://github.com/foundersandcoders/db-morning-challenge)
 
+* NB: this follows the same principles as connecting the dots locally, just slightly different commands.
 * Within repo and using [Heroku CLI]((https://devcenter.heroku.com/articles/heroku-cli)
 * Create an app on Heroku `heroku create app-name-here --region eu`
 * Push to Heroku `git push heroku master`
@@ -386,3 +389,104 @@ _Resources:_ [_Morning challenge (SQL commands)_](https://github.com/foundersand
 
 ### STEP 3) Testing databases
 _Resources:_ [_DB testing workshop_](https://github.com/foundersandcoders/ws-database-testing/)
+
+* NB: Similar principles to connecting the dots, but instead using `TEST_DB_URL` to connect to the test database.
+
+* Creating a different test database to run tests on
+    * `CREATE DATABASE` etc
+* Set the test database url in your `config.env` as  `TEST_DB_URL = postgres://[user_name]:[password]@localhost:5432/[db_test_name]`
+* Within `pgcli` connect to the test database using  `\c [test_database_name]
+* Run `\i [full_path_to_db_build.sql]` to build the schema etc.
+    * You need to connect to the test database before running the build at least initially, since at the moment `db_connection.js` is only set up for the original database (using `DB_URL`) - until the following steps are completed.
+* Now we have to specify in which cases we use the real database and in which cases we use the test one. To do that we have to set up a `NODE_ENV` variable:
+    > NODE_ENV is an environment variable popularized by the Express framework. It
+    > specifies the environment in which an application is running such as
+    > development, staging, production, testing, etc.
+    >
+    > By default, our application will run in development environment. And we can
+    > change the environment by changing process.env.NODE_ENV.
+
+* In `db_connection.js` add this condition:
+    ```js
+    let DB_URL = process.env.DB_URL;
+    if (process.env.NODE_ENV === "test") {
+        DB_URL = process.env.TEST_DB_URL;
+    }
+    ```
+
+    * And don't forget to replace the existing similar code with these changes:
+
+    ```js
+    if (!DB_URL) throw new Error("Enviroment variable DB_URL must be set");
+
+    const params = url.parse(DB_URL);
+    ```
+* The last thing to do here is to add a script in `package.json` to run your
+tests: `"test": "NODE_ENV=test node tests/test.js | tap-spec",`.
+    * This sets the node environment to test mode when `npm run test` is run
+* Before running the tests we need to make sure that our test database is at its default state.
+    * So before running every single test need to rerun the script from `db_build.js` to restart the database.
+    * Also the tests need to be executed only after the database has been restarted (i.e. only after `runDbBuild` has finished)
+        * So the `runDbBuild` function in `db_build.js` needs to be a callback function:
+        ```js
+        const runDbBuild = cb => {
+            dbConnection.query(sql, (err, res) => {
+                if (err) return cb(err);
+                cb(null, res);
+            });
+        };
+        ```
+        * And the tests are an anonymous function that is passed into `runDbBuild` as a callback
+
+* In `tests/test.js` require `tape`, `runDbBuild` and the handler `getData` and `postData` functions -- essentially you are testing it is getting back the relevant data after running these functions (like when testing the API)
+    ```js
+    tape('getData returns array', t => {
+        runDbBuild((err, res) => {
+            let query = 'SELECT * FROM topic';
+            getData(query, (err, res) => {
+                if (err) t.fail(err);
+                t.equals(Array.isArray(res), true, 'type of res should be array');
+                t.end();
+            });
+        });
+    });
+    ```
+    * NB: Here the `getData` function has been passed in the SQL command `SELECT * FROM topic` as a first argument, since the following:
+        ```js
+        const getData = (query, cb) => {
+            dbConnection.query(query, (err, res) => {
+                if (err) {
+                cb(err);
+                } else {
+                cb(null, res.rows);
+                }
+            });
+        };
+        ```
+        * Whilst it would not be passed in at the test stage if it the SQL command was part of `getData`:
+        ```js
+        const getData = cb => {
+            databaseConnection.query("SELECT * FROM users", (err, res) => {
+                if (err) {
+                    cb(err);
+                } else {
+                    cb(null, res.rows);
+                }
+            });
+        };
+        ```
+
+* On larger projects we may want to have a `test_db_build.sql` so that we can have a range of fake data in our test database to test on. To do this our `db_build.js` will need to check which sql script it needs to run.
+    * One way in which you could implement this would be to add the following to your
+    `db_build.js`:
+
+    ```js
+    if ((process.env.NODE_END = "test")) {
+        sql = fs.readFileSync(`${__dirname}/test_db_build.sql`).toString();
+    } else {
+        sql = fs.readFileSync(`${__dirname}/db_build.sql`).toString();
+    }
+    ```
+
+    * This will specify which file to use based on whether it's in a test environment
+    or not.
