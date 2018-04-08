@@ -14,6 +14,7 @@ There are different **Database Management Systems (DBMS)** including:
     * It saves data in table formats. Each row of data has an `id` (that is a **PRIMARY KEY** and unique to each entry in that table), and **FOREIGN KEY**s in a table (can be unique or not depending on one to many or many to one relationship) that acts to reference the `id` of another table.
 * _PostgreSQL_ is an example of a RDBMS (that we will be using)
 * _Structured Query language (SQL)_ is the standard language for dealing with Relational Databases. There are a few different syntaxes when using SQL for databases.
+* > Somebody from FAC12 stumbled across [this book](http://www.foo.be/docs-free/aw_pgsql_book.pdf) (published in 2001) when were were studying databases.
 
 ### STEP 1) PostgreSQL Setup
 _Resources:_ [_FAC setup instructions_](https://github.com/macintoshhelper/learn-sql/blob/master/postgresql/setup.md)
@@ -55,6 +56,10 @@ name | character varying(100) | not null
 release_date | date | not null
 publisher_id | integer | foreign key (publishers.id)
 
+* Can't stress enough the importance of designing a good schema reflective of the project during architecturing
+    * Can use sites like [draw](https://www.draw.io/)
+* When naming tables in SQL - beware of terms that can't be used for names (e.g. `user`)
+
 #### Retrieving data using basic SQL
 * Using [`SELECT`](https://www.w3schools.com/sql/sql_select.asp), to retrieve all the information from the a table - `SELECT [* for everything or column name, column 2 name] FROM [table name]`
 * Using `SELECT`, retrieve a list of *only* _column 1 name_ and _column 2 name_ from the _table name_ - `SELECT [column 1 name, column 2 name] FROM [table name]`
@@ -91,6 +96,7 @@ publisher_id | integer | foreign key (publishers.id)
         )
     ;
     ```
+    * [Some info on `JOINS` Vs `SUBQUERIES`](https://www.essentialsql.com/what-is-the-difference-between-a-join-and-subquery/) and [on stack overflow]( https://stackoverflow.com/questions/2577174/join-vs-sub-query)
 * `!=` or can use `<>`
 * Can use `WHERE [column name] IS NOT NULL` or `[column name] IS NULL`
 * naming convention — do it all lowercase
@@ -109,7 +115,8 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
 #### Challenges - SQL commands
 * Can use [`ORDER BY surname ASC|DESC`](https://www.w3schools.com/sql/sql_orderby.asp)
 * Using [`LIMIT`](https://www.techonthenet.com/sql/select_limit.php) to limit number of row displayed
-* For many to many relationships (where two tables can't be merged but temporarily joined) - use [`JOIN`](https://www.w3schools.com/sql/sql_join.asp) and specify using `ON` which `id` primary key from the first table is referred to as a foreign key in the second table to link the tables (e.g. `SELECT publishers.name FROM publishers INNER JOIN books ON books.publisher_id = publishers.id`). 
+* For many to many relationships (where two tables can't be merged but temporarily joined -- need a **linking table**) - use [`JOIN`](https://www.w3schools.com/sql/sql_join.asp) and specify using `ON` which `id` primary key from the first table is referred to as a **foreign key** in the second table to link the tables (e.g. `SELECT publishers.name FROM publishers INNER JOIN books ON books.publisher_id = publishers.id`). More [here](https://community.modeanalytics.com/sql/tutorial/sql-joins/)
+    * You can have a [**FOREIGN KEY constraint**](https://www.w3schools.com/sql/sql_foreignkey.asp) where when adding a row to one table, have to add a row to another table
     * Differences between the joins - where `INNER JOIN` only lists the data that is populated on both tables (matches on both tables), whilst `LEFT JOIN` or `RIGHT JOIN` will contain entries that are never referenced in the second table (that column is left blank)
     ![join image](https://i.imgur.com/LUejO6el.jpg)
     * After joining tables, use  object-like syntax to reference column (e.g. `authors` and `books` tables have been joined - so need to use `books.name` and `authors.first_name`)
@@ -178,6 +185,7 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
         ```
         * All tables should have an integer `id` that is set as a `PRIMARY KEY` - this is used relate databased together (integer `PRIMARY KEY` helps with performance).
             * `PRIMARY KEY` also adds `UNIQUE` and `NOT NULL` (primary keys have to be unique).
+            * The `PRIMARY KEY` can also be a concatenation of the two values within two columns - a **composite key** or **composite primary key**. This also prevents unwarranted multiple entries - e.g. a user then can not vote twice on the same topic if in our [project schema](https://github.com/fac-13/HEII-topics), `PRIMARY KEY (topic_id, user_id)`.
         * `VARCHAR(LENGTH)`, `INTEGER`, `TEXT` (unlimited length, but larger data usage), etc are SQL data types.
         * `NOT NULL` tells the PostgreSQL to give an error if this is not set.
         * `DEFAULT 100` changes `NULL` values to be `100`.
@@ -192,11 +200,13 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
         VALUES
           (DEFAULT, Wolverine', 'Regeneration', 300),
         ```
+        * Using `INSERT` in SQL without using the column names and just using `VALUES`: You can use the keyword `DEFAULT`.
         * Rows separated with commas and each bracket, `(comma-separated values inside here)`, has a row inside it with values
 
 #### Connecting the database
 * `pg` is a non-blocking PostgreSQL client for node.js that lets you access SQL values as JavaScript data values. Translates data types appropriately to/from JS data types.
-* `database/db_connection.js` -- This sets up your connection / makes the door of the database (the library as a metaphor). The **Pool** is like setting up the card reader (where the `DB_URL` in `config.env` is the keycard that can grant access). Using the exported `Pool` and `.query` (i.e. `db_connection.query`) opens the door.
+    * It needs to be required since it is a collection of node.js modules for interfacing with your PostgreSQL database (more on [`node-postgres` here](https://node-postgres.com/))
+* `database/db_connection.js` -- This sets up your connection / makes the door of the database (the library as a metaphor) - the node.js server. The [**Pool**](https://node-postgres.com/features/pooling) is like setting up the card reader (where the `DB_URL` in `config.env` is the keycard that can grant access). Using the exported `Pool` and `.query` (i.e. `db_connection.query`) opens the door.
     * Install and require `pg` and `env2` (node modules)
         ```js
         const { Pool } = require('pg');
@@ -253,13 +263,14 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     });
     ```
     * Where `dbConnection` is the exported `Pool` (the exported Pool constructor/object with the previously set options object) so that this file can use this connection pool with `dbConnection.query`.
-    * The `.query` opens the door to the database.
+    * The [`.query`](https://node-postgres.com/features/queries) opens the door to the database. - It is a feature of `node-postgres` (a collection of node.js modules for interfacing with your PostgreSQL database) the API for executing queries
     * `sql` is a string of the build script. Think of it as a single query (transaction / collection of queries compiled into one).
     * This file should only be run separately. NEVER run this in a production after setup, or from other files (unless you know what you're doing)
 
 #### Creating and connecting to the database
-* THE GENERAL PRINCIPLE: So you connect the dots by creating the database > setting up your username/password to allow access to the database if you are the user > matching these details with the `DB_URL` in `config.env` > running the database build (to create the default schema and populate your test database with data) - using `node src/database/db_build.js` (that could be listed in the `"scripts"` in `package.json`) OR (after doing the next step of connecting to it, running `\i [full_path_to_db_build.sql]`) > connecting to it within `pgcli` using `\c [test_database_name]`.
+* THE GENERAL PRINCIPLE: So you connect the dots by creating the database > setting up your username/password to allow access to the database if you are the user (the keycard) > matching these details with the `DB_URL` in `config.env` (to set up the keycard reader to match) > running the database build (to create the default schema and populate your test database with data) - by using `node src/database/db_build.js` (that could be listed in the `"scripts"` in `package.json`) OR (after connecting to it using `\c [database_name]` in `pgcli`, running `\i [full_path_to_db_build.sql]`)
     *  To easily copy a file's full path right click on it in atom and click on "Copy Full Path"
+    * The database has now been created, populated, and you can access it locally within `pgcli` using `\c [database_name]` to run SQL commands on it locally.
 
 ##### Creating and connecting to a local database
 * In the directory on your terminal, run `psql` or `pgcli` (a Postgres CLI client)
@@ -302,6 +313,7 @@ _Resources:_ [_Morning challenge (SQL commands)_](https://github.com/foundersand
   `$ echo "export DATABASE_URL = {YOUR_COPIED_DATABASE_URL}" >> "config.env"`
 * Build your database by running: `$ node database/db_build.js`
 * So now can access your database from the command line with `psql [YOUR_COPIED_DATABASE_URL]`
+    * The database url is needed to essentially log you in as that Heroku user (so that you can get access to the database) - you'll notice that your username becomes the last few numbers of the Heroku username.
 
 #### Connecting to our database from the backend server
 * `src/dynamic.js` -- this file connects to the database (using `.query`, queries the database using the SQL command passed in as a string, and the response (`res`, and also `err`) is an array of objects from the database. The `res` could be the data needed to be passed to the front end via an endpoint.
@@ -324,11 +336,11 @@ _Resources:_ [_Morning challenge (SQL commands)_](https://github.com/foundersand
     const postData = (topicTitle, description, cb) => {
         dbConnection.query('INSERT INTO users (topicTitle, description) VALUES ($1, $2)', [topicTitle, description], (err, res) => {
             if (err) {
-            return cb(err);
+                return cb(err);
             }
             else {
-            cb(null, res);
-        }
+                cb(null, res);
+            }
         })
         }
     ```
@@ -490,3 +502,77 @@ tests: `"test": "NODE_ENV=test node tests/test.js | tap-spec",`.
 
     * This will specify which file to use based on whether it's in a test environment
     or not.
+
+### Research topics
+_Resources:_ [_Research afternoon_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/research-afternoon.md)
+
+#### Schemas and relationships
+[Link to notes](https://hackmd.io/uFvqlSMnTt6qGF-lGfOELg)
+
+#### Database setup and maintenance
+[Link to notes](https://hackmd.io/k7thUJsaSMiYaoRgx10dwQ)
+
+##### Database migration
+_Resource: the external speaker on databases_
+* Every update to the schema should be tracked and documented - so that there are steps to 'evolve' the schema and also the ability to undo the change
+    * This refers to **database migration**
+        * "How the database looks/should be like" or:
+        * > In software engineering, [schema migration](https://www.google.co.uk/search?ei=K9_JWsPaNoekwALw-oyYDA&q=define+database+sql+migration&oq=define+database+sql+migration&gs_l=psy-ab.3...4448.5235.0.5392.6.5.1.0.0.0.99.322.5.5.0....0...1c.1.64.psy-ab..0.1.51...0.0.rJ78t0sQWFc) (also database migration, database change management) refers to the management of incremental, reversible changes to relational database schemas
+    * Therefore the `CREATE TABLE` SQL script should be updated incrementally everytime the schema changes, so the default schema built has reflected all changes (it should not be down to SQL dumps being passed around).
+    * And [**migrations**](http://docs.sequelizejs.com/manual/tutorial/migrations.html) should be tracked using migration managers (such as [the sequelize CLI](https://github.com/sequelize/cli))
+
+#### Script injections / safety issues
+[Link to notes](https://hackmd.io/-F5Ha0IsTZyFqcuo1pfFqA)
+
+## Day Three and Four
+
+### Projects
+_Resource:_ [_The week six project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/project.md)
+
+#### Travis and databases
+* [The set up docs](https://docs.travis-ci.com/user/database-setup/)
+    * > I think essentially it comes down to adding this to your `travis.yml`
+    ```yml
+    services:
+    - postgresql
+    before_script:
+    - psql -c 'create database nameOfDB;' -U postgres
+    ```
+    * > Maybe writing another script to set env and build db?
+    ```json
+    "pretest": "ENV=test npm run db-build",
+    ```
+
+#### POSTing information using <form>
+* Forms does an XHR request by default to the specified endpoint: `<form method="POST" action="/create-topic" class="form">`
+* When sending over information to the backend using a form, that is not from user-input fields, can either have invisible input fields, or pass on information based on the endpoint going to (that are then extracted from the endpoint in the backend using `querystring`.
+    * For the latter, you can use [`encodeURI()`](https://www.w3schools.com/jsref/jsref_encodeURI.asp)
+        ```js
+        var uri = "my test.asp?name=ståle&car=saab";
+        var res = encodeURI(uri); // = my%20test.asp?name=st%C3%A5le&car=saab
+        ```
+    * Also for `querystring` to split the URI properly, only need one `?` and each segment seperated using `&` - e.g. `action='/?end=createvote&topic=climbing&user=helen`
+* When receiving data in the backend, it may be a stream of data (because of node) that needs to be caught in chunks. Only streams has start and end events.
+
+
+#### Use of SQL
+* You can `SELECT` from two tables simultaneously using: `SELECT topic.topic_title, topic.description, users.username FROM topic, users WHERE topic.user_id = users.id;`
+* The following beauty made our lives easier:
+    ```sql
+    SELECT t.topic_title AS title,
+        t.description,
+        u.username AS author,
+        COUNT(CASE WHEN v.vote_value = 'yes' THEN 1 ELSE null END) AS yes_votes,
+        COUNT(CASE WHEN v.vote_value = 'no' THEN 1 ELSE null END) AS no_votes
+    FROM voting AS v
+    RIGHT JOIN topic AS t
+    ON t.id = v.topic_id
+    INNER JOIN users AS u
+    ON t.user_id = u.id
+    GROUP BY t.id, u.username
+    ORDER BY t.id;
+    ```
+    * See it in action [here](http://www.sqlfiddle.com/#!17/c4d1a/1)
+    * Note the use of [**SQL alias**](https://www.w3schools.com/sql/sql_alias.asp) to gain the required information before joining the table.
+        * Use `SELECT` to specify the column headers of the temporary table, and the content can be based on conditions (use SQL alias to gain information from multiple different tables), then use `FROM` to first join the table that would have the most rows and `JOIN` the others. Finally use `GROUP BY` and `ORDER BY`.
+        * Note the use of `RIGHT JOIN` so that topics that have no votes are still listed (but with `yes_vote = 0` and `no_vote = 0`.)

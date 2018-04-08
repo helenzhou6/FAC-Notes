@@ -110,9 +110,15 @@ Where `tap-spec` NPM makes the output of `test.js` prettier, and `nodemon` NPM r
     *   More IIFEs [here](http://benalman.com/news/2010/11/immediately-invoked-function-expression/) and [here](https://toddmotto.com/what-function-window-document-undefined-iife-really-means/). IIFEs are immediately called at runtime and only run once, so good for privacy.
 
 *   For backend modularisation, you can use `require` at the top. So have the `module.js` - first version in a file. And then in the other file put `const module = require('./logic');` and then to access use `logic.console()`.
-*   To export multiple functions do `module.exports = {console, other};` (you still need to call it in the same manner in the other files, the same as if you exported the whole `module` function, except in this manner you can select which functions to export and which ones not to. This is called **deconstruction**). Also when using require if it is a `.js` file, you don't need to put that extension. Then put `var {console, other} = require('./logic.js’);` (or `var {console}; = require('./logic.js’);` for one) in other files.
+*   To export multiple functions do `module.exports = {console, other};` (you still need to call it in the same manner in the other files, the same as if you exported the whole `module` function, except in this manner you can select which functions to export and which ones not to. This is called **deconstruction**). Also when using require if it is a `.js` file, you don't need to put that extension. Then put `var {console, other} = require('./logic.js’);` (or `var {console}; = require('./logic.js’);` for one) in other files (as long there is deconstruction on both files).
     *   Also the conventional way to export multiple functions is not to wrap it all into a larger object, rather just separated functions in one file, then on import do: `const {console, x } = require (‘./module’)`. This means you only import the ones you need, and no longer need to do `module.console()` (just do `console()`).
     *   Relative paths are needed for local modules `(‘./module’)` but not for core modules.
+    * Another example: `const { Pool } = require('pg');`
+        * `{ Pool }` is syntactic sugar (shorten/simplify syntax with abstraction) ([destructuring assignment](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)) that is equivalent to:
+        ```js
+        const pg = require('pg');
+        const Pool = pg.Pool;
+        ```
 *   More examples [here](http://www.matteoagosti.com/blog/2013/02/24/writing-javascript-modules-for-both-browser-and-node).
 
 -   You can only use `require` in the backend! In the required file, wrap them in an object, with each function linking to a key, and `module.exports` the bottom (either the whole object or just selecting a few functions to export)
@@ -494,6 +500,18 @@ if (!trace) {
   var arrKeys = Object.keys(cat).concat(Object.keys(bird)).filter(function (value, index, self) { return self.indexOf(value) === index });
   console.log('Combo - ES5 :', arrKeys);
 ```
+
+* **Deconstruction**, Example:
+    ```js
+    params.auth = helen:ac123;
+    const [username, password] = params.auth.split(':');
+    ```
+    * `[username, password]` is a ES6 destructuring assignment that is syntactic sugar for:
+        ```js
+        const username = params.auth.split(':')[0];
+        const password = params.auth.split(':')[1];
+        ```
+    * Where username is index 0 of `params.auth.split(':')` and password is index 1, and so on.
 
 ### Research afternoon
 
