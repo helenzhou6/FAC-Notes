@@ -115,7 +115,31 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
 #### Challenges - SQL commands
 * Can use [`ORDER BY surname ASC|DESC`](https://www.w3schools.com/sql/sql_orderby.asp)
 * Using [`LIMIT`](https://www.techonthenet.com/sql/select_limit.php) to limit number of row displayed
-* For many to many relationships (where two tables can't be merged but temporarily joined -- need a **linking table**) - use [`JOIN`](https://www.w3schools.com/sql/sql_join.asp) and specify using `ON` which `id` primary key from the first table is referred to as a **foreign key** in the second table to link the tables (e.g. `SELECT publishers.name FROM publishers INNER JOIN books ON books.publisher_id = publishers.id`). More [here](https://community.modeanalytics.com/sql/tutorial/sql-joins/)
+* For many to many relationships need a **linking table**
+    * > The proper way to handle a many-to-many relationship in a relational database management system is a pair of separate Primary-Keyed tables linked by a third mediating table associating their keys as Foreign-Keys
+    * Example of one:
+    ```sql
+    CREATE TABLE pizza_topping (
+    pizza_id INT REFERENCES pizza(id),
+    topping_id INT REFERENCES topping(id)
+    );
+    ```
+    * Explanation [here](https://github.com/fac-13/research/issues/33) and [SQL Fiddle](http://sqlfiddle.com/#!15/760d8/1)
+
+    * The [aggregate function](https://www.postgresql.org/docs/10/static/functions-aggregate.html) - `array_agg()` can be used to combine some rows nicely to become `Four-Seasons | [Ham, Mushroom, Artichoke, Pepper] | 12.39`
+        ```sql
+        SELECT pizza.name, 
+        (SELECT array_agg(topping.name) 
+        FROM topping 
+        INNER JOIN pizza_topping
+        ON pizza_topping.topping_id = topping.id
+        WHERE pizza_topping.pizza_id = pizza_id),
+        pizza.price
+        FROM pizza
+        ORDER BY pizza.name
+        ```
+        > Note the `WHERE` clause which associates the subquery aggregation to each current pizza Primary Key - if this clause were omitted then the subquery would return an array of every topping record for each pizza and not just those associated to the given pizza
+* Using [`JOIN`](https://www.w3schools.com/sql/sql_join.asp) to temporarily join two tables. Specify the join point using `ON` which `id` primary key from the first table is referred to as a **foreign key** in the second table to link the tables (e.g. `SELECT publishers.name FROM publishers INNER JOIN books ON books.publisher_id = publishers.id`). More [here](https://community.modeanalytics.com/sql/tutorial/sql-joins/)
     * You can have a [**FOREIGN KEY constraint**](https://www.w3schools.com/sql/sql_foreignkey.asp) where when adding a row to one table, have to add a row to another table
     * Differences between the joins - where `INNER JOIN` only lists the data that is populated on both tables (matches on both tables), whilst `LEFT JOIN` or `RIGHT JOIN` will contain entries that are never referenced in the second table (that column is left blank)
     ![join image](https://i.imgur.com/LUejO6el.jpg)
