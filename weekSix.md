@@ -1,6 +1,6 @@
 # Week Six
 
-_Resource:_ [_week five schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-6) - [_our condensed version_](hhttps://github.com/foundersandcoders/london-programme/blob/master/current-cohort/week6.md) due to Bank Holiday, _the_ [_learning outcomes_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/learning-outcomes.md) _and have a look at_ [_the resources_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/resources.md).
+_Resource:_ [_week six schedule_](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/week-6) - [_our condensed version_](hhttps://github.com/foundersandcoders/london-programme/blob/master/current-cohort/week6.md) due to Bank Holiday, _the_ [_learning outcomes_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/learning-outcomes.md) _and have a look at_ [_the resources_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-6/resources.md).
 
 It's Database themed week!
 
