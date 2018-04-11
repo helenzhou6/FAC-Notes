@@ -422,3 +422,146 @@ Using [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken), to create JW
 var cookies = cookie.parse('foo=bar; equation=E%3Dmc%5E2');
 // { foo: 'bar', equation: 'E=mc^2' }
 ```
+
+### Client side Form validation
+_Resources:_ [_Challenge on form validation_](https://github.com/foundersandcoders/mc-client-side-validation)
+
+* Using [`novalidate`](https://www.w3schools.com/tags/att_form_novalidate.asp) attribute on the form removes the browser default form validation, so need to target using Javascript.
+    * If not using this, can instead do: `<input required title="require...etc" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" />`, where it will change the default 'required' browser message.
+* NB: Can use [`.onchange`](https://www.w3schools.com/jsref/event_onchange.asp) for when radiobuttons and checkboxes when the checked state has been changed.
+
+```html
+<form id="form" class="form"
+      name="sign_up_form" autocomplete="off" novalidate>
+    <label class="form__label" for="password">Password:
+        <input class="form__input" id="password" type="password" name="password" placeholder="Enter your password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="Must contain a number" minlength="10" maxlength="32" required/>
+    </label>
+    <label class="form__label" for="confirmPassword">Confirm password:
+        <input class="form__input" id="confirmPassword" type="password" name="confirmPassword" placeholder="Enter your password" required/>
+    </label>
+    <p class="error" aria-live="polite"></p>
+    <button name="submit_button" type="submit">Submit</button>
+</form>
+```
+
+* For validation on submit (after getting all the elements), then on certain issues would display an error message.
+    * `event.preventDefault();` is needed to prevent the form from submitting.
+    
+    ```js
+    form.addEventListener("submit", function(event) {
+        if (password.validity.valueMissing || confirmPassword.validity.valueMissing) {
+            error.innerText = "Please enter a password";
+            event.preventDefault();
+        }
+
+        if (
+            password.validity.patternMismatch ||
+            confirmPassword.validity.patternMismatch
+        ) {
+            error.innerText =
+            "Password must contain 10 to 32 characters and at least one number, one capital letter and one special character";
+            event.preventDefault();
+        }
+
+        if (password.value != confirmPassword.value) {
+            error.innerText = "Passwords do not match";
+            event.preventDefault();
+        }
+    });
+    ```
+
+* For validation when clicking away from the input field:
+    * This runs the functions listed below on `focusout` of the input fields.
+    ```js
+    password.addEventListener("focusout", checkPw);
+    confirmPassword.addEventListener("focusout", checkConfirmPw);
+    ```
+    * This checks the [`validity`](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) of each field (using the API), and displays errors if there are any issues.
+        * > Contains boolean properties related to the validity of an input element.
+    ```js
+    var checkPw = function() {
+        if (password.validity.patternMismatch) {
+            displayErr(
+            passwordErr,
+            "Password must contain 10 to 32 characters and at least one number, one capital letter and one special character"
+            );
+        } else if (password.validity.valueMissing) {
+            displayErr(passwordErr, "Please enter a password");
+        } else {
+            displayErr(passwordErr, "");
+            return true;
+        }
+    };
+
+    var checkConfirmPw = function() {
+        if (password.value != confirmPassword.value) {
+            displayErr(confirmErr, "Passwords do not match");
+        } else if (confirmPassword.validity.valueMissing) {
+            displayErr(confirmErr, "Please confirm your password");
+        } else {
+            displayErr(confirmErr, "");
+            return true;
+        }
+    };
+    ```
+
+    * This displays the error message on the error `p` element
+    ```js
+    function displayErr(errElem, errMsg) {
+        errElem.innerText = errMsg;
+    }
+    ```
+    * On submit, if the final `else` is reached (so it computes to `true`, and also the error messages have been removed), then submit the form, otherwise `event.preventDefault();` (i.e. don't submit the form)
+
+    ```js
+    form.addEventListener("submit", function(event) {
+        if (!checkPw()) {
+            event.preventDefault();
+        }
+        if (!checkConfirmPw()) {
+            event.preventDefault();
+        }
+    });
+    ```
+
+* Can use [form validation pseudo selectors](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) such as the following:
+    ```css
+    input:invalid{
+        border-color: #900;
+        background-color: #FDD;
+    }
+
+    input:focus:invalid {
+        outline: none;
+    }
+    ```
+
+### Research topics
+_Resource:_ [_the research topics_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/research-afternoon.md)
+
+#### HTTP vs HTTPS
+* [Hackmd notes](https://hackmd.io/PPY7y66xQbCZ2qkICdNmLw)
+
+#### Stateless vs stateful authentication
+* [States article](https://nordicapis.com/defining-stateful-vs-stateless-web-services/)
+
+#### Attacks
+* [Hackmd notes](https://hackmd.io/zFC64nvQSkiZ6O7E2hEWKQ)
+* [Understanding CSRF](https://github.com/pillarjs/understanding-csrf)
+* [Try hacking this site](https://hackyourselffirst.troyhunt.com/)
+
+#### Web storage
+* [Hackmd notes](https://hackmd.io/NiBv_Xp3SfuzMnhDcb6Q9A)
+
+## Day three
+
+### Promises
+_Resource:_ [_Promises challenge_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md)
+
+* `Promises.all` for chained API (has an array of functions), and then will just catch an error at the very end.
+    * If chained, it will wait until everything has been received before processing. Then it will start at the top, and if the next function only receives the response of the previous function 
+
+## Day three, four and five
+
+### The projects
+_Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md)
