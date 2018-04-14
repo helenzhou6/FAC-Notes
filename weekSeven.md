@@ -502,7 +502,7 @@ _Resources:_ [_Challenge on form validation_](https://github.com/foundersandcode
             displayErr(confirmErr, "");
             return true;
         }
-    };
+    };  
     ```
 
     * This displays the error message on the error `p` element
@@ -556,12 +556,147 @@ _Resource:_ [_the research topics_](https://github.com/foundersandcoders/master-
 ## Day three
 
 ### Promises
-_Resource:_ [_Promises challenge_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md)
+_Resource:_ [_Promises challenge_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md) _and_ [_online article_](https://scotch.io/tutorials/javascript-promises-for-dummies#summary)
 
-* `Promises.all` for chained API (has an array of functions), and then will just catch an error at the very end.
-    * If chained, it will wait until everything has been received before processing. Then it will start at the top, and if the next function only receives the response of the previous function 
+* > Callbacks are awesome as they allow us to work with asynchronous code by waiting until a response comes back before we do something with it. However, this waiting can begin to make our code look messy when we need to link multiple async functions together.
+    * (You could end up with the a **flying V*)
+* **Promises** are a wrapper around callbacks.
+    * NB: ES5 doesn't support promises out of the box. 
+    * A example of an error first callback for doing something async...
+    ```js
+    const APIcall =  "https://pokeapi.co/api/v2/pokemon/pikachu;"
+    const myApiCall = (url, callback) => {
+    https
+        .get(url, resp => {
+            let data = ''
+            resp.on('data', chunk => {
+                data += chunk
+            })
+            resp.on('end', () => {
+                try {
+                    callback(null, JSON.parse(data))
+                } catch (e) {
+                    callback('It dun broked')
+                }
+            })
+        })
+        .on('error', err => {
+            callback(err.message);
+        })
+    }
+
+    <!-- calling it -->
+    myApiCall(pikaUrl, (err, res) => {
+        if (err) console.log(res)
+        else console.log(res)
+    })
+    ```
+    * ...vs promises:
+    ```js
+    const myPromiseApi = url => {
+        return new Promise((resolve, reject) => {
+        https
+        .get(url, resp => {
+            let data = ''
+            resp.on('data', chunk => {
+            data += chunk
+            })
+            resp.on('end', () => {
+            try {
+                resolve(JSON.parse(data))
+            } catch (e) {
+                reject('It dun broked')
+            }
+            })
+        })
+        .on('error', err => {
+            reject(err.message)
+        })
+    })
+    }
+    ```
+
+* Defining a promise
+    * **Promises** has three states: **pending**, **resolved** and **rejected**. 
+        * Where resolved = the Promise has been fulfilled, so call `resolve(response)` otherwise `reject(error.message)`
+    * NB: there is a [standard syntax to define a new Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise): `new Promise(/* executor*/ function (resolve, reject) { ... }`
+* Consuming the promise.
+    * We use `.then` and `.catch` to handle our action, where there is no callback nesting.
+    ```js
+    myPromiseApi(pikaUrl)
+        .then(console.log)
+        .catch(console.log)
+    ```
+
+#### Chaining async functions
+* If chaining functions, it will wait until everything has been received before processing. 
+    ```js
+    funcOne((err, resOne) => {
+    if (err) recoverFromError(err)
+        else funcTwo((err, resTwo) => {
+            if (err) recoverFromError(err)
+            else funcThree ((err, resThree) => {
+            if (err) recoverFromError(err)
+            else funcFour ((err, resFour) => {
+                if (err) recoverFromError(err)
+                else funcFive ((err, resFive) => {
+                <!-- do something -->
+                })
+            })
+            })
+        })
+    })
+    ```
+    * Whilst the same thing with promises:
+    ```js
+    funcOne
+        .then(funcTwo)
+        .then(funcThree)
+        .then(funcFour)
+        .then(funcFive)
+        .catch((err)=> recoverFromError(err))
+    ```
+    * If the next function only has one argument (to receive the previous response in order to process it), then there is no need to pass the response in - it passes along the response at each step automatically.
+
+    * Where each funcion (`funcTwo` etc) has:
+    ```js
+    var funcTwo = resOne => {
+        return new Promise(
+            (resolve, reject) => {
+                <!-- do something async -->
+                resolve(resThree);
+            }
+        )
+    }
+    <!-- AFTER REFACTORING -->
+    var funcTwo = function (phone) {
+        <!-- do something -->
+        return Promise.resolve(message);
+    };
+    ```
+    * You only need to define a promise if you are doing an async function.
+    * NB: the reject is optional
+
+* Note with Promises you only need to catch errors once, at the end.
+
+#### `Promises.all`
+* You can use  [`Promises.all`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) for multiple async functions
+    * > This method returns a single Promise that resolves when all of the promises in the iterable argument have resolved or when the iterable argument contains no promises. 
+* You pass it the array of functions:
+    ```js
+    const promiseArray = [funcOne, funcTwo, funcThree];
+    Promise.all(promiseArray).then(values => {
+        console.log(values);
+    });
+        .catch((err)=> recoverFromError(err));
+    ```
+    * This would `console.log` each response within an array.
+
+#### Other stuff
+* NB: There are also **observables** and `async` and `await` syntax in ES7 and described [in this article](https://scotch.io/tutorials/javascript-promises-for-dummies#summary)
 
 ## Day three, four and five
 
 ### The projects
 _Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md)
+
