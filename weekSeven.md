@@ -151,6 +151,28 @@ const comparePasswords = (password, hashedPassword, callback) => {
 ```
 * NB: No need to do the callback bit because it is handled in a different file (i.e. the test file)
 
+* Then in use:
+```js
+hashPassword('hello' (err, hashedPw) => {
+    if(err){
+        // handle error
+    } else {
+        // handle hashedPw
+    }
+});
+
+comparePasswords('hello', hashedPassword, (err, result) => {
+    if (err) {
+        // handle error
+    } else {
+        if (result) {
+            // handle if password match
+        } else {
+            // handle if password doesn't match
+        } 
+    }
+})
+```
 * Example of tests:
 
 ```js
@@ -265,6 +287,10 @@ _Resource:_ [_Jwt Stateless Session Workshop_](https://github.com/foundersandcod
 
 * Pieces of information about a user within an application (that would cover most of the requests) that would be useful inside a cookie would be e.g.:
     ```js
+    const jwtmodule = require('jsonwebtoken');
+    require('env2')('.config/.env');
+    const secret = process.env.SECRET;
+
     userInfo = {
         userId: 45,
         accessPrivileges: {
@@ -272,8 +298,8 @@ _Resource:_ [_Jwt Stateless Session Workshop_](https://github.com/foundersandcod
             admin: false
         }
     };
-
-    const cookieValue = JSON.stringify(userInformation);
+    
+    const cookieValue = jwtmodule.sign(userInfo, secret);
 
     req.setHeader('Set-Cookie', `data=${cookieValue}; HttpOnly; Secure`);
     ```
@@ -283,6 +309,25 @@ _Resource:_ [_Jwt Stateless Session Workshop_](https://github.com/foundersandcod
         * Cookie would have an expiration (like a month) - so that if the old one is compromised it is considered invalid anyway.
     * When the user navigates around the site (to user-type-restricted areas)/makes API calls to the server, the server will use the cookie to validate them and enable access/processes the API call. (Example [here](https://medium.com/vandium-software/5-easy-steps-to-understanding-json-web-tokens-jwt-1164c0adfcec))
         *  Only the authentication server and the application server knows the secret key. On receiving the signed cookie, the application can perform the same signature algorithm on the unencoded userInfo, and if the hashes matches - the application knows the cookie is valid.
+* To decode received JWT in the backend and verify it:
+    ```js
+    const userCookie = request.headers.cookie;
+    if (!userCookie) return addErrorCookie(response, 'need to log in');
+    const { jwt } = cookie.parse(userCookie);
+    if (!jwt) return addErrorCookie(response, 'need to log in');
+    jwtmodule.verify(jwt, secret, (err, jwt) => {
+        if (err) {
+            <!-- handle the error -->
+        } else {
+        let body = '';
+            request.on('data', chunk => (body += chunk));
+            request.on('end', () => {
+                const data = querystring.parse(body);
+                <!-- handle response.end etc -->
+        }
+    });
+
+    ```
 
 #### HMAC
 * But security and how can you tell cookie has not been tampered with?
@@ -700,3 +745,56 @@ _Resource:_ [_Promises challenge_](https://github.com/foundersandcoders/master-r
 ### The projects
 _Resource:_ [_the project_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-7/project.md)
 
+* Our project was a continuation of [last week's project](https://github.com/fac-13/HEII-topics), but with user registration and authentication.
+
+* To display a username:
+    1. On DOM.js, on submit of the login form, get the username from the input field and store it globally.
+    2. In the backend, add a loggedin=true cookie once jwt has been verified
+    3. On the front end - check to see the value of the cookie, and if it is true then display the username globally.
+
+* Obtaining messages from the backend (such as if user logged in and error messages):
+    * Backend: `response.end(message)` and get it from the front end using an XHR request - `callback(null, JSON.parse(xhr.responseText));` (this is generic method for one-pagers)
+    * Using default html in front end `<form action="/login" method="POST">`, in the backend: `response.writeHead(200, {'Set-Cookie': 'message=you are now logged in' });` and front end: `if (document.cookie !== 'message=OK' && document.cookie) { errorMessage.textContent = document.cookie.split('=')[1] };` (try and avoid)
+    * OR multi page sites can use **templating** to grab stuff before `html` file sent.
+
+#### Travis and databases
+* Using `travis` with databases, inside `db__connection.js` use:
+    ```js
+    if (process.env.TRAVIS === 'true') {
+    options = {
+        database: 'travis_ci_test'
+    };
+    } else {
+        <!-- all the include from `process.env.NODE_ENV === 'test'` onwards -->
+    }
+    ```
+* And in the `.travis.yml` file:
+    ```js
+    language: node_js
+    node_js:
+    - "node"
+    notifications:
+    - email: false
+    services:
+    - postgresql
+    before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
+    ```
+
+#### Other code snippets learnt
+
+* For database names: do not use uppercase letters or hyphens.
+* READMEs should contain:
+    * A good description of what the app is for. 
+    * How to run the project locally 
+    * Things you learnt
+    * Things you found difficult
+    * Diagrams of your white boarding & planning stages
+* Use `Array.from()` to make an array from a response.
+* SQL tips:
+    * Can be used to check if the input is correct or not, e.g.: `email VARCHAR(100) CONSTRAINT proper_email CHECK (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),`
+    * For unique entries: `CREATE UNIQUE INDEX email`
+    * `BIGSERIAL` = for things such as transactions (since numbers can run out)
+    *  `LEFT JOIN` - means doesn’t matter the order of the tables that are joined together, if there are multiple tables it will include all non-overlapping rows.
+* On Dom.js can access pseudo elements e.g. `if (button.disabled == true)`
+* When testing using supertest, and making a POST request, use `.send(password=string)` 

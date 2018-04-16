@@ -36,31 +36,37 @@ _Resources:_
 
 #### XMLHttpRequest
 
-*   `var xhr = new XMLHttpRequest();` - using the object constructor, `xhr` is a new instance of the object `XMLHttpRequest()` that has all associated methods.
+*   `var xhr = new XMLHttpRequest();` - using the object constructor, `xhr` is a new instance of the object `XMLHttpRequest()` that has [all associated methods](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest).
 *   There can change properties of the object, including `xhr.open` and `xhr.onreadystatechange`
 *   `xhr.onreadystatechange` - is an event listener for every time the ready state changes (keeps track of the request from **readyState** 0 to 4, and the response back (i.e. the **HTTP status code** received)). So `(xhr.readyState == 4 && xhr.status == 200)` = complete this function if request completed and a [status code](https://github.com/foundersandcoders/api-workshop/blob/master/02-http.md#http-status-codes) has been received and is 'OK' (not an error like the status code 404.
+    * Can do `xhr.addEventListener("load", callback);` instead,  where not need `if (xhr.readyState == 4 && xhr.status == 200)`
 *   Finally, use `xhr.send()` to then send the HTTP request.
 *   For example:
 
-```
+```js
 // In Logic.js file
-function fetch (url, processResult, displayResponse) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            var response = JSON.parse(xhr.responseText);
-            var result = processResult(response);
-            displayResponse(result);
-        } else {
-            console.log('XHR error', xhr.readyState);
-        }
-    };
-    xhr.open("GET", url, true);
-    xhr.send();
-});
+function clientRequest(method, url, body, callback) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.addEventListener("load", function() {
+    console.log(xhr.status);
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      callback(null, response);
+    } else {
+      callback('error');
+      console.log("XHR error", xhr.status);
+    } 
+  });
+  xhr.open(method, url, true);
+  xhr.send(body);
+}
 ```
 
+* Can also add `addEventListener("error", transferFailed);`
 *   `xhr.responseText` = the response, but it needs to be parsed using: `JSON.parse(xhr.responseText)` so that the response can be accessed like a JS object.
+* Method is e.g. `"GET"`, if it is `"POST"` then `body` is the message being sent (if "GET" then this can be `null`).
+* `callback` is error first callback
 
     *   Then to have an event listener function:
 

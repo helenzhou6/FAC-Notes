@@ -297,19 +297,22 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     * The database has now been created, populated, and you can access it locally within `pgcli` using `\c [database_name]` to run SQL commands on it locally.
 
 ##### Creating and connecting to a local database
-* In the directory on your terminal, run `psql` or `pgcli` (a Postgres CLI client)
-* Create the database by typing `CREATE DATABASE [tablename];`
-* Create a user specifically for the database with a password (though not necessary?)
-    * Type `CREATE USER [the new username] WITH SUPERUSER PASSWORD '[the password of the database]'`;
-        - The password needs to be in single-quotes, otherwise you get an error
-        - For security: In production/public facing server, clear command history and use a password manager with 25+ random characters - and use a firewall
-        - A new user is made specifically for the application/database, so if this user is compromised, other databases should remain safe. (security: avoid use of superusers/root + give minimum permissions needed)
-    * Change ownership of the database to the new user by typing `GRANT ALL PRIVILEGES ON DATABASE [name of the database] TO [the new username];` OR `ALTER DATABASE [db_name] OWNER TO [user_name];`
-* Add a `config.env` file and add the database's url in this format: `DB_URL = postgres://[username]:[password]@localhost:5432/[database]`. The username and password that has been generated previously and that you are logged in with locally (the library card) _need to match_ the `[username]:[password]` of `DB_URL` --> since if not you can not access the library since it needs to match the Pool options/the door card reader (that has been generated from the `DB_URL` in `config.env`). If it matches, then it allows the user to connect to the database once within `pgcli`.
+1. `git clone [the url to repo]`
+2. Run `npm i` to install the required modules
+3. Set up the local database by:
+    1. In the directory on your terminal, run `psql` or `pgcli` (a Postgres CLI client) in the terminal on MAC, and `sudo -u postgres psql` on ubuntu, to connect to postgres.
+    2. Create the database by typing `CREATE DATABASE [tablename];`. It's best not to use a hyphen (`-`) or uppercase letters in your database name.
+    3. Create a user specifically for the database with a password (though not necessary?)
+        * Type `CREATE USER [the new username] WITH SUPERUSER PASSWORD '[the password of the database]'`;
+            - The password needs to be in single-quotes, otherwise you get an error
+            - For security: In production/public facing server, clear command history and use a password manager with 25+ random characters - and use a firewall
+            - A new user is made specifically for the application/database, so if this user is compromised, other databases should remain safe. (security: avoid use of superusers/root + give minimum permissions needed)
+        * Change ownership of the database to the new user by typing `GRANT ALL PRIVILEGES ON DATABASE [name of the database] TO [the new username];` OR `ALTER DATABASE [db_name] OWNER TO [user_name];`
+4. Add a `config.env` file in the root and add the database's url in this format: `DB_URL = postgres://[username]:[password]@localhost:5432/[database]`. The username and password that has been generated previously and that you are logged in with locally (the library card) _need to match_ the `[username]:[password]` of `DB_URL` --> since if not you can not access the library since it needs to match the Pool options/the door card reader (that has been generated from the `DB_URL` in `config.env`). If it matches, then it allows the user to connect to the database once within `pgcli`.
     * The `config.env` has the sensitive information (`DB_URL`) that is structured in a way to obtain certain bits of information needed to make the door key card reader.
     - Don't use semi-colons or apostrophes for strings in `config.env`, or use alternative JSON notation
     - This is your keycard to access the database
-* Now we build the tables we set out in `db_build.sql` by running our `db_build.js` file by running: `node database/db_build.js` in command line. OR `psql --file init.sql` in bash OR within `pgcli` do `\i db_build.sql` to run the SQL build.
+* Now we build the tables we set out in `db_build.sql` by running our `db_build.js` file by running: `node database/db_build.js` in command line. OR `psql --file init.sql` in bash OR within `pgcli` do `\i [correct path to db_build.sql]` to run the SQL build.
 
 * Connect to the database by typing `psql postgres://[username]:[password]@localhost:5432/[database]` OR when within `pgcli` use `\c [databasename]`
     * If you experience permission problems, try running `psql superheroes` then `GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO [the new username];`
