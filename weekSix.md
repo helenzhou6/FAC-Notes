@@ -301,7 +301,8 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
 2. Run `npm i` to install the required modules
 3. Set up the local database by:
     1. In the directory on your terminal, run `psql` or `pgcli` (a Postgres CLI client) in the terminal on MAC, and `sudo -u postgres psql` on ubuntu, to connect to postgres.
-    2. Create the database by typing `CREATE DATABASE [tablename];`. It's best not to use a hyphen (`-`) or uppercase letters in your database name.
+    2. Create the database by typing `CREATE DATABASE [db name];`. It's best not to use a hyphen (`-`) or uppercase letters in your database name.
+        * Can do `createdb [db name]` in terminal to create database (instead inside pgcli)
     3. Create a user specifically for the database with a password (though not necessary?)
         * Type `CREATE USER [the new username] WITH SUPERUSER PASSWORD '[the password of the database]'`;
             - The password needs to be in single-quotes, otherwise you get an error

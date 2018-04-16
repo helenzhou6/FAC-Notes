@@ -755,6 +755,7 @@ _Resource:_ [_the project_](https://github.com/foundersandcoders/master-referenc
 * Obtaining messages from the backend (such as if user logged in and error messages):
     * Backend: `response.end(message)` and get it from the front end using an XHR request - `callback(null, JSON.parse(xhr.responseText));` (this is generic method for one-pagers)
     * Using default html in front end `<form action="/login" method="POST">`, in the backend: `response.writeHead(200, {'Set-Cookie': 'message=you are now logged in' });` and front end: `if (document.cookie !== 'message=OK' && document.cookie) { errorMessage.textContent = document.cookie.split('=')[1] };` (try and avoid)
+        * NB: When posting data using the HTML method, the post data is **urlencoded** (rather than sent as JSON), so need `querystring` or `qs` to parse in the backend.
     * OR multi page sites can use **templating** to grab stuff before `html` file sent.
 
 #### Travis and databases

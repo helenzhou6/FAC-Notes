@@ -10,3 +10,4 @@ I (somehow) made it to FAC13 😊🎉, and these are just notes based on the mat
 *   [Week Five](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFive.md) - Node week two. Project: [website](https://github.com/fac-13/jeth) with an XHR request from the front end to back end, and then the back end server makes an API call.
 *   [Week Six](https://github.com/helenzhou6/FAC-Notes/blob/master/weekSix.md) - Databases. Project: [a dynamic web app](https://github.com/fac-13/HEII-topics) which uses data from a database (connected to via a node.js server).
 *   [Week Seven](https://github.com/helenzhou6/FAC-Notes/blob/master/weekSeven.md) - User authentication. Project: continuation from the [week six project](https://github.com/fac-13/HEII-topics), but also includes user registration and authentication.
+*   [Week Eight](https://github.com/helenzhou6/FAC-Notes/blob/master/weekEight.md) - Using Express and Handlebars. Project: TBC.
