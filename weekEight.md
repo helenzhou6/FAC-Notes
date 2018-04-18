@@ -90,9 +90,9 @@ app.listen(3000, () => {
 * Need to add `.catch(err => next(err));` at the end of all the handlers
 
 #### 2) Middleware functions
-* [**Middleware functions**](http://expressjs.com/en/guide/writing-middleware.html) has _three_ arguments: `(req, res, next)` (which is the only difference between a middleware function and a route handler callback)
+* [**Middleware functions**](http://expressjs.com/en/guide/writing-middleware.html) has _three_ arguments: `(req, res, next)` (which is the only difference between a middleware function and a route handler callback). (More notes [here](https://hackmd.io/7rh55oT6ThOEjSwlsxWHmg?edit))
 * Middleware and routing functions are called in the order that they are declared - so ensure middleware is called before setting routes.
-    * `next()` is called if the middleware does not complete the request cycle - since it is the next function (that could be another middleware) in the application’s request-response cycle.
+    * `next()` is called if the middleware does not complete the request cycle - since it is the next function (that could be another middleware) in the application’s request-response cycle. This is really important or else the request is left **hanging**
     ![middleware flow](https://github.com/foundersandcoders/express-workshop/blob/master/images/middleware.jpg?raw=true)
 * Use `app.use()` to call the middleware function. It runs the functions sequentially (NB the order) - as long as use `next()` to skip to the next function.
     ```js
@@ -110,6 +110,17 @@ app.listen(3000, () => {
         console.log(Date.now(), 'after');
     });
     ```
+* Or something like (within the router):
+    ```js
+    const fruits = require('./../model/index');
+    exports.get = (req, res, next) => {
+        if ([condition]) {
+            return res.render('singlefruit', { singleFruit });
+        }
+    next()
+    }
+    ```
+    * Where if the condition is met, then `res.render()` runs, (so this needs to `return` or else `next()` runs), otherwise `next()` runs which will proceed to the next `app.use()` - which is the 500 error.
 
 ##### Morgan Middleware
 * `const morgan = require('morgan');` - `morgan` middleware is an HTTP request logger middleware function 
@@ -127,7 +138,7 @@ app.listen(3000, () => {
 
 ##### Modularisation
 * Look [here](https://github.com/foundersandcoders/express-workshop/tree/solution/13-split-into-modules/src) for the file structure AND [here](https://github.com/foundersandcoders/express-and-testing-workshop/tree/solution-branch) for another structure (that also includes database SQL queries)
-* `index.js` (is like `server.js`) that has the app entry point/is the starting point (NB that should be listed on the `package.json`:
+* `index.js` (is like `server.js`) that has the app entry point/server entry point/ is the starting point - It sets up the server with handlebars middleware and routes. (NB that should be listed on the `package.json`:
     ```js
     const app = require('./app');
     app.set('port', process.env.PORT || 3000);
@@ -296,7 +307,7 @@ test('Should be able to get a facster by their name', t => {
 ```
 
 ### Handlebars
-_Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders/express-handlebars-workshop)
+_Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders/express-handlebars-workshop) _and_ [_express and handlebars challenge_](https://github.com/foundersandcoders/express-handlebars-challenge/tree/solution-branch)
 
 * **HTML templating** - serving dynamic files from the backend using `Handlebars` (thus avoid duplication)
 * `Handlebars` is a **template engine** designed to combine reusable text (i.e. templates) with dynamic data in order to generate HTML.
@@ -307,10 +318,15 @@ _Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders
 
 #### Model-View-Controller (MVC) model
 
-> This is a common architectural design pattern to separate the data, their representation in the browser and the logic of your application. Think of your application as three separate parts talking to each other:
-1. **Model**: data stored in a database // directory - for data processing, database builds and SQL queries.
-1. **View**: the aesthetics/representation of data in your application // directory  holds the `.hbs` (handlebars) files (i.e. the html templates to 'view'). At the root there is a `.hbs` for each page that the client will view, and there is a folder for helpers, layouts and partials.
-1. **Controller**: the *brain* of your application // directory - for routes, linking
+> This is a common architectural design pattern to separate the data, their representation in the browser and the logic of your application.
+> More generally, MVC logic can be used to describe almost any web development process that uses a language like PHP, Ruby, Python or JavaScript.
+> Think of your application as three separate parts talking to each other:
+* **Model**: data stored in a database // directory - for data processing, database builds and SQL queries. // Structures your data in a reliable form and prepares it based on controller’s instructions // The model carries out the logic, pulls from a database and sends back a consistent response based on the controller’s instructions.
+* **View**: the aesthetics/representation of data in your application // directory holds the `.hbs` (handlebars) files (i.e. the html templates to 'view'). At the root there is a `.hbs` for each page that the client will view, and there is a folder for helpers, layouts and partials. // Displays data to user in easy-to-understand format, based on the user’s actions
+* **Controller**: the *brain* of your application // directory - for routes, linking // Takes in user commands, sends commands to the model for data updates, sends instructions to view to update interface.
+> You are the user, and the drink order is the **user request**. The bartender's brain is the **controller** - they use the limited tool set (the **model**) - e.g. glasses etc. behind the bar. The finished drink is the **view** (build out of the limited options from the model, arranged and transmitted via the **controller**)
+* Aim for a **skinny controller** - the controller should contain a minimal amount of logic - delegate it to the model.
+    * The controller should just receive the request, and give a specific set of orders that are related to that route. These instructions could either be for the view to update or serve a certain page, or for the model to perform specific logic. After processing, it then passes the data to the view to update the user interface.
 
 ![A diagram of the MVC model](https://cdn-images-1.medium.com/max/1600/1*4SxbmCrI5YVp1Uyj1Jstsg.png)
 
@@ -319,8 +335,6 @@ Image Cred: Real Python (from [this medium post](https://medium.freecodecamp.com
 ![handlebars type of templates](https://i.imgur.com/LUPgUxp.png)
 
 > It is generally good practice to separate the view (presentation/ aesthetics) and the model (actual data), as this encourages clean code organisation. More information on the MVC model [here](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) and [here](https://medium.freecodecamp.com/model-view-controller-mvc-explained-through-ordering-drinks-at-the-bar-efcba6255053#.3autr7o1d).
-
-
 
 
 #### Using it with Express
@@ -369,13 +383,13 @@ Image Cred: Real Python (from [this medium post](https://medium.freecodecamp.com
 
 * `./src/controllers` directory - the routes
     * `home.js` has `res.render()` that renders a view - specifically it renders the `home.hbs` HTML inside of the `{{{ body }}}` within `main.hbs` (it does this by default/magic) - and sends the rendered HTML string to the client.
-        * And `exports.get` is similar to `module.exports()`
+        * And `exports.get` is similar to `module.exports()` - so it renders the `src/views/home.hbs` view. In turn, the `src/views/home.hbs` view is rendered within the `src/views/layouts/main.hbs` layout.
     ```js
     exports.get = (req, res) => {
         res.render("home");
     };
     ```
-    * `index.js` - Express looks for this file that contains the routes/endpoints and links them with the appropriate imported `res.render()`.
+    * `src/routes/index.js` - Express looks for this file that contains the routes/endpoints and links them with the appropriate imported `res.render()`. Here is where the home route is defined.
     ```js
     router.get("/", home.get);
     ``` 
@@ -497,3 +511,77 @@ Image Cred: Real Python (from [this medium post](https://medium.freecodecamp.com
 ##### Other
 * NB: `<script>` tags that pull in `js` files you've made yourself should usually be at the bottom of the `<body>`, so that they only load after all the HTML has been loaded.
     * So within `./src/views/layouts` add `{{#if activePage.fruits}}<script src="/js/fruit-fav.js"></script>{{/if}}`
+* You can do the following:
+    ```html
+    {{#each users}}
+        {{#if this.loggedIn}}
+        <li>{{this.name}}</li>
+        {{else}}
+        <li>Log In</li>
+        {{/if}}
+    {{/each}}
+    ```
+  * Or can do `{{else if}}`
+
+
+* If you `require` a directory, then `express` will find the `index.js` file by default (rather than needing to write the full path to `index.js`)
+
+### Research topics
+_Resource:_ [_research topics_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-8/research-afternoon.md)
+
+#### Promises and Fetch
+
+#### Express Middlewares
+[More detailed explanation](https://hackmd.io/7rh55oT6ThOEjSwlsxWHmg?edit)
+
+`cookie-session` is an npm module that is used for signed cookies (that is a form of middleware).
+> This module stores the session data on the client within a cookie
+
+* An object is passed into cookie session as per the cookie session docs. `name` is whatever you want to call the cookie (default is session). `secret` is what would be in the `config.env` file
+    ```js
+    const express = require('express');
+    const app = express();
+    const cookieSession = require('cookie-session');
+
+    app.use(cookieSession({
+        name: 'session',
+        secret: 'orange'
+    }));
+    ```
+
+* You can add key value pairs to the cookie by using `req.session.[key] = [value]`.
+    ```js
+    app.get('/login', (req, res) => {
+        req.session.username = 'helen';
+        res.send('You are logged in');
+    });
+    ```
+* For restricted endpoints can do:
+    ```js
+    if (req.session.length > 0) {
+        return res.send(`Username is ${req.session.username}`);
+    } else {
+        res.send('Acess denied, Go log in!!!');
+    }
+    ```
+* To log out the user / delete the cookie
+    ```js
+    app.get('/logout', (req, res) => {
+        req.session = null;
+        res.send('You are now logged out')
+    })
+    ```
+* For error handling:
+    ```js
+    app.use((req, res) => {
+        res.send('Oops couldn\'t find that page ...404');
+
+    })
+
+    app.use((err, req, res, next) => {
+        res.send(`Ooops error ...500!! Your error is ${err.message}`);
+    })
+    ```
+#### Session-management in Express
+
+#### Templating and Serverside rendering
