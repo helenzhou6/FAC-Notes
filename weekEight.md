@@ -295,3 +295,191 @@ test('Should be able to get a facster by their name', t => {
 });
 ```
 
+### Handlebars
+_Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders/express-handlebars-workshop)
+
+* **HTML templating** - serving dynamic files from the backend using `Handlebars` (thus avoid duplication)
+* `Handlebars` is a **template engine** designed to combine reusable text (i.e. templates) with dynamic data in order to generate HTML.
+    * It builds on top of [Mustache](https://github.com/janl/mustache.js).
+    * Can be used for client-side and server-side **rendering**.
+* It minimises writing JS logic inside the templates, and have embedded placeholders that "hold" data.
+
+#### Using it with Express
+* Express has extensive support for template rendering and can load and leverage Handlebars.js.
+
+* **Rendering** in the context of express refers to the [`render`](http://expressjs.com/en/api.html#res.render) function - where we tell express which rendering engine to use (in this case handlebars) in order to take various pieces of input and compose them into an html string to be sent to the client.
+    * We do this in `./src/app.js` - `app.engine` tells express to use the **view engine** (express-handlebars) to render hbs files. We are also configuring express-handlebars by giving the various directories that the engine will search for, and the default layout.
+    ```js
+    const exphbs = require("express-handlebars");
+
+    const controllers = require('./controllers/index');
+    const helpers = require('./views/helpers/index');
+
+    const express = require('express');
+    const app = express();
+
+    app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', 'hbs');
+    app.engine(
+        'hbs',
+        exphbs({
+            extname: 'hbs',
+            layoutsDir: path.join(__dirname, 'views', 'layouts'),
+            partialsDir: path.join(__dirname, 'views', 'partials'),
+            defaultLayout: 'main',
+            helpers,
+        })
+    );
+
+    app.set('port', process.env.PORT || 3000);
+    app.use(favicon(path.join(__dirname, '..', 'public', 'favicon.ico')));
+    app.use(express.static(path.join(__dirname, '..', 'public')));
+    app.use(controllers);
+    ```
+
+* The files are split according to the type of file:
+    ![handlebars type of templates](https://i.imgur.com/LUPgUxp.png)
+    * **views** - `./src/views` directory  holds the `.hbs` (handlebars) files (i.e. the html templates to 'view'). At the root there is a `.hbs` for each page that the client will view, and there is a folder for helpers, layouts and partials.
+    * **Controller** - `./src/controller` directory - for routes
+    * **model** directory - for data processing, database builds and SQL queries.
+
+##### Main home page
+* `./src/views/layouts` directory holds **layouts** (i.e. base templates). It includes:
+    * `main.hbs` that has the default 'view', with 
+    ```html
+    <main>
+        {{{ body }}}
+    </main>
+    ```
+    * `{{{ body }}}` will be the hbs file we are rendering.
+* In the root `./src/views` contains `home.hbs` - the content specific to the 'home' page (that will replace the `{{{ body }}}`)
+
+* `./src/controllers` directory - the routes
+    * `home.js` has `res.render()` that renders a view - specifically it renders the `home.hbs` HTML inside of the `{{{ body }}}` within `main.hbs` (it does this by default/magic) - and sends the rendered HTML string to the client.
+        * And `exports.get` is similar to `module.exports()`
+    ```js
+    exports.get = (req, res) => {
+        res.render("home");
+    };
+    ```
+    * `index.js` - Express looks for this file that contains the routes/endpoints and links them with the appropriate imported `res.render()`.
+    ```js
+    router.get("/", home.get);
+    ``` 
+* And `./src/views/partials` directory that holds **partials** (smaller templates within templates). Partials allow us to reuse snippets of HTML preventing duplication - to put into the partials anything that is repeated across multiple pages/layouts.
+    *   `htmlHead.hbs` contains the `<head>[content]</head>`
+        * Link it inside `main.hbs` using the syntax `{{>htmlHead}}`
+
+##### Other pages
+* So now we have the main homepage set up, but for other 'view' pages, for each page have a seperate `.hbs` file within the `./src/views` root.
+
+* `./src/controllers/index.js`:
+    ```js
+    const express = require('express');
+    const path = require('path');
+    const router = express.Router();
+
+    const fruits = require('./fruits');
+    router.get('/fruits', fruits.get);
+    ```
+
+* `./src/model/index.js` has `module.exports = ['watermelon', 'strawberry'];`
+
+* `./src/controllers/fruits.js`
+    ```js
+
+    const fruits = require('./../model/index');
+
+    exports.get = (req, res) => {
+        res.render('fruits', { activePage: { fruits: true }, fruits });
+    };
+    ```
+    * `res.render()`/ the relevant controller also takes an object as an optional second argument (in this case the `fruits` **model** array from `./src/model/index.js`). Within the view (e.g the hbs file being rendered) values passed in on the options object will be available as variables named after the object keys. This allows us to insert values or use values along with handlebars helpers (see below!) to otherwise customise the view.
+    * To obtain things passed in using the url - `const { fruit } = req.params;` 
+
+* `./src/views/fruits.hbs` - has the template for the page (including partials where needed), which will be rendered as `{{{ body }}}` in the `main.hbs` layout.
+    * It can access information passed into the second argument of `res.render()`
+    * We can now use handlebars' built in **helpers** to dynamically generate HTML, such as:
+
+    ```html
+    {{#each fruits}}
+        <li class="fruit__item">
+            <a class="fruit__link" href="/fruits/{{this}}"><div class="fruit__image" style="background-image: url(/images/fruits/{{this}}.jpg)"></div></a>
+            <div class="fruit__info">
+                <h2 class="fruit__name">{{capitalize this}}</h2>
+                <svg class="fruit__fav-btn"><use id="js-fav-btn" xlink:href="#icon-heart"></use></svg>
+            </div>
+        </li>
+
+    {{/each}}
+    ```
+
+##### Helpers
+* **helpers** (functions used in templates to manipulate data) to ultimately render **views**.
+    * For CSS styling of the current page, can pass in `res.render([hbs file name], {active page: { home: true}})` and within `header.hbs` add `{{#if activePage.home}}navbar__link--active{{/if}}`
+
+* We can create our own helpers in plain javascript; custom **helpers** are within `./src/views/helpers` directory.
+    * This also has a require `index.js` file to refer to the other files - an index for all the helpers:
+    ```js
+    module.exports = {
+        capitalize: require('./capitalize'),
+        uppercase: require('./uppercase'),
+    };
+    ```
+    * `./src/views/helpers/capitalize.js` contains `module.exports = str => str[0].toUpperCase() + str.slice(1);`
+    * `./src/views/helpers/uppercase.js` contains `module.exports = str => str.toUpperCase();`
+    * These can then be used within the `.hbs` files, such as `{{capitalize this}}` (within `{{#each fruits}}`)
+* To link it, within the `./src/app.js`, the index file is imported - `.const helpers = require("./views/helpers/index")` and then referred to within `app.engine(...helpers...)`. 
+
+##### Error pages
+* `./src/views/layouts/error.hbs` - the error main page is different enough from a default page to warrant another main template page. 
+    ```html
+    <!DOCTYPE html>
+    <html>
+        {{>htmlHead}}
+    <body>
+
+        <main class="main">
+        {{{body}}}
+        </main>
+
+    </body>
+    </html>
+    ```
+* `./src/views/error.hbs`
+   ```html
+   <section class="error">
+     <p class="error__desc">{{statusCode}}. <span class="error__msg">{{errorMessage}}</span></p>
+     <img class="error__image" src="/images/error.png" alt="error">
+   </section>
+   ```
+* `./src/controllers/error.js` - specifying `layout: 'error'` means the default layout (`./src/views/layouts/main.hbs` - as specified in `app.js > app.engine()`) is overridden and instead `./src/views/layouts/error.hbs` will be used. The other paramaters passed in (`statusCode: 404` and `errorMessage:[text]`) are just other second arguments that can be accessed in the `.hbs` file.
+    ```js
+    const path = require('path');
+
+    exports.client = (req, res) => {
+        res.status(404).render('error', {
+            layout: 'error',
+            statusCode: 404,
+            errorMessage: 'Page not found',
+        });
+    };
+
+    exports.server = (err, req, res, next) => {
+        res.status(500).render('error', {
+            layout: 'error',
+            statusCode: 500,
+            errorMessage: 'Internal server error',
+        });
+    };
+    ```
+* `./src/controllers/index.js`
+    ```js
+    const router = express.Router();
+    const error = require('./error');
+
+    router.use(error.client);
+    router.use(error.server);
+    ```
+##### Other
+* NB: `<script>` tags that pull in `js` files you've made yourself should usually be at the bottom of the `<body>`, so that they only load after all the HTML has been loaded.
