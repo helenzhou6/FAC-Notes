@@ -14,7 +14,7 @@ _Resources:_ [_Intro to express_](https://github.com/foundersandcoders/introduct
 * > Express gives you an API, submodules, and methodology and conventions for quickly and easily tying together all the components necessary to set up a functional web server with all the conveniences necessary (static asset hosting, templating, CORS, cookie parsing, POST parsing etc.)
 * It is:
     *  is a **framework** - i.e. you need to insert your behaviour into various places in the framework (so it calls upon your code at these points). VS a **library** which is a set of functions that you can reuse and call.
-    ![library vs framework](./images/library-framework.png)
+    ![library vs framework](https://github.com/foundersandcoders/introduction-to-express/raw/master/images/library-framework.png)
     * is **unopinionated**  - has less restrictions than **opinionated** frameworks (e.g. you can any directory structure and insert almost any compatible middleware you like into the request handling chain)
     * provides only a thin layer of **abstraction** over vanilla Node - i.e. interacting with Node without directy working with complex details **"under the hood"**.
 
@@ -93,7 +93,7 @@ app.listen(3000, () => {
 * [**Middleware functions**](http://expressjs.com/en/guide/writing-middleware.html) has _three_ arguments: `(req, res, next)` (which is the only difference between a middleware function and a route handler callback)
 * Middleware and routing functions are called in the order that they are declared - so ensure middleware is called before setting routes.
     * `next()` is called if the middleware does not complete the request cycle - since it is the next function (that could be another middleware) in the application’s request-response cycle.
-    ![middleware flow](./images/middleware.jpg)
+    ![middleware flow](https://github.com/foundersandcoders/express-workshop/blob/master/images/middleware.jpg?raw=true)
 * Use `app.use()` to call the middleware function. It runs the functions sequentially (NB the order) - as long as use `next()` to skip to the next function.
     ```js
     app.use((req, res, next) => {
@@ -304,6 +304,25 @@ _Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders
     * Can be used for client-side and server-side **rendering**.
 * It minimises writing JS logic inside the templates, and have embedded placeholders that "hold" data.
 
+
+#### Model-View-Controller (MVC) model
+
+> This is a common architectural design pattern to separate the data, their representation in the browser and the logic of your application. Think of your application as three separate parts talking to each other:
+1. **Model**: data stored in a database // directory - for data processing, database builds and SQL queries.
+1. **View**: the aesthetics/representation of data in your application // directory  holds the `.hbs` (handlebars) files (i.e. the html templates to 'view'). At the root there is a `.hbs` for each page that the client will view, and there is a folder for helpers, layouts and partials.
+1. **Controller**: the *brain* of your application // directory - for routes, linking
+
+![A diagram of the MVC model](https://cdn-images-1.medium.com/max/1600/1*4SxbmCrI5YVp1Uyj1Jstsg.png)
+
+Image Cred: Real Python (from [this medium post](https://medium.freecodecamp.com/model-view-controller-mvc-explained-through-ordering-drinks-at-the-bar-efcba6255053#.3autr7o1d))
+
+![handlebars type of templates](https://i.imgur.com/LUPgUxp.png)
+
+> It is generally good practice to separate the view (presentation/ aesthetics) and the model (actual data), as this encourages clean code organisation. More information on the MVC model [here](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) and [here](https://medium.freecodecamp.com/model-view-controller-mvc-explained-through-ordering-drinks-at-the-bar-efcba6255053#.3autr7o1d).
+
+
+
+
 #### Using it with Express
 * Express has extensive support for template rendering and can load and leverage Handlebars.js.
 
@@ -336,12 +355,6 @@ _Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders
     app.use(express.static(path.join(__dirname, '..', 'public')));
     app.use(controllers);
     ```
-
-* The files are split according to the type of file:
-    ![handlebars type of templates](https://i.imgur.com/LUPgUxp.png)
-    * **views** - `./src/views` directory  holds the `.hbs` (handlebars) files (i.e. the html templates to 'view'). At the root there is a `.hbs` for each page that the client will view, and there is a folder for helpers, layouts and partials.
-    * **Controller** - `./src/controller` directory - for routes
-    * **model** directory - for data processing, database builds and SQL queries.
 
 ##### Main home page
 * `./src/views/layouts` directory holds **layouts** (i.e. base templates). It includes:
@@ -483,3 +496,4 @@ _Resource:_ [_Express Handlebars workshop_](https://github.com/foundersandcoders
     ```
 ##### Other
 * NB: `<script>` tags that pull in `js` files you've made yourself should usually be at the bottom of the `<body>`, so that they only load after all the HTML has been loaded.
+    * So within `./src/views/layouts` add `{{#if activePage.fruits}}<script src="/js/fruit-fav.js"></script>{{/if}}`
