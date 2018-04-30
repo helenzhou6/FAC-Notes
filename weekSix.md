@@ -335,7 +335,8 @@ _Resources:_ [_Morning challenge (SQL commands)_](https://github.com/foundersand
 * Within repo and using [Heroku CLI]((https://devcenter.heroku.com/articles/heroku-cli)
 * Create an app on Heroku `heroku create app-name-here --region eu`
 * Push to Heroku `git push heroku master`
-* Create a new database on Heroku using `heroku addons:create heroku-postgresql:hobby-dev --as USERS_DB`
+* [Alternatively instead of these steps ^, log onto the heroku website and create a new app there and connect to the GitHub]
+* Create a new database on Heroku using `heroku addons:create heroku-postgresql:hobby-dev --as USERS_DB` [add `--app [appname]` to connect if used GitHub to create a new app]
 * Find the database url, either on the heroku dashboard for your project, under settings (click reveal config vars), or by using `heroku config -s | grep USERS_DB` (note: make sure to remove the quotations around the url when using this method).
 * Back in your command line, create a `config.env` file with the url of your new database. You can do that like this
   `$ echo "export DATABASE_URL = {YOUR_COPIED_DATABASE_URL}" >> "config.env"`

@@ -94,6 +94,7 @@ app.listen(3000, () => {
 * Middleware and routing functions are called in the order that they are declared - so ensure middleware is called before setting routes.
     * `next()` is called if the middleware does not complete the request cycle - since it is the next function (that could be another middleware) in the application’s request-response cycle. This is really important or else the request is left **hanging**
     ![middleware flow](https://github.com/foundersandcoders/express-workshop/blob/master/images/middleware.jpg?raw=true)
+    * If `next(err)` is called, then it goes straight to the 500 middleware (that express identifies due to the 4 arguments.)
 * Use `app.use()` to call the middleware function. It runs the functions sequentially (NB the order) - as long as use `next()` to skip to the next function.
     ```js
     app.use((req, res, next) => {
@@ -149,6 +150,7 @@ app.listen(3000, () => {
     ```
     * We split the server out into a different file so that our tests don't hang because the server is listening still
 * `app.js` (is like `router.js`, but also called `server.js` 🙄)
+    * The `router.js` file should have the endpoints, whilst the `app.js` file should contain the middlewares (including cookie sessions)
     ```js
     app.disable('x-powered-by');
     app.use(compression());
@@ -548,6 +550,7 @@ _Resource:_ [_research topics_](https://github.com/foundersandcoders/master-refe
         secret: 'orange'
     }));
     ```
+* Best to not use `'session'` as the cookie name and also use `keys` not `secret` for the secret string.
 
 * You can add key value pairs to the cookie by using `req.session.[key] = [value]`.
     ```js
@@ -585,3 +588,13 @@ _Resource:_ [_research topics_](https://github.com/foundersandcoders/master-refe
 #### Session-management in Express
 
 #### Templating and Serverside rendering
+
+### Other snippets of code
+* Be careful when linking resource files - since there is a difference between **absolute** and **relative paths** -> if you leave off the `/` (e.g. `href="theme.css"` - i.e. relative), then the query string will be relative to the location in the browser.
+![Image of paths](https://files.gitter.im/foundersandcoders/FAC13/fi2K/Screen-Shot-2018-04-19-at-17.30.35.png)
+
+
+* With promises
+    * Need to define a function inside `.then` - so if not have any arguments, then needs to be a anonymous function
+    * If there is a `try` and `catch`, then the `.catch(err)` at the end of promises would catch these synchronous errors as well. 
+    * Remember to `throw new Error` within the promise
