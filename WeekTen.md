@@ -23,6 +23,8 @@ Because it is only by testing our ideas that we find out what we really need.
 * **Product Owner**: The product owner is the person who ensures that the client gets the best from the development team - to ensure the vision is kept
     * They act as the buffer/person between the client/stackholders and the dev team (to manage the sprint and backlog)
     * From the agile methodology, a role within Scrum (product management)
+* **User story** - Defines a single testable interaction. VS **User journey** - Describes all the interactions required to achieve a user goal. It is made up of several User stories. Who, what, wow - A to B with outcome. 
+* **User centered design** - designing for the problem - narrowing it down to the most important goal to achieve as the first iteration of the app, and mindful of user stories.
 
 * The stages:
     *  **Emphasise**  (conduct research to develop an understanding of your users/ building a connection with the people you're building for / reduce the amount of biases you have about who the users will be) > **Define** (Combine all your research and observe where your users problems exist / problem statement) > **Ideate** (Generate a range of crazy, creative ideas / solutions to the problem) > **Prototype** (Build real, tactile representations for a range of your ideas)> **Test** (Return to your users for feedback) > **Implement** (Put the vision into effect)
@@ -83,7 +85,7 @@ The Questions We Are Trying To Answer / Why You Are Conducting Research?
 2. Hypotheses: What We Believe We Already Know
     * In a few bullet points- by building this app, what are you looking to prove?
 3. Methods: How We Plan To Fill The Gaps In Our Knowledge. [More methods here](http://www.designkit.org/methods)
-    * This step is dedicated towards choosing the best research methods to test your hypothesis and acquire the most validated learning. - 
+    * This step is dedicated towards choosing the best research methods to test your hypothesis and acquire the most validated learning.
 
 4. Conduct: Gather Data Through The Methods We’ve Selected
 
@@ -143,8 +145,7 @@ Be sure to write down the details about your Persona. Create a profile which inc
 Re-cast the idea in human terms of what the technology allows your user to accomplish  // help you synthesise information to develop point of view statements and to generate potential ideas. // Using what you discovered in the Empathise stage, record the needs and insights of your group's user persona
     * THE USER needs a way to DO SOMETHING (THAT ADDRESSES THEIR NEED) so that SOMETHING HAPPENS (THAT BENEFITS THEM)
 
-#### Define phase to Ideate phase
-* **How Might We** based [from this kit](http://www.designkit.org/methods/3)
+* **How Might We** (HMW) based [from this kit](http://www.designkit.org/methods/3)
 Turning problems into opportunities
 1. Look at the “THEMES” and Sentences we created.
 2. Put the letters “HMW” in the top left corner of your post it
@@ -154,3 +155,39 @@ Turning problems into opportunities
     Identify themes and common patterns among the ideas
     Move the post its to group the post its with similar themes
     Make a record of themes you need to address
+
+* Pick to focus on one problem statement and HMW for the first iteration of the app.
+    * > Trust your gut feeling: Choose those questions that feel exciting and help you think of ideas right away. 
+    * > Select the questions that are most important to address and feel like they have the biggest opportunity for design solutions, even if they feel difficult to solve for.
+
+* More research:
+    * **Inspirational Overview** - what people do now/the services they use related to solving your problem
+    * **Product/process audit** - why they use these services/ specific features that seem good
+
+* Now narrowing it to find MVP (**BIG PICTURE GOAL**) / What are the user and organisational needs?
+    * SPECIFIC **GOAL** - what do we want to achieve by solving this problem? / what is the big picture goal (start at the end) / describe the big picture goal
+    * ONE **STAKEHOLDER** - WHO IS INVOLVED? - Who does it concern? not just users, but who shares the goal? / just one
+    * PRODUCT / PROCESS AUDIT / **JOURNEY**- What are we already doing to achieve the goal? / a single outcome want to achieve
+    * INSPIRATIONAL OVERVIEW - Who is achieving these goals in related fields? / a **tweet** advertising the service - the pitch
+
+## Day Three
+
+#### 3) Ideate
+
+* Your idea as a message service: a script / dialogue between the site and user 
+
+* Your idea as a mobile app: storyboard the transactions. Crazy 8s x2 -- each section will achieve the goal in a new inventive way (divergent mode of thinking).
+    * Storyboard - an ordered set of screen designs for your user to explore / user journey (think about the different interactions the user will have) / (this is the visual version of the message service)
+
+* Put storyboards up on wall and get everyone to talk through each one. This may well lead to a re-evaluation of the purpose of the app and the problem being solved. It is an opportunity to review the priority. 
+
+#### 4) Prototype
+
+##### Figma and Invision
+_Resources:_ _Figma & Invision demos_ - [part 1](https://drive.google.com/file/d/0B89QUJBPl5FKOUZlYWtyekZ0RFU/view?usp=sharing) & [part 2](https://drive.google.com/file/d/0B89QUJBPl5FKX0lLbDBjSmZIQ3M/view?usp=sharing) _and_ [_design kit article_](http://www.designkit.org/methods/26)
+
+* When exporting PNGs - 1x (pixels match the size), for retina screesn blurry, 2x and 3x for higher resolution. 
+
+#### 5) Test
+
+Feedback: what did the user like / what did the user dislike / what new questions do we have /  what new ideas do we have
