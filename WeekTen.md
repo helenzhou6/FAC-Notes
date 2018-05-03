@@ -186,8 +186,56 @@ Turning problems into opportunities
 ##### Figma and Invision
 _Resources:_ _Figma & Invision demos_ - [part 1](https://drive.google.com/file/d/0B89QUJBPl5FKOUZlYWtyekZ0RFU/view?usp=sharing) & [part 2](https://drive.google.com/file/d/0B89QUJBPl5FKX0lLbDBjSmZIQ3M/view?usp=sharing) _and_ [_design kit article_](http://www.designkit.org/methods/26)
 
-* When exporting PNGs - 1x (pixels match the size), for retina screesn blurry, 2x and 3x for higher resolution. 
+* When exporting PNGs - 1x (pixels match the size), for retina screen blurry, 2x and 3x for higher resolution. 
+
+## Day Four
 
 #### 5) Test
+_Resources:_ [_FAC user testing guide_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/user-testing.md#1-planning) _and_ [_LCN user testing script_](https://github.com/InFact-coop/LCN/blob/master/UserTestingScript.md)
 
-Feedback: what did the user like / what did the user dislike / what new questions do we have /  what new ideas do we have
+* Feedback: what did the user like / what did the user dislike / what new questions do we have /  what new ideas do we have
+
+* The general layout of the test session should be like [this](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/user-testing.md#4-test-session-x-3) - 5 min of set up, 10 min of tasks, 5 min for questions and wrap up
+* The script: fleshed out version [here](https://github.com/InFact-coop/LCN/blob/master/UserTestingScript.md#script) and [here](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/user-testing.md#2-build-scriptguide), but basics are:
+    * Start off saying
+        * Very brief intro - the app should say what there is 
+        * Tell them will not be offended by feedback - is there to help improve the app (not testing the user but the app)
+        * Expect things to break - it is to test the flow
+    * At end
+        * What would you keep? What would you change?
+        * Final thought
+
+* General points:
+    * Think about having some warm up questions to unease the user
+    * Should not ask leading questions and prompt the user to have a continuous dialogue whilst testing - let them talk and ask why done certain behaviours
+    * In pairs: one person looks at behaviour (can contradict what the person is saying and v important), and the other asks questions
+    * Think about what functionality or endpoint ant user to test - and see where the user looks/clicks/any errors (take notes) - look at the [tasks they should complete here](https://github.com/InFact-coop/LCN/blob/master/UserTestingScript.md#tasks)
+    * There is well known user habits and patterns that should not be disrupted (unless very good reason to)
+    * Need to make sure the cognitive overload is low when using the application
+    * > Pay particular attention to any strong emotional words, and any usage challenges/unexpected uses of the app (don’t show them how to use it, just watch what they do) - make sure you capture _*everything*_!
+    * > Explore any issues they may raise
+    * > Try not to speak unless asked something by participant (let them speak).
+    * > If the participant
+        > * asks you how to do something; _How do you think you should do it?_.
+        > * stops speaking for a while; _Please remember to speak your thoughts aloud_.
+        > * makes a comment & you're not sure what triggered it; _Was there something in particular that made you think that?_.
+        > * wanders away from the task; _What are you trying to do now?_.
+
+* Create an issue in the repo saying **User Testing: (DD-MM-YYYY)**, as the description write the *observers template* (that will be filled in and pasted into a comment during testing session):
+    - Users name.
+    - Users top three pain points using application.
+    - Users profile.  
+    - Additional observations section.
+
+* > Debrief: Explore common user feedback and agree on most prominent issues (2-3) to address first, then discuss how to address issues.
+
+### Design talk
+_Resource:_ _external talk from designers are Outlandish_
+
+Design process involves:
+1. Concept and scope - make vision into tangible product
+2. Design and Validate
+3. Execute and Validate
+4. Build and Manage - handover
+
+* Use black and white basic design for UX design (so that the design is not focused on), then UI design after this
