@@ -1,6 +1,6 @@
 #  Week Ten
 
-_Resources:_ [FAC product build timetable](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12) _and_ [the design sprint schedule and resources](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12/design-sprint) _and_ [FAC design thinking week slides](https://docs.google.com/presentation/d/1CiYH-jdV3OojT3mUITuTBCao6IeZyNkI8xF2G2B6vDA/edit?ts=59a18a95#slide=id.g35f391192_00) _and_ [the learning outcomes](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/learning-outcomes.md) 
+_Resources:_ [FAC product build timetable](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12), [_the london timetable_](https://github.com/foundersandcoders/london-programme/blob/master/weeks-10-16/week-10.md) _and_ [the design sprint schedule and resources](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12/design-sprint) _and_ [FAC design thinking week slides](https://docs.google.com/presentation/d/1CiYH-jdV3OojT3mUITuTBCao6IeZyNkI8xF2G2B6vDA/edit?ts=59a18a95#slide=id.g35f391192_00) _and_ [the learning outcomes](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/learning-outcomes.md)  _and_ _external talk from an alumni FAC member (now working as a UX and service manager)_
 * NB: This week is the FAC's mixture and interpretation of two methods - the Google Ventures design sprint and Design Thinking by IDEO (80s)
 
 * It's design thinking week and Project One Week One - Design Sprint - having already [completed this in preparation for the project](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/design-sprint/preparation.md)
@@ -25,6 +25,7 @@ Because it is only by testing our ideas that we find out what we really need.
     * From the agile methodology, a role within Scrum (product management)
 * **User story** - Defines a single testable interaction. VS **User journey** - Describes all the interactions required to achieve a user goal. It is made up of several User stories. Who, what, wow - A to B with outcome. 
 * **User centered design** - designing for the problem - narrowing it down to the most important goal to achieve as the first iteration of the app, and mindful of user stories.
+* **UI** - wireframes: best possible portrayal of data (such as hierarchy) VS **UX**: beyond the app, data flow, what assume people know already & what do once have the app (writing it out as a conversation between the user and app)
 
 * The stages:
     *  **Emphasise**  (conduct research to develop an understanding of your users/ building a connection with the people you're building for / reduce the amount of biases you have about who the users will be) > **Define** (Combine all your research and observe where your users problems exist / problem statement) > **Ideate** (Generate a range of crazy, creative ideas / solutions to the problem) > **Prototype** (Build real, tactile representations for a range of your ideas)> **Test** (Return to your users for feedback) > **Implement** (Put the vision into effect)
@@ -188,7 +189,7 @@ _Resources:_ _Figma & Invision demos_ - [part 1](https://drive.google.com/file/d
 
 * When exporting PNGs - 1x (pixels match the size), for retina screen blurry, 2x and 3x for higher resolution. 
 
-## Day Four
+## Day Four and five
 
 #### 5) Test
 _Resources:_ [_FAC user testing guide_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/user-testing.md#1-planning) _and_ [_LCN user testing script_](https://github.com/InFact-coop/LCN/blob/master/UserTestingScript.md)
@@ -229,7 +230,7 @@ _Resources:_ [_FAC user testing guide_](https://github.com/foundersandcoders/mas
 
 * > Debrief: Explore common user feedback and agree on most prominent issues (2-3) to address first, then discuss how to address issues.
 
-### Design talk
+### Design talks
 _Resource:_ _external talk from designers are Outlandish_
 
 Design process involves:
@@ -239,3 +240,15 @@ Design process involves:
 4. Build and Manage - handover
 
 * Use black and white basic design for UX design (so that the design is not focused on), then UI design after this
+
+_Resource:_ _external talk from an alumni FAC member (now working as a UX and service manager)_
+* **Hypothesis** - broader than a problem statement. Don't make assumptions
+    * Believe that people have [a problem], and assume have [an app] - both need to be aligned
+    * The gamble is that the PO understands the nature of their problems, and forces them to learn [the app] since they believe it will benefit them 
+* **Service** - let people use it but they do not own it 
+* **Service Design** - When fully realised, the full user journey is plotted out from hearing about the app to leaving, and split into front stage and back stage.
+* **Innovation** - calculated risks, limit yourself with data
+    * E.g. Apple have popular apps listed in the App Store whilst the user research approach may have lead to a file structure with hierarchy (like the default folder structure on your computer)
+    * VS **Optimisation** routes e.g. manipulinks and dont-leave-me-modals
+* **data-driven design** - will design better vs design for something new
+* Google time well spent: apps that don't take up all your time (not use as currency to measure how well app is doing)
