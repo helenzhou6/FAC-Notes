@@ -201,3 +201,11 @@ _Resources:_ [_dwyl document_](https://raw.githubusercontent.com/dwyl/process-ha
 > **Retrospective** 10-30mins - each team member should have the opportunity to share things that they felt **went well**, **not very well** or things that could be **improved** based on the last sprint.
 >
 > **Spring Planning** 1-1.5hrs. PO to prepare backlog with user stories and acceptance criteria for each issue. Review the backlog and client's priorities to outline what will be put into the next sprint milestone. / Aim is to recognise the highest priority issues and how long it would take to complete them
+
+### Other snippets of code learnt
+* Add this to the end of testing database code to speed up the process
+    ```js
+    test.onFinish(() => {
+    dbConnection.$pool.end();
+    });
+    ```
