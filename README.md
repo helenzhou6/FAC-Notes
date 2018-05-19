@@ -20,4 +20,4 @@ Learning the fundamentals, each week completing a mini project in teams of four 
 ## Weeks 10-13
 First internal student project, 3 week process in teams of 4. Project: [StackMatch](https://github.com/fac-13/stackMatch) and role: scrum master.
 * [Week Ten](https://github.com/helenzhou6/FAC-Notes/blob/master/weekTen.md) - Project One Week One - Design Sprint
-* [Week Eleven](https://github.com/helenzhou6/FAC-Notes/blob/master/weekEleven.md) - Project One Week Two - Build Week 1 of 2.
+* [Week Eleven to Twelve](https://github.com/helenzhou6/FAC-Notes/blob/master/weekEleventoTwelve.md) - Project One Week Two - Build Week 1 of 2.

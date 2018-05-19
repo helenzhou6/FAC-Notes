@@ -2,7 +2,7 @@
 
 _Resources:_ [_the london timetable_](https://github.com/foundersandcoders/london-programme/blob/master/weeks-10-16/week-11.md) 
 
-Project One Week Two - Build part 1 of 2.
+Project One Week Two to Three - Build sprints.
 
 ## Day One
 
@@ -123,9 +123,10 @@ _Resources:_ [_FAC learning outcomes_](https://github.com/foundersandcoders/lond
     * Each issue should contain:
         - pictures of your wireframes
         - acceptance criteria (define these with your PO)
-        - a priority label
-        - a time estimate
+        - a priority label (use dwyl imported labels)
+        - a time estimate (yuse dwyl imported labels)
 6. Order issues in milestone and assign them
+    * Use Milestones to manage time - based on the sprints - link to user journeys and user stories in the desription - add the small/technical issues and order by importance
 
 ### Starting build
 1. Write your initial `README.md` ([good example here](https://github.com/fac-12/Little-Window) and [another template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2))
@@ -134,7 +135,7 @@ that contains:
     - problem statement
     - user stories
     - team `git flow` section that can be referred to by anyone so everyone is clear on the work flow the team will follow.
-    - instructions for how to run/set up local environment - helpful for other devs and code reviewers
+    - instructions for how to run/set up local environment - helpful for other devs and code reviewers *
     - images of prototype :camera: or a link :link: to figma/invision (or both)
     - tech stack 
     - section on learning - this can be updated with useful links as you create your project. This helps everyone in your project have the resources needed.
@@ -150,7 +151,7 @@ that contains:
         - passing all tests?
         - no linter errors
         - test coverage over a certain %
-3. Decide on the git flow e.g.:
+3. Decide on the git flow for example [the stackMatch gitflow](https://hackmd.io/boHxsVrwS12W3iPdbwX05g?edit).:
     - assign yourself to an issue and add `in-progress` label :traffic_light: 
     - starts work on issue
     - commit work referencing issue add maybe adds an [emoji](https://gitmoji.carloscuesta.me/) :smile: 
@@ -163,6 +164,50 @@ that contains:
     - the creator of the PR should respond to all the questions and/or make changes requested (or say why don't want to change has to be a good reason)
     - the final team member to review should `assign` the QA and add `awaiting-merge` label :clock1: 
     - QA to merge into master branch and delete the other branch
+    - QA to check if after merge any issues have been resolved.
+        - If so, issues need to be closed and the related criteria in the user story ticked.
+        - Should all the user story acceptance criteria be filled, tick the related criteria in the related user journey and notify the team (for heroku deployment)
+
+### How to run project locally *
+(For example for the [stackMatch project](https://github.com/fac-13/stackMatch))
+
+#### You will need before hand:
+
+1. **PostgreSQL Database set up locally**
+    1. Connect to postgres, either by `psql` (`pgcli`) in the terminal on MAC, and `sudo -u postgres psql` on ubuntu.
+    2. Create the database by typing `CREATE DATABASE [the name of the database];`. It's best not to use a hyphen (`-`) or uppercase letters in your database name.
+    3. Create a superuser with a password - type in `CREATE USER [the new username] WITH SUPERUSER PASSWORD '[the password of the database]';`
+    4. Change ownership of the database to the new user by typing `ALTER DATABASE [name of the database] OWNER TO [the new username];`
+    5. Exit postgres
+
+2. **GitHub oAuth App**
+    * Log in to Github and go to **Personal Settings > Developer Settings > OAuth Apps**
+    * Click **New OAuth app**
+    * Give it any name and description you want. 
+    * Homepage URL = [http://localhost:3000]
+    * Authorization callback URL = [http://localhost:3000/auth/github/callback]
+    * Save and make note of your Client ID and Client Secret for your secret environment variables. 
+
+#### Steps:
+
+1. Clone the repo: `git clone https://github.com/fac-13/stackMatch.git`
+2. Install dependencies: `npm install`
+
+3. Create a `.env` in the root directory. This will need:
+
+TEST_DB_URL = [Your local PostgreSQL testing DB]
+DB_URL = [Your local development DB] 
+GITHUB_CLIENT_ID = [Client ID from your app registration]
+GITHUB_CLIENT_SECRET = [Client Secret from your app registration]
+BASE_URL = http://localhost:3000
+COOKIE_KEY = [Anything you want]
+
+5. Run `npm run build` to build the database (or login to your prod db using postgres and run `\i [full path to] db_build.sql`).
+6. Run the app in dev mode using`npm run dev` and access the site at [http:://localhost:3000](http:://localhost:3000). 
+
+#### Testing:
+1. Run `npm test` in the command line
+2. Check coverage with `npm run test:coverage`
 
 ### The Scrum Framework
 _Resources:_ [_youtube video on scrum framework_](https://www.youtube.com/watch?v=_BWbaZs1M_8)
@@ -202,10 +247,96 @@ _Resources:_ [_dwyl document_](https://raw.githubusercontent.com/dwyl/process-ha
 >
 > **Spring Planning** 1-1.5hrs. PO to prepare backlog with user stories and acceptance criteria for each issue. Review the backlog and client's priorities to outline what will be put into the next sprint milestone. / Aim is to recognise the highest priority issues and how long it would take to complete them
 
+## Day Three - Five
+
+Build sprint for [stackMatch](https://github.com/fac-13/stackMatch/). We spent time adding the GitHub OAuth into the project.
+
+### GitHub OAuth
+_Resources:_ [_FAC OAuth walkthrough_](https://github.com/foundersandcoders/oauth-workshop) _and_ [_The Net Ninja Passport YouTube Tutorials_](https://www.youtube.com/watch?v=-PuMp5tQ8Jw) _and_ [_GitHub OAuth docs_](https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/) _and_ [_passport workshop_](https://github.com/mineshmshah/passport-tutorial) _and_ [_tutorial for Passport.js authentication_](https://www.jokecamp.com/tutorial-passportjs-authentication-in-nodejs/)
+
+Worked through this: [_passport workshop_](https://github.com/mineshmshah/passport-tutorial)
+
+
+## Week 12
+_Resources:_ [_FAC Schedule_](https://github.com/foundersandcoders/london-programme/blob/master/weeks-10-16/week-12.md)
+
+More building, sprint planning, demoing and retrospectives done.
+
+### Functional Programming
+_Resources:_ _External Talk and_ [_currying article_](https://hackernoon.com/currying-in-js-d9ddc64f162e)
+
+* **Functional Programming** is:
+    * A style of how to build computer programs using pure functions and avoiding side effects
+    * Based on breaking bigger problems down into small easily composable parts
+* **Pure function** = data in, data out and the same input = same output, wherever you put the code. There is no internal state - just series operations (map input value to another value outputted). Logic should be in pure functions. 
+* **Side effect** = Can include: change entry in database, `console.log`, changing global variables. Can't have a user interfact without side effects.
+* **First Class Function** = they are treated the same as any other data type: assigned to variables, passed into functions as argument(s), and returned from functions. - Need these for functional programming. Can write any language with first class functions.
+* **Higher order function**: takes a function and/or returns a function
+* **Parameters** are what the function has, whilst **arguments** are what has been passed into the function. If argument has not been passed in, it is `undefined` by default.
+* **Arity of a function** (or operation) describes the number of arguments that the function (or operation) takes
+* Functional libraries have curry and compose functions:
+* **Currying** is the process of breaking down a function into a series of functions that each take a single argument. It makes code more reusable and less repetition.
+    * Usual way:
+    ```js
+    function sum3(x, y, z) {
+        return x + y + z;
+    }
+    console.log(sum3(1, 2, 3) // 6
+    ```
+    * Curried version:
+    ```js
+    function sum3(x) {
+        return (y) => {
+            return (z) => {
+            return x + y + z;
+            };
+        };
+    }
+    console.log(sum3(1)(2)(3)) // 6
+
+    ```
+    * > Observe that the last function in the chain only accepts z, but operates on other variables. For all it cares, they are global variables. When in reality, they’re just local variables scoped in different functions.
+    * Works because JS supports **closures** where nested functions have access to the scope "above" them.
+    ```js
+    var add = (function () {
+    var counter = 0;
+        return function () {return counter += 1;}
+    })();
+
+    add();
+    add();
+    add(); // counter is 3
+    ```
+    * `add()` can access the `counter` in the parent scope = a JS **closure** where a function can have "**private**" variables - The `counter` is protected by the scope of the anonymous function, and can only be changed using  `add()`.
+* **Composition** - takes 2+ functions rather than needed to nest. It reads right to left / bottom to top whilst **pipe** is like compose but read left to right / top to bottom
+    ```js
+    function addOne(a){return a+1;}
+    addOne(addOne(0));// -> 2
+
+    function compose(fn1,fn2){
+        return function(a){
+            return fn1(fn2(a));
+        };
+    }
+
+    var addTwo = compose(addOne,addOne);
+
+    addTwo(0);// -> 2
+    ```
+    * Can do `array.map(fn1).map(fn2)` but better to do `array.map(pipe(fn1, fn2))` — since then won’t be going through the array twice
+    * First argument can take multiple numbers but after that can only take and return a single value - for it to pass on that single value to the next function etc.
+
 ### Other snippets of code learnt
 * Add this to the end of testing database code to speed up the process
     ```js
-    test.onFinish(() => {
-    dbConnection.$pool.end();
+        test.onFinish(() => {
+        dbConnection.$pool.end();
     });
     ```
+* Notes on [using gulp](https://hackmd.io/nYbTUXuYSZOiTSoSHDp5BA)
+* `<a href=""></a>` is the same as an XHR GET request.
+* SQL: `OUTER JOIN` is a combination of `LEFT JOIN` and `RIGHT JOIN` (so it includes all the entries even if there are no rows to be mapped to the other table)
+* `git pull` is a combination of `git fetch` and `git merge` (if not want recent changes to be merged, do `git stash` then `git fetch`)
+* VSCode shortcut to search whole workshop: `Shift Cmd H`
+* Each promise within `Promises.all()` could return quicker than others, so the order may change (e.g. locally vs Travis CI) so in tests involving integrated SQL queries, instead of using `deepEquals([expected array], [actual array], [message])`, should do `res.includes([item])` and also `res.indexOf([item]) == res.lastIndexOf([item])`
+
