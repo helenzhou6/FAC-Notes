@@ -106,7 +106,7 @@ _Resource:_ [_Why use react workshop_](https://github.com/foundersandcoders/mc-r
   * Static HTML that “boots up” into an SPA once the JS loads.
 
 ### React workshop
-_Resource:_ [_the workshop_](https://github.com/oliverjam/intro-react-workshop) _and_ [_stopwatch workshop_](https://github.com/oliverjam/intro-react-workshop/tree/master/workshop-top-notch-stopwatch)
+_Resource:_ [_the workshop_](https://github.com/oliverjam/intro-react-workshop) _and_ [_stopwatch workshop_](https://github.com/oliverjam/intro-react-workshop/tree/master/workshop-top-notch-stopwatch) _and_ [_react docs: clock (v good)_](https://reactjs.org/docs/state-and-lifecycle.html)
 
 ```html
    <!-- These scripts will make React and ReactDOM globally available. It's just a JS library-->
@@ -121,7 +121,8 @@ _Resource:_ [_the workshop_](https://github.com/oliverjam/intro-react-workshop) 
   ```js
   const title = React.createElement('h1', { className: 'main-title' }, 'Hello world!', 'This will be another text node');
   ```
-  * `title` is not a DOM element, it's an object. Therefore need to `render` the object onto the page using `ReactDOM.render(title, root);` (only do this once)
+  * `title` is not a DOM element, it's an object. Therefore need to `render` the object onto the page using `ReactDOM.render(title, root);` (only do this once - So usually at the top level have `<App />` that has multiple react components and composes it all together)
+  
 
 #### JSX
 * React apps usually use a non-JavaScript syntax known as JSX (similar to HTML) to create elements.
@@ -158,8 +159,8 @@ const title = <h1 className="main-title"><span>Hello world!</span></h1>;
 
 #### Using classes to create components
 Two types:
-1. stateless - functional components (can still be dynamic if parent state changed and passed down using props)
-2. class component - interact-able to have a state. Props: passed in (like html), state that is local to that component that can be set (props can be passed in and changed). If state changes, then React will re-render with new state (and any children that has referred to this state via props) 
+1. stateless - functional components (can still be dynamic if parent state changed and passed down using props) / don’t have states, just used to present data passed down e.g. `const Repo = props => <div>{props.name}</div>` - is a function that returns JSX defined outside the class
+2. class /container component or stateful component- interact-able to have a state. Props: passed in (like html), state that is local to that component that can be set (props can be passed in and changed). If state changes, then React will re-render with new state (and any children that has referred to this state via props). Every class based component has a `render` function
 ```jsx
 // need to extend React.Component for this.state and render()
 class Title extends React.Component {
@@ -191,7 +192,7 @@ class Toggle extends React.Component {
 }
 ```
 * With the `state` object: need to be initial **controlled component** i.e. the state needs default values set (not a controlled react component, and then will treat it as an HTML stuff)
-`setState` method: pass it a function that takes the previous state and returns a new state object
+`setState` method: pass it a function that takes the previous state and returns a new state object - if changes, React knows and will update the DOM accordingly
   * ensure state is always updated correctly, as `setState` calls do not necessarily happen synchronously in order (React may batch them for performance).
   * `setState()` order is important - uses object passed in based on state to create a new object — immutable state: - doesn’t mutate the original state.
   * Only mutate `setState()` —> do not use `this.state` (except in constructor) to change, only within setSate.
@@ -220,6 +221,7 @@ class Toggle extends React.Component {
       toggled: false
     }
     toggleOn() {
+      // merging is shallow: won't replace anything else in state object
       this.setState({ toggled: true });
     }
     render() {...}
@@ -291,6 +293,7 @@ Look [here](https://github.com/oliverjam/intro-react-workshop/tree/master/04-sto
         render() {
           return (
             <div>
+            // so component has passed its state down as props to child components
               <div>{this.state.time}</div>
               <button onClick={this.toggle}>
                 {this.state.running ? 'Pause' : 'Start'}
@@ -307,3 +310,283 @@ Look [here](https://github.com/oliverjam/intro-react-workshop/tree/master/04-sto
 
 </html>
 ```
+* NB: `this.props` is set up by React itself, `this.state` has special meaning, but can add additional fields to the class manually if need to store something that doesn't participate in the data flow (like `this.timer` - the timer ID / `setInterval90` = returns an id that references that interval, that is saved globally within the class and targeted later to clearInterval static values)
+* NB **'unidirectional' data flow** - any data from that component can only affect components below them in the tree/ a waterfall of props
+* React elements are immutable - once created can't change children or attributes
+
+#### Destructuring
+_Resouce:_ [_destructing workshop_](https://github.com/oliverjam/learn-destructuring)
+
+* An ES6 feature that pulls values out of arrays or objects and assigns them to variables. E.g. `const { name, surname } = { name: 'Zooey', surname: 'Miller' };` 
+* Can grab nested values
+```js
+const {
+  data: { name },
+} = { data: { name: 'Zooey' } };
+console.log(name); // "Zooey"
+```
+* Can set defaults when nothing has been passed in (so it is `default` (see below).
+  * NB: `null` is a legit value so in these cases the default will not be set (in which case need a ternary operator or `if(null)` within function)
+  * Similarly, React can turn '0' into a string and render that rather than seeing it as a falsy value.
+```js
+const {
+  data: { name = [default value e.g. {}] },
+} = { data: {} };
+console.log(name); // "{}"
+```
+It also works in function parameters:
+
+```js
+function formatName({ name, surname }) {
+  return `${name} ${surname}`;
+}
+const user = { name: 'Zooey', surname: 'Miller' };
+console.log(formatName(user)); // "Zooey Miller"
+```
+This enabled a cool pattern—named function parameters:
+
+```js
+function calculateTotal({ subtotal, tax, tip }) {
+  return subtotal * (1 + tax) + tip;
+}
+const total = calculateTotal({ tax: 0.2, subtotal: 100, tip: 10 });
+console.log(total); // 130
+```
+And using it with React
+```jsx
+class Stopwatch extends React.Component {
+  state = {
+    time: 0,
+    running: false
+  }
+  render() {
+    const { time, running } = this.state;
+    return (...)
+  }
+}
+```
+Another nice trick is to combine destructuring with the rest operator (`...`) to pull off just the parameters you need:
+  * With the rest operator: if given an object, will return an object (and same with array)
+  * With regular JS you can’t spread on object onto a line (only into another object), but JSX allow you to do `{…restProps}` to pass props down to children on one line (React magic)
+```jsx
+const TextInput = ({ id, label, ...restProps }) => (
+  <label htmlFor={id}>
+    {label}
+    <input id={id} {...restProps} />
+  </label>
+);
+```
+You can also rename the properties during destructuring, in case there may be conflicts with ones you already have.
+
+```js
+class Counter extends React.Component {
+  state = {
+    count: 0,
+  };
+  render() {
+    // this line is only needed for the 'Count:...' can access it
+    const { count } = this.state;
+    return (
+      <button
+        onClick={() =>
+        // first argument (prevState containing count is deconstructed and renamed to prevCount), and second argument props is deconstructed to get step, where <Count step=2 />
+          this.setState(({ count: prevCount }, { step }) => ({
+            count: prevCount + step,
+          }))
+        }
+      >
+        Count: {count}
+      </button>
+    );
+  }
+}
+
+```
+### Bundlers
+_Resource:_ [_hackMD notes_](https://hackmd.io/B_RJWosBT9Ksq4E9hptLHQ#/)
+* Bunders made ES Modules work, and can transform code (minification/ transpilation / compilation from another language /include non-JS asset like `style.css`)
+* Entry point - usually `index.js`, use `import` and `exports` etc to transpile
+`commons.js` - what all pages has // vs one page specific javascript bundles (can async load what need)
+* **Compile** - like changing to different language VS **transpile** - editing what you write
+
+### Dynamic data workshop
+_Resource:_ [_workshop using GitHub API_](https://github.com/sofiapoh/react-dynamic-data-workshop)
+* User card brokedn down into some top level components. These components will be `Class` components so that we'll have access to state and lifecycle methods. These components will act as "containers" that will do our data fetching and then pass that data down to purely presentational _functional components_. 
+* Lifecycle methods are a place to run functions related to the components lifecycle. Run a data fetching function (API call) as the component mounts the DOM, in `componentDidMount()` - do `getUserData(username).then(data => this.setState({userData: data}));`
+* Usually data over network gets to us slower than DOM renders content so to safeguard, in `render()` have:
+```js
+if (!this.state.userData) {
+  return <h3>...Loading</h3>;
+}
+```
+  * > Note that unless the payload of the made request is not paritcularily heavy you might want to skip loading state and just return `null` to defer rendering until the content is ready. This way you won't get a janky looking flash of loading state before the component finishes loading.
+
+* If passing down something to children via props and relying on async daya (e.g. GitHub API call includes repos_url) - need use a ternary statement to render the component only when the data is fully loaded: `{repos_url ? <RepoList url={repos_url}` within `render()`
+* `{data.map(repo => <Repo key={repo.id} {...repo} />)}`. With dynamically generated content, and any looping over the data need to make a key, so when the content updates (e.g. node has been deleted etc), then the `key` is how React can keep track of all the nodes
+  * This `map` function must be written inside `render()` - can't wrap it in a function elsewhere since the context needs to be bound (so it won't run within the React file). Usually can avoid by using arrow functions (it automatically binds to context by default - `() => this.renderList()`), otherwise need to bind ‘this’ - `this.renderList.bind(this)` within `render()`
+
+### Integration tests
+_Resource_ [_Testing workshop_](https://github.com/oliverjam/learn-react-testing)
+* Test UI (checks functionality) not tests on implementation. So to get elements use things like `getLabelByText` since priority is find labels by text since that is what the user finds. If change code then tests should fail.
+
+
+#### Jest
+* Jest will automatically look for any filenames ending in either `.test.js` or `.spec.js` and run them. It'll also run anything in a folder called `__tests__`. `package.json` needs `"test": "jest --watch"` for watch mode.
+* Common component folder setup:
+  ```
+  button
+      ├── button.css
+      ├── button.js
+      └── button.test.js
+  ```
+* > It's worth noting that `toEqual` performs a recursive check of all properties on an object (sometimes called deep equal). `toBe` on the other hand checks object identity.
+
+#### React Testing Library
+* [React Testing Library](https://github.com/kentcdodds/react-testing-library) is designed to help you write good React integration tests. 
+
+* Use `render` and `Simulate` from this library.
+  * > Simulate does _not_ simulate actual browser events. This means there are certain caveats, like simulating a click on a submit button will not trigger the form's submit event. Read [this section of the React Testing Library](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event) docs for a workaround.
+    * React events are different to DOM events - react are root elements (not bound to component - bubbles up) -> means normally clicking a button will bubble up and submits the form but doesnt. 
+    * Not in DOM - just lives in memory (render method renders it to the root element and not on document yet). `renderIntoDocument` -> would add it to the actual document so can fire actual DOM event like submit the form. Need to re-render the DOM if needed to `renderIntoDocument` or else weird side effects.
+* Helper methods to find DOM notes: `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text). If you can't find a node using one of them you can still use regular DOM methods on the `container` that is returned.
+* A useful convenience method when debugging is `prettyDOM`, which you can use to log nicely formatted HTML nodes (`console.log(prettyDOM(node)))`)
+
+* Examples of use:
+```js
+// EXAMPLE ONE
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Toggle from './toggle.js';
+import TestUtils from 'react-dom/test-utils';
+import { prettyDOM } from 'react-testing-library';
+
+test('The toggle toggles when clicked', () => {
+  const root = document.createElement('div');
+  ReactDOM.render(<Toggle>just clicked</Toggle>, root);
+  const buttonNode = root.querySelector('button');
+  TestUtils.Simulate.click(buttonNode);
+  const childrenNode = root.lastChild;
+  expect(childrenNode.textContent).toEqual('just clicked');
+});
+// where toggle is:
+      <React.Fragment>
+        <button
+          onClick={() =>
+            this.setState(prevState => ({ toggled: !prevState.toggled }))
+          }
+        >
+          {this.state.toggled ? 'Hide' : 'Show'}
+        </button>
+        {this.state.toggled && <div>{this.props.children}</div>}
+      </React.Fragment>
+
+// EXAMPLE TWO
+
+import React from 'react';
+import { renderIntoDocument, cleanup, fireEvent } from 'react-testing-library';
+import Jadenizer from './jadenizer.js';
+
+// ensures our document gets cleared out after each test
+// so we don't have lots of copies of our component in there
+// otherwise our tests might affect each other
+afterEach(cleanup);
+
+test('Jadenizer component', () => {
+  const { getByText, getByLabelText, getByTestId } = renderIntoDocument(
+    <Jadenizer />
+  ); // use renderIntoDocument so we have a real document with browser events
+  const button = getByText('Jadenize');
+  const input = getByLabelText('Enter text for Jadenization');
+  input.value = `how can mirrors be real if our eyes aren't real`;
+  fireEvent.change(input); // ensure our onChange gets called
+  fireEvent.click(button); // fire a real browser event on the submit button
+  const output = getByTestId('output');
+  expect(output.textContent).toBe(
+    `How Can Mirrors Be Real If Our Eyes Aren't Real`
+  );
+// where Jadinizer is:
+        <form onSubmit={this.jadenize}>
+          <h2>Jadenizer</h2>
+          <label htmlFor="jadenizer-input">
+            Enter text for Jadenization
+            <input
+              id="jadenizer-input"
+              className="form__input"
+              value={input}
+              onChange={e => this.setState({ input: e.target.value })}
+            />
+          </label>
+          <button type="submit" className="form__button form__button--jaden">
+            Jadenize
+          </button>
+        </form>
+       {output && <div data-testid="output">{output}</div>}
+
+// EXAMPLE THREE
+import React from 'react';
+import {
+  renderIntoDocument,
+  fireEvent,
+  cleanup,
+  waitForElement,
+} from 'react-testing-library';
+import fetchMock from 'fetch-mock';
+import Markdownifier from './markdownifier.js';
+
+afterEach(cleanup);
+
+test('Markdownifier component', () => {
+  const mockResponse = `<h1 id="a-heading">a heading</h1>`;
+  fetchMock.mock('https://micro-marked-nqbbqbtkrq.now.sh/', mockResponse);
+  const { getByText, getByLabelText, getByTestId } = renderIntoDocument(
+    <Markdownifier />
+  ); // use renderIntoDocument so we have a real document with browser events
+  const button = getByText('Markdownify');
+  const input = getByLabelText('Enter markdown');
+  input.value = `# a heading`;
+  fireEvent.change(input); // ensure our onChange gets called
+  fireEvent.click(button); // fire a real browser event on the submit button
+  waitForElement(() => getByTestId('output')).then(output => {
+    expect(output.innerHTML).toEqual(mockResponse);
+  });
+  // wait until our element callback finds a DOM node
+  // then we have access to the node
+  // so we can assert against it to make sure the innerHTML is correct
+
+  // where Markdownifier is:
+          <form onSubmit={this.markdownifier}>
+          <h2>Markdownifier</h2>
+          <label htmlFor="markdown-input">
+            Enter markdown
+            <textarea
+              id="markdown-input"
+              className="form__input form__input--markdown"
+              value={input}
+              onChange={e => this.setState({ input: e.target.value })}
+              rows="6"
+            />
+          </label>
+          <button type="submit" className="form__button form__button--markdown">
+            Markdownify
+          </button>
+        </form>
+        {output && (
+          <div
+            data-testid="output"
+            dangerouslySetInnerHTML={{ __html: output }}
+          />
+        )}
+});
+
+
+```
+
+* ([workshop](https://raw.githubusercontent.com/oliverjam/learn-react-testing/master/README.md) has more information on why haven't covered Enzyme and Snapshot testing)
+
+
+### Other snippets of code learnt
+* Only strings and symbols allowed as JS object keys (so not need to put '"' around them)
+* Use **composition** to share code among React components - use JSX to add `<Toggle />` to <Counter /> (not via inheritance - don’t extend the class). Should only every extend `React.component`
+* Can only have a single child in react (so need to wrap html in a `<div>` or wrap it in `React.fragment`) / `React.fragment` = not need to wrap in div (can only return one thing from React component), unless use this
+* Event bubbling - synthetic event with react — full react does performance stuff with events
+* React can keep a record of function calls - time travel 
