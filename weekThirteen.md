@@ -581,8 +581,170 @@ test('Markdownifier component', () => {
 
 ```
 
-* ([workshop](https://raw.githubusercontent.com/oliverjam/learn-react-testing/master/README.md) has more information on why haven't covered Enzyme and Snapshot testing)
+* ([Workshop](https://raw.githubusercontent.com/oliverjam/learn-react-testing/master/README.md) has more information on why haven't covered Enzyme and Snapshot testing)
 
+### `this`
+* The value of `this` can change (dynamic). 
+
+1. By default, using `this` in the global scope = `this` will be the global object --> such as the `window` object of the browser.
+  * > The window object is the default local scope, so it is what `this` defaults to if there is not a more specific object for `this` to be bound to.
+  * > In strict mode there is no default local scope so `this` is `undefined`
+  * So within React classes, using `this.state` is fine if it is not used outside the context of the class
+2. `this` value is based on where the function containing `this` is invoked.
+  ```js
+  function returnThis() {
+    return this;
+  }
+  const person = {
+    name: "Zooey",
+    returnThis
+  };
+
+  person.returnThis(); // returns { name: "Zooey", returnThis: Function }
+  ```
+  Where `this` is now the object it is called upon.
+  * > This is how `this` is bound for [function declarations](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function) which are one of the multiple ways to define functions in javascript.
+  * The problem: using `this` when writing a method within a React class e.g. `myFunc() = {this.state.time}`. Then `.onClick(this.myFunc)`, since when function is invoked it is within the browswer, (the call context has changed), so `this` will be the `window` object of the browser, rather than `this.state.time` within the React class (context of what `this` should be will be lost). (Also when trying to assign the method to another variable: `const returnThisTwo = person.returnThis;` - `this` is window object)
+    * > To call any function or use any variable is essentially shorthand for doing `window.myFunction/Variable`, so we can understand that in this scenario `this` is effectively whatever object the function is being called on, in this case window.
+3. Can explicitly tell the function what `this` is using `.bind()`
+  ```js
+  const person2 = {
+    name: "Charli"
+  };
+  // we assign the method in this way as during the creation of
+  // the object `person2` is not defined
+  person2.returnThis = returnThis.bind(person2);
+
+  const returnThisThree = person2.returnThis;
+
+  returnThisThree(); // gives us { name: "Charli", returnThis: f } - even if 
+  ```
+  * Alternatively, can use arrow functions: `this` will always be whatever `this` was in the lexical context of the function's delaration. 
+    * > At the time of writing the object literal the value of `this` is the global object, any arrow functions that refer to `this` declared inside will always refer to the global object, whereas the function declaration has the `this` of whatever it is called on.
+3. Within object literal — is the global `this` (since it doesn’t exist until finished writing it) - the lexical context of the `this` is global. 
+  * `this` isn’t bound to object yet until it’s made (object literal: in the process of writing it) - global until using
+lexical content of `this` before the React object is made is global until runs the function
+  * Whilst function can refer to itself since function is still being defined (only once it is called and starts running is `this` defined)
+  * Example one:
+  ```js
+  // for `person.returnThis()` to return { name: "Taylor" etc }
+  const person = {
+    name: "Taylor",
+    // myThis: this --> this will be undefined since JS looks through and sees global 
+    // myThis: () => this --> same here as object not defined yet
+    returnThis: () => this // --> if going to use it on itself, object is not defined yet, so looking at the context it has been defined (as arrow function) - `this` refers to global undefined
+    returnThis: function () {
+      return this; // --> this is correct - the `this` will refer to the person when calling `person.returnThis()` (after person has been made)
+    }
+  };
+  // and if bind (doing `.bind(this)` at the end of the object (then same as arrow function), then would still be undefined since object not created yet
+
+  // can also do person.returnThis = person.returnThis.bind(person); to bind `this``
+  // since person has now been defined and binds 'this' after person is made so can access 'this'
+
+  ```
+  * Example Two:
+  ```js
+  class Cat {
+    constructor(name) {
+      this.name = name;
+    }
+
+    sayHi() {
+      return `Hi I'm ${this.name}, miaow`; // refers to window at the moment
+    } 
+
+  // SOLN: using arrow function, but no longer declaring a method inside a class using the syntax `sayHi(){}`
+  // sayHi = () => {
+  //   return `Hi I'm ${this.name}, miaow`;
+  // }
+
+  // OR function declaration and the `this.sayHi = this.sayHi.bind(this);` within the constructor (since have access to `this` inside there)
+  // lexical `this` inside the constructor is the `this` of the class
+
+  // OR class property that has a function assigned to it
+  // sayHi = function() {
+  //   return `Hi I'm ${this.name}, miaow`;
+  // }.bind(this)
+    const getCatName = ({ sayHi }) => sayHi();
+
+    const catGreeting = getCatName(new Cat("Francois"));
+  }
+  ```
+  * Example three:
+  ```js
+  const Button = ({ onClick, children }) => (
+    <button onClick={onClick}>{children}</button>
+  );
+
+  class Counter extends React.Component {
+    constructor() {
+      super();
+      this.state = {
+        count: 0
+      };
+      // this.handleUpdateCount = this.handleUpdateCount.bind(this); -- 1. SOLN - to bind `this` to the class 
+    }
+    //   handleUpdateCount(type) {
+    //     return function() {
+    //       this.setState(({ count }) => ({ // INCORRECT this is the window
+    //         count: type === "inc" ? count + 1 : count - 1
+    //       }));
+    //     };
+    //   }
+
+    // NB THIS IS A HIGHER ORDER FUNCTION -- it is returning a function, so no need to write one for 'inc' and one for 'dec'
+    // method on a class- shorthand
+    handleUpdateCount(type) {
+      console.log(this) // this would be within the class, since it is called immediately upon creation of the class (should be called 'makeUpdateCountFunc')
+      return () => { //-- 2. SOLN using arrow functions
+        console.log(this) // this would be the window by default since it is called onclick in a different context
+        this.setState(({ count }) => ({
+          count: type === "inc" ? count + 1 : count - 1
+        }));
+      };
+    }
+
+    // 3. OR this arrow function to generate the function
+    // handleUpdateCount = (type) => () => {
+    //   this.setState(({ count }) => ({
+    //     count: type === "inc" ? count + 1 : count - 1
+    //   }));
+    // }
+
+    // 4. OR bind the `this` at the end
+    // handleUpdateCount(type) {
+    //   return function () {
+    //     this.setState(({ count }) => ({
+    //       count: type === "inc" ? count + 1 : count - 1
+    //     }));
+    //   }.bind(this);
+    // }
+
+    // OR 5.
+    // handleUpdateCount(type) {
+    //   this.setState(({ count }) => ({
+    //     count: type === "inc" ? count + 1 : count - 1
+    //   }));
+    // }
+    //  AND THEN CHANGE the bottom (the JSX) to: {() => this.handleUpdateCount("inc")}
+
+    render() {
+      return (
+        <React.Fragment>
+          <Button onClick={this.handleUpdateCount("inc")}>+</Button>
+
+          <p data-testid="count">{this.state.count}</p>
+
+          <Button onClick={this.handleUpdateCount("dec")}>-</Button>
+        </React.Fragment>
+      );
+    }
+  }
+  ```
+
+* NB: One can explicitly bind `this` and call a function at the same time using `.call` or `.apply`.
+* Can `.bind()` anything (e.g. `.bind(object)` - can bind it to anything since everything in JS is an object). Can only bind once (so arrow function can't use `.bind()`). Invoking a function is shorthand for function.Prototype.call -- when `.bind(this)`, sets the this (where `this` can be an object etc)
 
 ### Other snippets of code learnt
 * Only strings and symbols allowed as JS object keys (so not need to put '"' around them)
@@ -590,3 +752,4 @@ test('Markdownifier component', () => {
 * Can only have a single child in react (so need to wrap html in a `<div>` or wrap it in `React.fragment`) / `React.fragment` = not need to wrap in div (can only return one thing from React component), unless use this
 * Event bubbling - synthetic event with react — full react does performance stuff with events
 * React can keep a record of function calls - time travel 
+
