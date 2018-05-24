@@ -746,6 +746,42 @@ lexical content of `this` before the React object is made is global until runs t
 * NB: One can explicitly bind `this` and call a function at the same time using `.call` or `.apply`.
 * Can `.bind()` anything (e.g. `.bind(object)` - can bind it to anything since everything in JS is an object). Can only bind once (so arrow function can't use `.bind()`). Invoking a function is shorthand for function.Prototype.call -- when `.bind(this)`, sets the this (where `this` can be an object etc)
 
+### React Project
+_Resource:_ [_React Project Goals_](https://github.com/oliverjam/fac-react-project/blob/master/README.md)
+
+Paired programmed to make a [React game arcade](https://github.com/fac-13/HP-game) - Two games, one to guess how long 10 seconds is, and another: whack a mole (where the mole is your github avatar). Play it [here](https://relaxed-wing-98fffd.netlify.com/)
+
+#### Changing parent's state
+
+* For a child to update a parent component's state, can pass a function down to the child via `props` to set the parent's state: (Thanks to [stackoverflow post](https://stackoverflow.com/questions/35537229/how-to-update-parents-state-in-react))
+
+  ```jsx
+  class Parent extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.handler = this.handler.bind(this)
+    }
+
+    handler(e) {
+      e.preventDefault()
+      this.setState({
+        someVar: someValue
+      })
+    }
+
+    render() {
+      return <Child handler = {this.handler} />
+    }
+  }
+
+  class Child extends React.Component {
+    render() {
+      return <Button onClick = {this.props.handler}/ >
+    }
+  }
+  ```
+
 ### Other snippets of code learnt
 * Only strings and symbols allowed as JS object keys (so not need to put '"' around them)
 * Use **composition** to share code among React components - use JSX to add `<Toggle />` to <Counter /> (not via inheritance - don’t extend the class). Should only every extend `React.component`

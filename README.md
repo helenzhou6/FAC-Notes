@@ -23,4 +23,4 @@ First internal student project, 3 week process in teams of 4. Project: [StackMat
 * [Week Eleven to Twelve](https://github.com/helenzhou6/FAC-Notes/blob/master/weekEleventoTwelve.md) - Project One Week Two - Build Week 1 of 2.
 
 ## Week 13
-* [Week Thirteen]()
+* [Week Thirteen](https://github.com/helenzhou6/FAC-Notes/blob/master/weekThirteen.md) - React week! - Project: [React game arcade](https://github.com/fac-13/HP-game) - Two games, one to guess how long 10 seconds is, and another: whack a mole (where the mole is your github avatar).
