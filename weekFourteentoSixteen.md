@@ -61,6 +61,24 @@ _Resource:_ [_Notes for the talk here_](https://slides.com/sofiapoh/webperf101#/
 * Understand what perceived performance is - how quick user thinks your site is
   * Instant feedback (e.g. button that give the illusion pressing down) / use animations / placeholders and spinners (though use with care - sometimes can perceive as longer & need pixel to pixel matching)
 
+### Accessibility talk
+_Resources:_ [_Talk on accessibility here_](https://github.com/oliverjam/intro-to-accessibility) _and_ [_the slides here_](https://a11y-intro.netlify.com/#0). _Talk based on these resources:_ [_WAI-ARIA basics - mozilla_](https://developer.mozilla.org/en-US/docs/Learn/Accessibility/WAI-ARIA_basics), [_inclusive components - blog/pattern library_](https://inclusive-components.design/), [_the accessibility cheatsheet_](https://bitsofco.de/the-accessibility-cheatsheet/) _and_ [_gov.uk article on accessibility_](https://accessibility.blog.gov.uk/)
+
+* Don't rely solely on colour 
+* Scale UI based on font-size (use `rem`and don't hard code boxes - minimum height of button should be -44px?)
+* Show things in context (e.g. error messages near to the relevant input box) and logical content flow (when tab through - shouldn't jump around a loy)
+* Autocompletes: don't require exact spelling
+* The Web Content Accessibility Guidelines are a set of best practices. Look at the [cheat sheet](bitsofco.de/the-accessibility-cheatsheet)
+  > * **Perceivable**: Can all users perceive your UI? - e.g. text with sufficient size/contrast/line-height, images with alt-text, alerting screenreaders to dynamic content.
+  > * **Operable:** Can all users operate the UI components and navigation? e.g. ensure keyboard functionality, no unnecessary time-limits, descriptive link text, hierarchical headings, unique & descriptive page titles.
+  > * **Operable:** Can all your users understand the content and how to use the interface? e.g. use plain English, set the lang attribute, label inputs, provide error messages in context.
+  > * **Robust** Can your content be understood by different user-agents/assistive tech? e.g. semantic HTML (and ARIA when this fails you), automated and manual testing.
+* **WAI-ARIA** = Web Accessibility Initiative – Accessible Rich Internet Applications - A spec for assigning meaning to otherwise meaningless chunks of markup.
+  * ARIA gives meaning to screenreaders when beyond semantic html.
+    * Visually obvious content might need a text label. e.g. `<button aria-label="menu button">☰</button>`
+    * Roles: Signifies your custom component as a type assistive tech can recognise. e.g. a custom `<select>` using divs could use  `role="listbox"`.
+    * Live regions: Ensures dynamically updated content is read out. `aria-live="polite"` will be read once the current info finished,  `aria-live="assertive"` will interrupt.
+
 ### Snippets of code
 * `this.setState(({ shoeDetails: prevDetails }) => { return { shoeDetails: { ...prevDetails, [e.target.id]: e.target.value }` -> the latter overrides the values set in `prevDetails`
 * `this.setState(props, callback)` => second argument takes a callback! (for after state change)
