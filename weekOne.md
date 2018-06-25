@@ -55,6 +55,8 @@ Introduction into the idea of forking a repository. Never work on the master! Al
 
 ![The lifecycle of a branch](https://i.imgur.com/dyCSnVN.jpg)
 
+[GitHub Cheat sheet (made for FAC14 as part of mentoring)](https://hackmd.io/FAnreC54RT27io6imUqFAQ)
+
 1. Found a problem: create an issue on GitHub. This will give you an issue number.
 2. ```git pull origin master``` to pull remote master files into your local repo (origin refers to remote)
 3. ```git checkout -b <new-branch-name>.``` to create new local branch and change HEAD to branch. (Shortcut for ```git branch <new-branch-name>.``` then ```git checkout <new-branch-name>.```).
