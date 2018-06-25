@@ -749,7 +749,9 @@ lexical content of `this` before the React object is made is global until runs t
 ### React Project
 _Resource:_ [_React Project Goals_](https://github.com/oliverjam/fac-react-project/blob/master/README.md)
 
-Paired programmed to make a [React game arcade](https://github.com/fac-13/HP-game) - Two games, one to guess how long 10 seconds is, and another: whack a mole (where the mole is your github avatar). Play it [here](https://relaxed-wing-98fffd.netlify.com/)
+Paired programmed to make a [React game arcade](https://github.com/fac-13/HP-game) - Two games, one to guess how long 10 seconds is, and another: whack a mole (where the mole is your github avatar). Play it [here](https://relaxed-wing-98fffd.netlify.com/).
+
+I then forked this repo and worked on it independently: view the GitHub repo [here](https://github.com/helenzhou6/Whack-a-Mole) and play it [here](https://whack-a-moleeee.netlify.com/)
 
 #### Changing parent's state
 

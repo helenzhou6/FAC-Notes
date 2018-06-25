@@ -18,9 +18,15 @@ Learning the fundamentals, each week completing a mini project in teams of four 
 * Week Nine - reading week
 
 ## Weeks 10-12
-First internal student project, 3 week process in teams of 4. Project: [StackMatch](https://github.com/fac-13/stackMatch) and role: scrum master.
+Internal student project, 3 week process in teams of 4. Project: [StackMatch](https://github.com/fac-13/stackMatch) and role: scrum master.
 * [Week Ten](https://github.com/helenzhou6/FAC-Notes/blob/master/weekTen.md) - Project One Week One - Design Sprint
 * [Week Eleven to Twelve](https://github.com/helenzhou6/FAC-Notes/blob/master/weekEleventoTwelve.md) - Project One Week Two - Build Week 1 of 2.
 
 ## Week 13
 * [Week Thirteen](https://github.com/helenzhou6/FAC-Notes/blob/master/weekThirteen.md) - React week! - Project: [React game arcade](https://github.com/fac-13/HP-game) - Two games, one to guess how long 10 seconds is, and another: whack a mole (where the mole is your github avatar).
+
+## Week 14-16
+* [Week Fourteen to Sixteen](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFourteentoSixteen.md) - MVP made for an external social enterprise. 3 week process (1 week design, 2 week build sprint). Project: [Craft Track - front end](https://github.com/fac-13/craft-track) and [Craft Track - back end](https://github.com/fac-13/crafttrack-server) - a tracker for shoes to be made for Juta Shoes.
+
+## Bonus week (17)
+_ 
