@@ -1,6 +1,6 @@
 # Week Thirteen
 
-_Resource:_ [_week thirteen schedule and learning outcomes_](https://github.com/foundersandcoders/react-week)
+_Resource:_ [_week thirteen schedule and learning outcomes_](https://github.com/foundersandcoders/react-week) _and_ [_list of resources_](https://github.com/foundersandcoders/react-week/blob/master/resources.md)
 
 It's React week!
 
@@ -842,10 +842,22 @@ _Resources:_ [_Parcel setup for React instructions_](https://github.com/oliverja
 ### Boilerplate
 Made a boilerplate with a backend and client side front end - [here](https://github.com/helenzhou6/React-setup)
 
+### Deploying a React App - Netlify
+_Resources:_ [_deploying instructions_](https://github.com/oliverjam/fac-react-project/blob/master/docs/deploying.md)
+
+* Add to `package.json` - `"build": parcel build index.html --public-url ./`
+> If you get build errors using Parcel with Netlify it may be because they build using an older Node version by default (v6!). You can tell them to use whatever version you're using by setting an environment variable called NODE_ENV in the 'Deploy Settings' (scroll down to 'Build environment variables').
+* To look at deploying on Heroku - look at the boilerplate I made [here](https://github.com/helenzhou6/React-setup)
+
+### React routing
+* [A React Router Tutorial - Medium article](https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf)
+* And a new router library focused on accessibility and simplicity - [Reach Router](https://reach.tech/router/)
+  > Might be worth a look if you don't need all the features the full React Router provides
+  * Look at the [Craft Track project](https://github.com/fac-13/craft-track) for an example of Reach Router
+
 ### Other snippets of code learnt
 * Only strings and symbols allowed as JS object keys (so not need to put '"' around them)
 * Use **composition** to share code among React components - use JSX to add `<Toggle />` to <Counter /> (not via inheritance - don’t extend the class). Should only every extend `React.component`
 * Can only have a single child in react (so need to wrap html in a `<div>` or wrap it in `React.fragment`) / `React.fragment` = not need to wrap in div (can only return one thing from React component), unless use this
 * Event bubbling - synthetic event with react — full react does performance stuff with events
 * React can keep a record of function calls - time travel 
-
