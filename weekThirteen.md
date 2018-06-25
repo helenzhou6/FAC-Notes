@@ -447,7 +447,7 @@ _Resource_ [_Testing workshop_](https://github.com/oliverjam/learn-react-testing
 * Use `render` and `Simulate` from this library.
   * > Simulate does _not_ simulate actual browser events. This means there are certain caveats, like simulating a click on a submit button will not trigger the form's submit event. Read [this section of the React Testing Library](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event) docs for a workaround.
     * React events are different to DOM events - react are root elements (not bound to component - bubbles up) -> means normally clicking a button will bubble up and submits the form but doesnt. 
-    * Not in DOM - just lives in memory (render method renders it to the root element and not on document yet). `renderIntoDocument` -> would add it to the actual document so can fire actual DOM event like submit the form. Need to re-render the DOM if needed to `renderIntoDocument` or else weird side effects.
+    * Not in DOM - just lives in memory (render method renders it to the root element and not on document yet). `renderIntoDocument` -> would add it to the actual document so can fire actual DOM event like submit the form. Need to re-render the DOM if needed to `renderIntoDocument` or else weird side effects. (`renderIntoDocument` is now `render`)
 * Helper methods to find DOM notes: `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text). If you can't find a node using one of them you can still use regular DOM methods on the `container` that is returned.
 * A useful convenience method when debugging is `prettyDOM`, which you can use to log nicely formatted HTML nodes (`console.log(prettyDOM(node)))`)
 
@@ -783,6 +783,64 @@ I then forked this repo and worked on it independently: view the GitHub repo [he
     }
   }
   ```
+
+### `Parcel` Setup for React
+_Resources:_ [_Parcel setup for React instructions_](https://github.com/oliverjam/fac-react-project/blob/master/docs/setup.md)
+* Transpiled with `Babel` - source files are processed (so can use ES Modules, ES6+ and JSX - custom React syntax)
+* Bundled all together with `parcel` (and puts them in the `dist` folder)
+
+1. `npm i -D parcel-bundler babel-plugin-transform-class-properties babel-preset-env babel-preset-react`
+  * `parcel-bundler` does the actual bundling and `babel-plugin-transform-class-properties`: lets us write our state as an object directly on a class ([more info here](https://github.com/oliverjam/intro-react-workshop/blob/master/03-surpass-with-class/README.md#state))
+2. `npm i react react-dom`
+3. `package.json`, add script: `"start": parcel index.html`
+4.  Create `.babelrc` file containing:
+
+```js
+{
+  "presets": ["env", "react"],
+  "plugins": ["transform-class-properties"]
+}
+```
+> Parcel will automatically use Babel to transpile all ES6 and React syntax out of the box, but we want to use a new feature (class properties), so we need to tell Parcel to use an extra plugin.
+
+5.  Create `index.html` file containing:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="index.js"></script>
+  </body>
+</html>
+```
+
+> Parcel will use this as an 'entrypoint' to your app. It'll find the `index.js` script in there and follow all the `import`s to bundle everything. Then it'll replace the `index.js` with the final JS bundle when it outputs the `dist` folder.
+
+#### Testing
+
+1. `npm i -D jest babel-jest babel-core`
+2.  `"test": jest --watch` add test script to `package.json`
+
+> Jest will read the `.babelrc` file to know what presets/plugins it should use. Parcel actually defaults to using `babel-preset-env` and `babel-preset-react`, but Jest doesn't, which is why we had to install and specify them.
+
+#### Eslint
+1. `npm i -D eslint eslint-config-recommended eslint-plugin-react babel-eslint`
+2. Create `.eslintrc.json` file with:
+```json
+{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended", "plugin:react/recommended"]
+}
+```
+> This will tell ESlint to use `babel-parser` instead of its own. That way it won't complain about new things that Babel understands/transpiles away.
+
+### Boilerplate
+Made a boilerplate with a backend and client side front end - [here](https://github.com/helenzhou6/React-setup)
 
 ### Other snippets of code learnt
 * Only strings and symbols allowed as JS object keys (so not need to put '"' around them)
