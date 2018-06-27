@@ -34,6 +34,8 @@ _Resource:_ [_Node Intro workshop_](https://github.com/foundersandcoders/Node-In
     *   **third-party modules** or **packages** - thousands of open-source modules - Node.js' package ecosystem, `npm`, has a large ecosystem of open source libraries
     *   Access by 'requiring' them: `var http = require('http');`.
 
+* More resources [here](https://toddmotto.com/mastering-the-module-pattern/) and [here](http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html)
+
 #### NPM
 
 _Resource:_ [_introduction to NPM_](https://github.com/foundersandcoders/npm-introduction)
@@ -72,7 +74,7 @@ Where `tap-spec` NPM makes the output of `test.js` prettier, and `nodemon` NPM r
     *   In a `logic.js` file that is loaded using `<script>` in the html (above the others).
 
 
-    ```
+    ```js
     var module = {
         publicMethod: function(text){
             console.log(text);
@@ -86,7 +88,7 @@ Where `tap-spec` NPM makes the output of `test.js` prettier, and `nodemon` NPM r
 
     BUT better for privacy to use IIFEs:
 
-    ```
+    ```js
     var module = (function(){
         var publicMethod = function(text){
             console.log(text);
@@ -100,7 +102,7 @@ Where `tap-spec` NPM makes the output of `test.js` prettier, and `nodemon` NPM r
     *   In `DOM.js`
 
 
-    ```
+    ```js
     (function() {
         publicMethod.console('hi');
     })();
@@ -140,7 +142,7 @@ Some general points:
     *   Here the HTML for the form is:
 
 
-    ```
+    ```html
     <form class="" action="/create/post" method="post" id="the-form">
         <h2>Write a Blog Post</h2>
         <textarea name="post" rows="8" cols="40"></textarea>
@@ -171,7 +173,7 @@ Some general points:
 
 *   When a request reaches the server, we need a way of responding to it. The `router` function receives requests and routes them to any appropriate handler functions (which handle the requests) or handles the requests directly (like giving the server a pre-paid addressed envelope)
 
-```
+```js
 function router (request, response) {
   response.writeHead(200, {"Content-Type": "text/html"});
   response.write(message); //response body
@@ -187,7 +189,7 @@ function router (request, response) {
     *   In router function:
 
 
-    ```
+    ```js
       if (endpoint === "/") {
         fs.readFile(__dirname + '/public/index.html', function(error, file) {
             if (error) {
@@ -209,7 +211,7 @@ function router (request, response) {
         *   `handleHomeRoute` - when `endpoint === '/'` (gets the `index.html` file)
 
 
-        ```
+        ```js
         function homeHandler(request, response) {
             response.writeHead(200, {
                 'Content-Type': 'text/html'
@@ -225,11 +227,43 @@ function router (request, response) {
             });
         };
         ```
+        * (Or can use a `switch` statement: though if do, remember they need to return the function (that returns within it to return to the outer case) or use break, otherwise will keep running)
+        ```js
+        module.exports = (req, res) => {
+          switch (`${req.method} ${req.url}`) {
+            case 'GET /':
+              return readFile(
+                './index.html',
+                (err, data) => {
+                  res.writeHead(
+                    200,
+                    {
+                      'Content-Type': 'text/html',
+                      'Content-Length': data.length
+                    }
+                  );
+                  return res.end(data);
+                }
+              );
+            default:
+              res.writeHead(
+                404,
+                {
+                  'Content-Type': 'text/html',
+                  'Content-Length': notFoundPage.length
+                }
+              );
+              return res.end(notFoundPage);
+          }
+        }
+        ```
+
+        * NB: In Node.js, you set headers using the `res.setHeader` and `res.writeHead` methods. (`setHeader` lets you set one header at a time, `writeHead` lets you set your response code and multiple headers at the same time.)
         *   `handlePublic` - the **static file handler** - for assets (when the URL path literally is the backend path to the specific file wanted - since in other cases the endpoints may not be asking for a specific file).
             *   It uses the file name to find the file within the `public` folder and the file extension to pick the right `Content-Type`
 
 
-        ```
+        ```js
         function staticFileHandler(request, response) {
             var extensionType = {
                 html: 'text/html',
@@ -252,7 +286,7 @@ function router (request, response) {
         };
         ```
 *   Can use `respondWith(res, 200, getContentType(endpoint), file);` or `respondWith(res, 404, 'text/plain', 'Error loading content');` instead, where:
-    ```
+    ```js
     const getContentType = endpoint => {
     // Get the content type based on the file extension
     return {
@@ -270,7 +304,7 @@ function router (request, response) {
     ```
 *   NB: can also use `path.extname()`
 *   Can also do:
-    ```
+    ```js
     const url = /;
     const staticRoute = {
         ‘/‘: ‘fac.html’
@@ -283,7 +317,7 @@ function router (request, response) {
         *   In order to have it penultimate, in the front end asset requests should include 'public/[assetname]
 
 
-    ```
+    ```js
     const router = (request, response) => {
         const url = request.url;
         if(url === '/') {
@@ -300,7 +334,7 @@ function router (request, response) {
     *   In `server.js` file:
 
 
-    ```
+    ```js
     const http = require('http');
     const port = process.env.PORT || '5000';
     const router = require('./router.js');
@@ -324,13 +358,13 @@ function router (request, response) {
 
 *   Data doesn't come through the server in one go; it flows to the server in a stream. Need to collect a bucket of water in the server
 *   Listen for the 'data' event and when ot starts to arrive, collect the chunks of data into the `allTheData` variable.
-    ```
+    ```js
     request.on('data', function (chunkOfData) {
         allTheData += chunkOfData;
     });
     ```
 *   Once all the data has come through, listen to the 'end' event (so all POST requests need `response.on` and `response.end`:
-    ```
+    ```js
     request.on('end', function () {
         var convertedData = querystring.parse(allTheData);
         console.log(allTheData);
@@ -353,7 +387,7 @@ To creating an blog post website. General points:
 
 In `router.js` file (adapted so may not have correct func names):
 
-```
+```js
 const router = (request, response) => {
     const url = request.url;
     if(url === '/') {
@@ -379,7 +413,7 @@ So the `script.js` file sends a request for all the blog posts using the `/posts
 
 *   With `fs.readFile`, it's arguments are `(filePath, (err, data))`, - where the second argument is a callback that takes in two arguments, error and the data (see [here](https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback)).
 
-```
+```js
 var oldPosts = require('./posts.json');
 function getPostsHandler(request, response) {
     response.writeHead(200, {'Content-Type': 'application/json'});
@@ -394,7 +428,7 @@ function getPostsHandler(request, response) {
 *   N.B. where the data must be parsed or stringified.
 *   There needs to be a redirection to `/` since even if there is an error, the response needs to be ended in order for the page to move on (and not just be a loading bar that keeps waiting for data to come back)
 
-```
+```js
 function createPostHandler(request, response) {
     const blogPost = '';
     request.on('data', function(dataChunk) {
@@ -436,10 +470,13 @@ if (!trace) {
     trace = '';
 }
 ```
+-- ternary statment, not ES6
+
+* Arrow function can do implicit or explicit i.e. `item => item + 1` rather than `item => {return item + 1}`
 
 [Set data type](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 
-```
+```js
 // SPREAD - used to combine
 
   var arrOne = [0];
@@ -513,6 +550,8 @@ if (!trace) {
         ```
     * Where username is index 0 of `params.auth.split(':')` and password is index 1, and so on.
 
+* Videos on ES6 features [here](https://drive.google.com/drive/folders/1sT59ES-aSzNUbSMbE3Y74AKCuP9yNsSY)
+
 ### Research afternoon
 
 _Resource:_ [_the research afternoon instructions_](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-4/research-afternoon.md)
@@ -543,7 +582,7 @@ Producing an autocomplete website/widget. [Our code](https://github.com/fac-13/v
     *   use `const inputTwo = querystring.parse(input)['/search/?q'].toLowerCase().trim();`
 *   You can use `<datalist>` (though not fully supported in all broswers), but gives you default dropdown functionality like arrow down etc:
 
-    ```
+    ```html
     <input list="browsers">
 
     <datalist id="browsers">
@@ -567,3 +606,38 @@ Producing an autocomplete website/widget. [Our code](https://github.com/fac-13/v
     *   Should use `className` rather than adding and removing classes with `classList` (`className` replaces all existing classes with one or more new classes)
 *   The [`addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) can take a third argument - where can e.g. do it once before removing the event listener.
     *   Should never add an event listener within a function (since can accidentally add too many)
+
+* Testing endpoints (from [modules FAC challenge](https://github.com/foundersandcoders/modules-challenge/blob/alt-solution/src/test.js))
+  ```js
+  const handler = require('./server.js').handler;
+  const test = require('tape');
+
+  const endpoints = [
+    {url: '/unknown', status_code: 404, body: '404 server error'},
+    {url: '/', status_code: 200, body: 'view = \'fac\''},
+    {url: '/fac', status_code: 200, body: 'view = \'fac\''},
+    {url: '/dwyl', status_code: 200, body: 'view = \'dwyl\''},
+    {url: '/css/stylesheet.css', status_code: 200, body: 'body {'},
+    {url: '/js/request.js', status_code: 200},
+    {url: '/js/index.js', status_code: 200, body: 'request.get('},
+    {url: '/api/repos/fac', status_code: 200},
+    {url: '/api/repos/dwyl', status_code: 200}
+  ];
+
+  endpoints.forEach((endpoint) => {
+    test('GET :: ' + endpoint.url + ' :: returns ' + endpoint.status_code, (t) => {
+      t.plan(2);
+
+      handler({url: endpoint.url}, {
+        writeHead: (status, _content) => {
+          t.equal(status, endpoint.status_code);
+        },
+        end: (body) => {
+          t.ok(endpoint.body ? body.includes(endpoint.body) : body);
+        }
+      });
+    });
+  });
+
+  test.onFinish(() => process.exit(0));
+  ```

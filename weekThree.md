@@ -34,6 +34,8 @@ _Resources:_
 *   > When sending an API request, we use a URL to identify the specific server where we want to send the request (kind of like the address on an envelope) and the rest of the url specifies what it is we want the server to send back. These are called parameters or queries.
 *   > DNS uses the resource name (e.g. www.google.com) to look up the server to which the request is addressed. Anything beyond the resource name is part of the query or filepath the specifies exactly what data or resources are being requested (including an access token for increased rate limit)
 
+* More on HTTP and RESTful APIs [in this article](https://www.infosys.com/digital/insights/Documents/restful-web-services.pdf)
+
 #### XMLHttpRequest
 
 *   `var xhr = new XMLHttpRequest();` - using the object constructor, `xhr` is a new instance of the object `XMLHttpRequest()` that has [all associated methods](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest).
@@ -65,13 +67,13 @@ function clientRequest(method, url, body, callback) {
 
 * Can also add `addEventListener("error", transferFailed);`
 *   `xhr.responseText` = the response, but it needs to be parsed using: `JSON.parse(xhr.responseText)` so that the response can be accessed like a JS object.
-* Method is e.g. `"GET"`, if it is `"POST"` then `body` is the message being sent (if "GET" then this can be `null`).
+* Method is e.g. `"GET"`, if it is `"POST"` then `body` is the message being sent (if `"GET"` then this can be `null`).
 * `callback` is error first callback
 
     *   Then to have an event listener function:
 
 
-    ```
+    ```js
     // In DOM.js file:
     function addListener (selector, eventName, callback) {
         document.querySelector(selector).addEventListener(eventName, callback);
@@ -81,7 +83,7 @@ function clientRequest(method, url, body, callback) {
     *   Callbacks for manipulating the DOM (the function `displayResponse` is passed into `fetch` and runs within `fetch` after the repsonse from the API has been received:
 
 
-    ```
+    ```js
     // In DOM.js file:
     function displayResponse(APIresponse) {
         // Code that manipulates the DOM after response from API received
@@ -118,6 +120,8 @@ _Resources:_ [_Flexbox dice workshop_](https://github.com/smarthutza/flexbox-wor
 *   To mirror diagonally/flip across x and y axis, since can't have `column-reverse` and `row-reverse` together, do `flex-wrap: wrap-reverse` and `flex-direction: column-reverse`.
 
 ![flexbox notes](https://i.imgur.com/wlz2RRc.jpg)
+
+* Play [flexbox zombies](https://geddski.teachable.com/p/flexbox-zombies)
 
 ### Software Architecture
 
@@ -169,7 +173,7 @@ _Resource_: [_FAC article_](https://github.com/foundersandcoders/ws-software-des
 
 *   A **closure** is a technique for creating scopes that persist even after the function they are defined by has returned.
 
-```
+```js
 function createIncrementer () {
   // local scope (scope B)
   var a = 1;
@@ -207,8 +211,7 @@ _Resource_: [_FAC article_](https://github.com/foundersandcoders/ws-software-des
     *   > It exploits the technique of creating a closure to create variables which can by used by the module, but not directly by any of the code outside it.
     *   So can wrap multiple modules in a function (e.g. `function createCalculator ()`) or use IIFEs:
 
-
-    ```
+    ```js
     var Calculator = (function createCalculator () {
         // ... module code
     })();
@@ -291,7 +294,7 @@ console.log(
 >     *   The second argument is an array of functions, each function takes two arguments. The first argument it uses to find a result and the second is a callback function.
 >     *   A final callback is given as the third argument. This is called after the waterfall has invoked all of the functions in the array.
 
-```
+```js
 function asyncAddOne(x, callBack) {
   setTimeout(function() {
     if (typeof x !== 'number'){ return callBack(new Error('need a number!'), undefined) }
@@ -353,7 +356,7 @@ SO in this mass of confusing code:
 *   The `null` needs to be passed in as a first argument (e.g. `callBack(null, x * 2)` and `cb(null, args)`) because it refers to there not being an error. At the running of each task, if `x` is not a number being passed in, instead it returns `callBack(new Error('need a number!'), undefined)` (the second argument would be undefined by default), so that when `if (err) {return cb(err)}` runs - it would stop the waterfall, run the `cb` test instead that would return an error message using the first argument (`'need a number!'`) passed in. But if `x` is always a number, and so `err = null` (since `null` is being passed in when `x` is a number), the `if(err)` doesn't run in this example.
 *   `new Error()` means the error has some other features, but it could've just been the string `'need a number!'`.
 *   With `callBack(null, x * 10)` essentially the relevant code becomes:
-    ```
+    ```js
     function(null, x * 10){
             if (err != null){
             return cb(er)
@@ -371,7 +374,7 @@ _Resources:_ [_The project_](https://github.com/foundersandcoders/master-referen
 
 *   We found it difficult trying to filter duplicate results, but it turned out to be a simple solution: Essentially you push the value of what you don't want duplicates of into a `seen` array. You loop over each item and (using `filter`) if the current value is already within the `seen` array, ignore it otherwise add it to the result and the `seen` array:
 
-```
+```js
 var songs = [
     {'a':"hello", 'b': "1"},
     {'a':"goodbye", 'b': "2"},
