@@ -42,7 +42,9 @@ Common things missing are listed in the [_solution_](https://github.com/founders
 ```
 * Also look at the ```form``` and ```quote``` sections of the solution.
 
-* Look into [aria labels](https://stackoverflow.com/questions/22039910/what-is-aria-label-and-how-should-i-use-it)
+* Look into [aria labels](https://stackoverflow.com/questions/22039910/what-is-aria-label-and-how-should-i-use-it) - more about them in this [w3 article](https://www.w3.org/TR/aria-in-html/)
+
+* Useful videos to watch [A11ycasts youtube videos](https://www.youtube.com/watch?v=fGLp_gfMMGU&list=PLNYkxOF6rcICWx0C9LVWWVqvHlYJyqw7g)
 
 ### **Practicing Git**
 _Resource:_ [_Git challenge_](https://github.com/foundersandcoders/git-workflow-workshop-for-two) _and also added in info learnt over Days two to five_
@@ -77,6 +79,8 @@ Introduction into the idea of forking a repository. Never work on the master! Al
     * ```git commit -a -m “..”```shortcut for add and commit at the same time
     * Before closing the commit message with a quote symbol you can press enter on your keyboard to continue typing in the new terminal line. The text in the second line can be used as an additional message (use `#` to link to issues).
     * `git stash` to stash your changes locally without commiting, allowing you to switch your HEAD without complaints. `Git stash` is like a stack. You can stash multiple things and the last bit you stashed is at the top of the stack. When you use `git stash pop` it will apply your most recent stash back into your code and DELETE it from the stack whereas `git stash apply` will apply your most recent stash and KEEP it in the stack.
+    * NB: Can do `git pull --rebase origin master` - the `--rebase` option tells Git to move all of the branch commits to the tip of the master branch after synchronising it with the changes from the central repository,
+      > * Rebasing works by transferring each local commit to the updated `master` branch one at a time. This means that you catch merge conflicts on a commit-by-commit basis rather than resolving all of them in one massive merge commit. Source: [here](https://www.atlassian.com/git/tutorials/comparing-workflows)
 * [Cool website](https://flaviocopes.com/git-guide/) introducing git (git setting up a new repo, push and pull and branches)
 * [Article:A successful git branching model](http://nvie.com/posts/a-successful-git-branching-model/)
 * [Article: Why use GitHub](https://medium.freecodecamp.org/a-developers-introduction-to-github-1034fa55c0db)
@@ -205,7 +209,7 @@ Cool code to deal with stuff!
     However, you can not use CSS to untick a checkbox once ticked, so JS is needed to untick it.
 
 ### CSS Styling
-_Resource:_ a talk by @oliverjam during Week Three (but I thought the content was more appropriate for week 1 so putting it in here 😬). [_The slides_](https://utilitarian-ui.netlify.com/#/) and [_the code along_](https://github.com/oliverjam/react-todo/blob/master/src/doin-it-live.css)
+_Resource:_ a talk by @oliverjam during Week Three (but I thought the content was more appropriate for week 1 so putting it in here 😬). [_The slides_](https://utilitarian-ui.netlify.com/#/) and [_the code along_](https://github.com/oliverjam/react-todo/blob/master/src/doin-it-live.css). Also (though not used for the below notes), collection of useful [CSS snippets](https://justmarkup.com/log/2018/03/collection-of-css-snippets/)
 
 #### Colours!
 * Who knew you could search Dribbble using [colors!](https://github.com/oliverjam/react-todo/blob/master/src/doin-it-live.css) (and each post has a colour palette associated)

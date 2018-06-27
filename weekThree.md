@@ -10,7 +10,7 @@ It's API themed week!
 
 _Resources:_
 
-*   _Introduction to Request and response pattern, HTTP, XMLHttpRequests, Asynchronous code and fixing a broken API request excercise [here]_(https://github.com/foundersandcoders/api-workshop)
+*   _Introduction to Request and response pattern, HTTP, XMLHttpRequests, Asynchronous code and fixing a broken API request excercise_ [here](https://github.com/foundersandcoders/api-workshop)
 *   [_XHR workshop_](https://github.com/foundersandcoders/xhr-workshop) - HTTP GET request to the Giphy API.
 *   [_API workshop using GitHub API_](https://github.com/emilyb7/workshop-APIs)
 

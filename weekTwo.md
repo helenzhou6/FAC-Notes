@@ -13,7 +13,16 @@ _Resources:_ [_introduction to testing and TDD methodology_](https://github.com/
 * Code used in testing:
   * **deepequals** testing checking inside an object (as stated [here](https://api.qunitjs.com/assert/deepEqual))
   * Can use `t.pass()` and `t.fail()` within your tests, that can test for other things other than whether actual equals expected.
-* Fantastic talk on testing (including testing doubles) by Rabea. Slides [here](http://rabea.co.uk/spies-fakes-and-friends/) and [rock/paper/scissors repo](https://github.com/RabeaGleissner/rock-paper-scissors-js). Also [a blog post on test doubles](http://rabea.co.uk/blog/apprenticeship/post-101) by her
+* Fantastic talk on testing (including testing doubles) by Rabea. Slides [here](http://rabea.co.uk/spies-fakes-and-friends/) and [rock/paper/scissors repo](https://github.com/RabeaGleissner/rock-paper-scissors-js). Also [a blog post on test doubles](http://rabea.co.uk/blog/apprenticeship/post-101) by her. Notes based on her talk below:
+  * Pure functions are easy to test and classes with few dependencies. 
+  * **Test Double** - an object that stands in your prodn code objects in tests - that needs to conform to the interface of the required collaborator.
+    * Because: reduce amount of dependencies (e.g. not actually make an API call), make impure functions pure, make tests less fragile and force code to execute certain branches. Has types:
+    * **Dummy** - implements any functions called (pass in empty method `function(_)`. Usually empty function body, unless hasto return something.
+    * **Stub** - simplified implementation of a method. Returns a value but without business logic, can force code to run along specific paths.
+    * **Spy** - Records some info to check if method was called, how many times a method was called. Number of method arguments, check that arguments are correct. (Report back code done)
+    * **Fake** - has a working implementation but is a shortcut (not suitable for prodn code)
+    * **Double** - umbrella term for all of the above. 
+  * NB: not so easy with typed languages - testing frameworks has all thus built in
 
 #### Tape Testing terminologies
 [_Resource: fizbuzz_](https://github.com/foundersandcoders/fizzbuzz/blob/deep-equal-explanation/README.md)
@@ -57,11 +66,10 @@ _Resource:_ [_The istanbul NPM_](https://github.com/dwyl/learn-tape#bonus-level)
   > * If used TDD, then indicates that there is redundant code in the program
   > * If not used TDD then your tests are crap: indicates there will be functionality in the program that is not being tested for
 
-
   > Use ```"test": "nyc tape <test.js filename> | tap-spec "``` - to make it look pretty on terminal
 
 ### Other snippets learnt
-* ```switch``` statement: to evaluate expressions need to put ```swithc(true)```. Not need to break if you want to continue with function.
+* ```switch``` statement: to evaluate expressions need to put ```switch(true)```. Not need to break if you want to continue with function.
 
 ## Day Two
 
@@ -86,13 +94,13 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
   * To combat this, you need to essentially copy a global array/object before manipulating it within the function
 
     _Duplicating an array:_
-    ```
+    ```js
     for (var i = 0; i < array.length; i++) {
       arrayCopy[i] = array[i] ;
     }
     ```
     OR
-    ```
+    ```js
     arrayCopy = array.map(function(x){
       return x;
     });
@@ -101,7 +109,7 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     ```arrayCopy = array.slice(0);```
 
     _Duplicating an object:_
-    ```
+    ```js
       var objectKeysArray = Object.keys(object);
       var objectCopy = {};
       objectKeysArray.forEach(function(key){
@@ -111,7 +119,7 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     Where it creates an array of the object keys. Then for each key, adds to the new empty array the object[key] and the old object value associated.
 
     OR
-    ```
+    ```js
     var objectKeysArray = Object.keys(object);
     var objectCopy = objectKeysArray.reduce(function(accumulator, key){
         accumulator[key] = object[key];
@@ -119,11 +127,11 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     }, {});
     ```
     OR
-    ```
+    ```js
     var copy = Object.assign({}, original);
     ```
     OR
-    ```
+    ```js
     var objectCopy = JSON.parse(JSON.stringify((object)));
     ```
     -> The `JSON.parse` method makes a **deep copy**/**deep clone** rather than a **shallow copy** of the object (refer to [here](https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c)) and below.
@@ -133,7 +141,7 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
 
 ### Other snippets learnt
 * Objects are passed by reference (held in memory) rather than a copy. A copy could have been made of the object (thus `original === copy` evaluates to `false`). But an item within a **shallow copy** of an object is still a reference to the original object (as opposed to **deep copies**) - where `original.key === copy.key` evaluates to `true`. See below for an example:
-```
+```js
 var original = {
   name: 'Helen',
   family: {
@@ -184,7 +192,7 @@ _Resource:_ [_the traffic light challenge_](https://github.com/foundersandcoders
   * The `Function` data-type is an instance of the `Object` data-type - using `instanceof Function;` and `instanceof Object;` gives true. So you can attach arbitrary attributes to functions (e.g. `foo.bar = 2`) & the identity of functions works the same way as identity of objects
   > * And can pass a function as an argument in another function and later execute that passed-in function or even return it to be executed later (a **higher order function**). This is the essence of using callback functions in JavaScript. 
 
-```
+```js
 function blinkLight(element, colour) {
   return function(callback) {
     element.classList.add(colour);
@@ -219,7 +227,7 @@ In [the challenge](https://github.com/foundersandcoders/morning-challenge-traffi
 
 #### Higher order functions
 [This video](https://www.youtube.com/watch?v=BMUiFMZr7vk) tells you about **higher order functions** - a function that does at least one of the following: takes one or more functions as arguments, returns a function as its result.
-  ```
+  ```js
   var animals = [
     { name: 'Helen', species: 'human'},
     { name: 'Doggy', species: 'dog'}
@@ -229,7 +237,7 @@ In [the challenge](https://github.com/foundersandcoders/morning-challenge-traffi
   }
   var dogs = animals.filter(isDog);
   ```
-  * e.g. the `filter` function takes an anonymous function (called a **callback function**). It loops through each item, and each item is passed into the callback function. The callback function returns true or false (to see if should go into new array or not) & then after the filter function would return a new array. Since functions are variables (that can be passed in etc) - this means you can make smaller functions (in this case `isDog()` that can be reused and tested easily.
+  * e.g. the `filter` function takes an anonymous function (called a **callback function**). It loops through each item, and each item is passed into the callback function. The callback function returns `true` or `false` (to see if should go into new array or not) & then after the filter function would return a new array. Since functions are variables (that can be passed in etc) - this means you can make smaller functions (in this case `isDog()` that can be reused and tested easily.
 
 
 ## Day Three, Four & Five
