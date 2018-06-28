@@ -174,6 +174,7 @@ Cool code to deal with stuff!
     > * [A free svg editor](https://github.com/jakearchibald/svgomg) that would produce svg code from your drawings
         SCGOMG - another awesome site to draw svg and then turn into code
     > * There is also a way to view any .svg as code by simply [opening it in a text editor](https://css-tricks.com/using-svg/)
+    * SVG maestro Sarah Drasner [svg course on Frontend Masters](https://frontendmasters.com/courses/svg-animation/)
 
 * Floating label code:
     ```
@@ -260,6 +261,12 @@ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubun
     > * [Wes Bos' CSS Grid course](https://cssgrid.io/): This free video course covers pretty much everything to do with grid and is really fun.
     * Difference between `autofit` and `autofill` is the latter fills the remaining space with empty columns
 
-#### Other stuff
+### CSS Animated drawer challenge
+_Resource:_ [_the challenge_](https://github.com/foundersandcoders/morning-challenge-animated-app-drawer/blob/master/solutions/style.css)
+
+* Done in week 8, but more sense with week one content
+
+### Other stuff
 * You can use `:not(X)` (e.g. `:not(:nth-child(2n+1)) `)
 * `outline-offset` for outlines are cool!
+* Accessibility testing with Travis CI![Here](http://cruft.io/posts/automated-accessibility-testing-node-travis-ci-pa11y/)

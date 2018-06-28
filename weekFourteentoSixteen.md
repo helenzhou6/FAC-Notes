@@ -23,7 +23,8 @@ Watch this space...
 ### Project 
 MVP made for an external social enterprise ([Juta Shoes](https://www.jutashoes.com/)). 3 week process (1 week design, 2 week build sprint). Links: [Craft Track - front end](https://github.com/fac-13/craft-track) and [Craft Track - back end](https://github.com/fac-13/crafttrack-server) - a tracker for shoes to be made for Juta Shoes.
 
-* Used Reach Router to handle page changes
+* Used Reach Router to handle page changes. Different to React Router (more accessible) - but [here is a tutorial](https://medium.com/@pshrmn/a-simple-react-router-v4-tutorial-7f23ff27adf)
+* Tachyons was used, resources: [here](https://tachyons-tldr.now.sh/#/classes), [here](https://tachyons.pro/) and [here](https://github.com/dwyl/learn-tachyons)
 
 ### Interview practice
 [Interview tips](https://github.com/foundersandcoders/interview-tips)

@@ -135,7 +135,7 @@ _Resource:_ [_Workshop for writing testable code_](https://github.com/foundersan
     var objectCopy = JSON.parse(JSON.stringify((object)));
     ```
     -> The `JSON.parse` method makes a **deep copy**/**deep clone** rather than a **shallow copy** of the object (refer to [here](https://we-are.bookmyshow.com/understanding-deep-and-shallow-copy-in-javascript-13438bad941c)) and below.
-
+      * If nested object (vs plain) - this is the only method that hard copy of nested objects— VS ES6 spread and object assign methods
 
     [The solution to the DOM Manipulation challenge](https://github.com/foundersandcoders/DOM-manipulation-Challenge/blob/solutions/exercise/exercise.js) involves using reduce instead.
 

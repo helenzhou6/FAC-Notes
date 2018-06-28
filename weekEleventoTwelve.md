@@ -252,7 +252,7 @@ _Resources:_ [_dwyl document_](https://raw.githubusercontent.com/dwyl/process-ha
 Build sprint for [stackMatch](https://github.com/fac-13/stackMatch/). We spent time adding the GitHub OAuth into the project.
 
 ### GitHub OAuth
-_Resources:_ [_FAC OAuth walkthrough_](https://github.com/foundersandcoders/oauth-workshop) _and_ [_The Net Ninja Passport YouTube Tutorials_](https://www.youtube.com/watch?v=-PuMp5tQ8Jw) _and_ [_GitHub OAuth docs_](https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/) _and_ [_passport workshop_](https://github.com/mineshmshah/passport-tutorial) _and_ [_tutorial for Passport.js authentication_](https://www.jokecamp.com/tutorial-passportjs-authentication-in-nodejs/)
+_Resources:_ [_FAC OAuth walkthrough_](https://github.com/foundersandcoders/oauth-workshop) _and_ [_The Net Ninja Passport YouTube Tutorials_](https://www.youtube.com/watch?v=-PuMp5tQ8Jw) _and_ [_GitHub OAuth docs_](https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/) _and_ [_passport workshop_](https://github.com/mineshmshah/passport-tutorial) _and_ [_tutorial for Passport.js authentication_](https://www.jokecamp.com/tutorial-passportjs-authentication-in-nodejs/) _and_ [_Medium article on learning jwt with passport_](https://medium.com/front-end-hacking/learn-using-jwt-with-passport-authentication-9761539c4314)
 
 Worked through this: [_passport workshop_](https://github.com/mineshmshah/passport-tutorial)
 

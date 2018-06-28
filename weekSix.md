@@ -184,6 +184,11 @@ _Resources:_ [_PostgreSQL Workshop_](https://github.com/foundersandcoders/postgr
 * Note that a single equals is used for equality testing, not assignment.
 * > SQL keywords like `SELECT`, `WHERE` etc can be in upper or lower case. The convention is upper case to distinguish them from identifiers and values but PostgreSQL will understand either way.
 * > SQL is pretty flexible with whitespace so you can spread your statements out on to as many lines as you want. Keeping things aligned can help make big statements easier to read. Just remember to end with a semicolon!
+* Can use `DISTINCT` rather than `GROUP BY` so only unique results show.
+* `UNION` combines two results of queries into a single query (single column)
+
+* Really fantastic site to practice SQL queries: [here](https://pgexercises.com/questions/basic/) and [dwyl/learn-postgresql](https://github.com/dwyl/learn-postgresql), and [Khan academy](https://www.khanacademy.org/computing/computer-programming/sql#concept-intro)
+* There are other databases that don't use SQL (NoSQL (e.g. MongoDB) databases, more info [here](https://codeburst.io/what-the-database-be60a4a6b903))
 
 ## Day Two
 
@@ -290,6 +295,23 @@ _Resources:_ [_Code along/walkthrough_](https://github.com/foundersandcoders/pg-
     * The [`.query`](https://node-postgres.com/features/queries) opens the door to the database. - It is a feature of `node-postgres` (a collection of node.js modules for interfacing with your PostgreSQL database) the API for executing queries
     * `sql` is a string of the build script. Think of it as a single query (transaction / collection of queries compiled into one).
     * This file should only be run separately. NEVER run this in a production after setup, or from other files (unless you know what you're doing)
+
+* Can use `pg-promise` so that the database query is a promise
+  ```js
+  const path = require('path');
+  const { QueryFile } = require('pg-promise');
+  const db = require('./db_connection');
+
+  const sql = file => QueryFile(path.join(__dirname, file), { minify: true });
+
+  const dbBuild = sql('./db_build.sql');
+
+  db
+  .query(dbBuild)
+    .then((res) => {})
+  .catch(err => console.error('error', err));
+  ```
+  * QueryFile from pg-promise takes the file, and then `const dbBuild = sql('./db_build.sql’);` turns the `.sql` into a string, so that you can run `db.query(dbBuild)` on it
 
 #### Creating and connecting to the database
 * THE GENERAL PRINCIPLE: So you connect the dots by creating the database > setting up your username/password to allow access to the database if you are the user (the keycard) > matching these details with the `DB_URL` in `config.env` (to set up the keycard reader to match) > running the database build (to create the default schema and populate your test database with data) - by using `node src/database/db_build.js` (that could be listed in the `"scripts"` in `package.json`) OR (after connecting to it using `\c [database_name]` in `pgcli`, running `\i [full_path_to_db_build.sql]`)
@@ -605,3 +627,4 @@ _Resource:_ [_The week six project_](https://github.com/foundersandcoders/master
     * Note the use of [**SQL alias**](https://www.w3schools.com/sql/sql_alias.asp) to gain the required information before joining the table.
         * Use `SELECT` to specify the column headers of the temporary table, and the content can be based on conditions (use SQL alias to gain information from multiple different tables), then use `FROM` to first join the table that would have the most rows and `JOIN` the others. Finally use `GROUP BY` and `ORDER BY`.
         * Note the use of `RIGHT JOIN` so that topics that have no votes are still listed (but with `yes_vote = 0` and `no_vote = 0`.)
+        * Pro-tip: always use `LEFT JOIN` to get all entries

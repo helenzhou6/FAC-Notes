@@ -1,6 +1,7 @@
 #  Week Ten
 
 _Resources:_ [FAC product build timetable](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12), [_the london timetable_](https://github.com/foundersandcoders/london-programme/blob/master/weeks-10-16/week-10.md) _and_ [the design sprint schedule and resources](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/weeks-10-12/design-sprint) _and_ [FAC design thinking week slides](https://docs.google.com/presentation/d/1CiYH-jdV3OojT3mUITuTBCao6IeZyNkI8xF2G2B6vDA/edit?ts=59a18a95#slide=id.g35f391192_00) _and_ [the learning outcomes](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/learning-outcomes.md)  _and_ _external talk from an alumni FAC member (now working as a UX and service manager)_
+
 * NB: This week is the FAC's mixture and interpretation of two methods - the Google Ventures design sprint and Design Thinking by IDEO (80s)
 
 * It's design thinking week and Project One Week One - Design Sprint - having already [completed this in preparation for the project](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/weeks-10-12/design-sprint/preparation.md)
@@ -231,7 +232,7 @@ _Resources:_ [_FAC user testing guide_](https://github.com/foundersandcoders/mas
 * > Debrief: Explore common user feedback and agree on most prominent issues (2-3) to address first, then discuss how to address issues.
 
 ### Design talks
-_Resource:_ _external talk from designers are Outlandish_
+_Resource:_ _external talk from designers at Outlandish_
 
 Design process involves:
 1. Concept and scope - make vision into tangible product
@@ -252,3 +253,9 @@ _Resource:_ _external talk from an alumni FAC member (now working as a UX and se
     * VS **Optimisation** routes e.g. manipulinks and dont-leave-me-modals
 * **data-driven design** - will design better vs design for something new
 * Google time well spent: apps that don't take up all your time (not use as currency to measure how well app is doing)
+
+### Other Resources
+* Powerpoint on [the importance of UX](https://docs.google.com/presentation/d/1URTHmtKcxXUz2figOyczww41j8a1JhA5P18tpN-6CTU/edit#slide=id.g1d8ce2a6ed_0_209)
+* Things to look into:
+  * Look into Framer and Principle (like inVision for animation)
+  * Expert, omnigraffle and sketch for UX design

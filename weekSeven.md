@@ -799,3 +799,17 @@ _Resource:_ [_the project_](https://github.com/foundersandcoders/master-referenc
     *  `LEFT JOIN` - means doesn’t matter the order of the tables that are joined together, if there are multiple tables it will include all non-overlapping rows.
 * On Dom.js can access pseudo elements e.g. `if (button.disabled == true)`
 * When testing using supertest, and making a POST request, use `.send(password=string)` 
+* Issue: tests running slow on project: because you weren’t manually closing the the database connection and basically a process will stay “running” (or hanging) if there are any open connections (e.g. to a DB or a server).
+  * You had two issues: (1) a big delay before your tests started, (2) a big delay before the process exited. These are both because you’re waiting for the automatic timeout in node-postgres to kill the connections which is roughly 15 seconds.
+  * (1) is caused by the pretest script, which IMO you can get rid of. Fixing (2) requires you to run dbConnection.end() after all other tests have finished. You can look into tape.onFinish to help with that.
+  ```js
+  // using pg
+  tape.onFinish(() => {
+    dbConnection.end()
+  })
+
+  // using pg-promise
+  tape.onFinish(() => {
+    dbConnection.$pool.end()
+  })
+  ```

@@ -158,7 +158,7 @@ const title = <h1 className="main-title"><span>Hello world!</span></h1>;
 * We can pass React components to each other as children -- **composition** so can encapsulate functionality in a component and then wrap that component around whatever we like.
 
 #### Using classes to create components
-Two types:
+Two types ((read more about stateless vs. stateful components [here](https://code.tutsplus.com/tutorials/stateful-vs-stateless-functional-components-in-react--cms-29541))):
 1. stateless - functional components (can still be dynamic if parent state changed and passed down using props) / don’t have states, just used to present data passed down e.g. `const Repo = props => <div>{props.name}</div>` - is a function that returns JSX defined outside the class
 2. class /container component or stateful component- interact-able to have a state. Props: passed in (like html), state that is local to that component that can be set (props can be passed in and changed). If state changes, then React will re-render with new state (and any children that has referred to this state via props). Every class based component has a `render` function
 ```jsx
@@ -442,7 +442,8 @@ _Resource_ [_Testing workshop_](https://github.com/oliverjam/learn-react-testing
 * > It's worth noting that `toEqual` performs a recursive check of all properties on an object (sometimes called deep equal). `toBe` on the other hand checks object identity.
 
 #### React Testing Library
-* [React Testing Library](https://github.com/kentcdodds/react-testing-library) is designed to help you write good React integration tests. 
+* [React Testing Library](https://github.com/kentcdodds/react-testing-library) is designed to help you write good React integration tests.
+  * The author of react-testing-library did a quick (10 min) example of him [using the library to test a react component](https://www.youtube.com/watch?v=kCR3JAR7CHE)
 
 * Use `render` and `Simulate` from this library.
   * > Simulate does _not_ simulate actual browser events. This means there are certain caveats, like simulating a click on a submit button will not trigger the form's submit event. Read [this section of the React Testing Library](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event) docs for a workaround.
@@ -861,3 +862,15 @@ _Resources:_ [_deploying instructions_](https://github.com/oliverjam/fac-react-p
 * Can only have a single child in react (so need to wrap html in a `<div>` or wrap it in `React.fragment`) / `React.fragment` = not need to wrap in div (can only return one thing from React component), unless use this
 * Event bubbling - synthetic event with react — full react does performance stuff with events
 * React can keep a record of function calls - time travel 
+
+### Other resources
+* [HackJam React workshop](https://github.com/hackages/hackjam-introduction-react) - part of a meet up
+* React docs:
+  - [Rendering Elements | React Docs](https://reactjs.org/docs/rendering-elements.html)
+  - [JSX In Depth | React Docs](https://reactjs.org/docs/jsx-in-depth.html)
+  - [Components and Props | React Docs](https://reactjs.org/docs/components-and-props.html)
+  - [Composition vs Inheritance | React Docs](https://reactjs.org/docs/composition-vs-inheritance.html)
+  - [State and Lifecycle | React Docs](https://reactjs.org/docs/state-and-lifecycle.html)
+  - [Handling Events | React Docs](https://reactjs.org/docs/handling-events.html)
+  - [Conditional Rendering | React Docs](https://reactjs.org/docs/conditional-rendering.html)
+* FAC [resources on React](https://github.com/foundersandcoders/react-week/blob/master/resources.md)

@@ -598,3 +598,7 @@ _Resource:_ [_research topics_](https://github.com/foundersandcoders/master-refe
     * Need to define a function inside `.then` - so if not have any arguments, then needs to be a anonymous function
     * If there is a `try` and `catch`, then the `.catch(err)` at the end of promises would catch these synchronous errors as well. 
     * Remember to `throw new Error` within the promise
+
+* Speed up express - article [here](http://stackabuse.com/6-easy-ways-to-speed-up-express/)
+* Useful Handlebar code [- blog post](https://webapplog.com/handlebars/)
+* ...And tons of resources [here](https://github.com/foundersandcoders/master-reference/blob/master/coursebook/week-8/resources.md) - particularly the youtube videos [by this guy](https://www.youtube.com/watch?v=1srD3Mdvf50)

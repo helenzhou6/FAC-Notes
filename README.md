@@ -1,9 +1,12 @@
 # FAC
 
-I (somehow) made it to FAC13 😊🎉, and these are just notes based on the materials covered. Hopefully I'll keep this up.
+I (somehow) made it to FAC13 😊🎉, and these are just notes based on the materials covered ([the original FAC coursebook here](https://github.com/foundersandcoders/master-reference/tree/master/coursebook))
 
 ## Pre course
 *   [Pre course notes](https://github.com/helenzhou6/FAC-Notes/blob/master/precourse.markdown) - (mostly based on the [pre course FAC materials](https://github.com/foundersandcoders/master-reference/tree/master/coursebook/precourse))
+
+## Recommended Materials
+* [FAC recommended materials](https://github.com/helenzhou6/FAC-Notes/blob/master/recommended-materials.md), based off [this repo](https://github.com/foundersandcoders/recommended-materials)
 
 ## Weeks 1-9
 Learning the fundamentals, each week completing a mini project in teams of four based on objectives.
@@ -29,4 +32,4 @@ Internal student project, 3 week process in teams of 4. Project: [StackMatch](ht
 * [Week Fourteen to Sixteen](https://github.com/helenzhou6/FAC-Notes/blob/master/weekFourteentoSixteen.md) - MVP made for an external social enterprise. 3 week process (1 week design, 2 week build sprint). Project: [Craft Track - front end](https://github.com/fac-13/craft-track) and [Craft Track - back end](https://github.com/fac-13/crafttrack-server) - a tracker for shoes to be made for Juta Shoes.
 
 ## Bonus week (17)
-_ 
+* Elm Week - watch this space
