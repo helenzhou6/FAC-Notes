@@ -270,3 +270,6 @@ _Resource:_ [_the challenge_](https://github.com/foundersandcoders/morning-chall
 * You can use `:not(X)` (e.g. `:not(:nth-child(2n+1)) `)
 * `outline-offset` for outlines are cool!
 * Accessibility testing with Travis CI![Here](http://cruft.io/posts/automated-accessibility-testing-node-travis-ci-pa11y/)
+* If you add files to the staging area using `git add`, don't commit and then alter the file, you need to `git add` those files again befre commiting - since the files added to the staging area would be the older version of those files.
+* Do `git checkout` and then tab twice to see all the branches.
+* `git fetch [remote branch name]` will create the branch locally and contain all the changes made to that branch
