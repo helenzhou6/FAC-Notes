@@ -862,6 +862,12 @@ _Resources:_ [_deploying instructions_](https://github.com/oliverjam/fac-react-p
 * Can only have a single child in react (so need to wrap html in a `<div>` or wrap it in `React.fragment`) / `React.fragment` = not need to wrap in div (can only return one thing from React component), unless use this
 * Event bubbling - synthetic event with react — full react does performance stuff with events
 * React can keep a record of function calls - time travel 
+* From the [FreeCodeCamp course](https://learn.freecodecamp.org/front-end-libraries/react):
+  * React also has an option to set default props. You can assign default props to a component as a property on the component itself and React assigns the default prop if necessary. This allows you to specify what a prop value should be if no value is explicitly provided. Using: `[Component name].defaultProps = { location: 'San Francisco' }`
+  * `import React, { PropTypes } from 'react';` - React provides useful type-checking features to verify that components receive props of the correct type. 
+  * A **stateless functional component** is any function you write which accepts props and returns JSX. A **stateless component**, on the other hand, is a class that extends React.Component, but does not use internal state (covered in the next challenge). Finally, a **stateful component** is any component that does maintain its own internal state. You may see stateful components referred to simply as components or React components.
+  * Rmemeber to use built-in JavaScript conditionals for rendering, e.g. `{this.state.condition && <p>markup</p>}` to display components dependent on state
+  * Use `ReactDOMServer.renderToString(<App />)` to render a React component on the server - to render the initial HTML markup on the server and send this to the client (for performance and search engines)
 
 ### Other resources
 * [HackJam React workshop](https://github.com/hackages/hackjam-introduction-react) - part of a meet up
