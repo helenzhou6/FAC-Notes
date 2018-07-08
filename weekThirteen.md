@@ -873,4 +873,7 @@ _Resources:_ [_deploying instructions_](https://github.com/oliverjam/fac-react-p
   - [State and Lifecycle | React Docs](https://reactjs.org/docs/state-and-lifecycle.html)
   - [Handling Events | React Docs](https://reactjs.org/docs/handling-events.html)
   - [Conditional Rendering | React Docs](https://reactjs.org/docs/conditional-rendering.html)
-* FAC [resources on React](https://github.com/foundersandcoders/react-week/blob/master/resources.md)
+* FAC [resources on React](https://github.com/foundersandcoders/react-week/blob/master/resources.md). Interesting articles listed on there, and these video courses are also mentioned:
+  - [The Beginner's Guide to React](https://egghead.io/courses/the-beginner-s-guide-to-react) is what a lot of our Intro to the React API workshop was based on. It's great to quickly jump through to brush up on concepts.
+  - [Advanced React](https://courses.totalreact.com/p/advanced-react-free) is a great short series of videos introducing some more advanced React patterns (by the creator of React Router).
+  - [Advanced Component Patterns](https://egghead.io/courses/advanced-react-component-patterns) goes into more depth about advanced React use.
